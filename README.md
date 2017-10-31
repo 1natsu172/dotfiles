@@ -19,7 +19,7 @@ $ sh install.sh
 
 * [Homebrew-bundle](https://github.com/Homebrew/homebrew-bundle)
 
-`cask`も`Homebrew bundle`も今はデフォルトでHomebrewに含まれてるはず
+`cask`も`Homebrew bundle`も今はデフォルトでHomebrewに含まれてるはず
 
 `Brewfile`がある場所で以下コマンド(大抵ルートディレクトリなはず)
 
