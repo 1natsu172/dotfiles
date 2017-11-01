@@ -10,6 +10,8 @@ do
   [[ ${f} = ".gitmodules" ]] && continue
   [[ ${f} = ".DS_Store" ]] && continue
   [[ ${f} = ".travis.yml" ]] && continue
+  [[ ${f} = ".direnv" ]] && continue
+  [[ ${f} = ".envrc" ]] && continue
   ln -snfv ${DOT_DIRECTORY}/${f} ${HOME}/${f}
 done
 echo $(tput setaf 2)Deploy dotfiles complete!. ✔︎$(tput sgr0)
