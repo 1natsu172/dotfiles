@@ -3,3 +3,5 @@
 .config/*
 !.config/fish
 .zsh/history/
+.direnv
+.envrc
