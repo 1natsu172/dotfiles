@@ -1,8 +1,8 @@
 # dotfiles
 
-## Usage
+# Usage
 
-### シンボリックリンクをルートに張る
+## シンボリックリンクをルートに張る
 
 ```
 $ cd ~/
@@ -10,7 +10,7 @@ $ git clone https://github.com/1natsu172/dotfiles.git
 $ cd dotfiles
 $ sh install.sh
 ```
-### Homebrew
+## Homebrew
 1. まずインストールする
 
 * [https://brew.sh/index_ja.html](https://brew.sh/index_ja.html)
@@ -33,7 +33,7 @@ $ brew bundle
 $ brew bundle dump --force
 ```
 
-### シェルのデフォルトをzshにする
+## シェルのデフォルトをzshにする
 
 * [[MacOSX]ターミナルのデフォルトShellをzshに変更する方法 &middot; DQNEO起業日記](http://dqn.sakusakutto.jp/2014/05/macosx_shell_chsh_zsh.html)
 
@@ -44,7 +44,7 @@ sudo sh -c 'echo $(which zsh) >> /etc/shells'
 # ユーザのデフォルトシェルを変更します。
 chsh -s /usr/local/bin/zsh
 ```
-### Homebrewの対象ディレクトリがPath優先順位負けするので最優先にする
+## Homebrewの対象ディレクトリがPath優先順位負けするので最優先にする
 
 [Homebrew コマンドが優先的に実行されるようにデフォルトパスに/usr/local/binを追加する](https://qiita.com/n-oshiro/items/3c571a4fcdb023b1fe77)
 
@@ -66,13 +66,13 @@ $ sudo vi /etc/paths
 $ exec $SHELLで反映(シェル再起動)
 
 
-### nodebrewでnode.jsのインスコしたりrubyの環境構築したりする
+## nodebrewでnode.jsのインスコしたりrubyの環境構築したりする
 
 しましょう
 
-### Gitアカウントの設定
+## Gitアカウントの設定
 
-#### メインアカウント設定
+### メインアカウント設定
 リポジトリはhttps形式でcloneするようにして、認証キーは`credential-osxkeychain`で管理するようにする。
 
 * [Caching your GitHub password in Git](https://help.github.com/articles/caching-your-github-password-in-git/)
@@ -100,7 +100,7 @@ export GIT_AUTHOR_EMAIL="mail@example.com"
 
 これでOSログインユーザーのメインアカウントの設定が完了
 
-#### サブアカウント設定
+### サブアカウント設定
 
 サブアカウント用のディレクトリを切って、そこ以下でのgitの環境変数をdirenvで制御することでサブアカウント実現をする。
 
@@ -123,6 +123,6 @@ export GIT_AUTHOR_EMAIL="mail@example.com"
 
 これで`~/dev_folder/sub_ccount`以下での作業はサブアカウントでの作業になる
 
-### 参考
+## 参考
 
 * [Macの環境構築自動化 2016年10月版](http://jnst.hateblo.jp/entry/2016/09/30/051636)
