@@ -27,6 +27,11 @@ $ sh install.sh
 $ brew bundle
 ```
 
+なおBrewfile再生成は以下でできる
+
+```
+$ brew bundle dump --force
+```
 
 ### シェルのデフォルトをzshにする
 
@@ -64,6 +69,59 @@ $ exec $SHELLで反映(シェル再起動)
 ### nodebrewでnode.jsのインスコしたりrubyの環境構築したりする
 
 しましょう
+
+### Gitアカウントの設定
+
+#### メインアカウント設定
+リポジトリはhttps形式でcloneするようにして、認証キーは`credential-osxkeychain`で管理するようにする。
+
+* [Caching your GitHub password in Git](https://help.github.com/articles/caching-your-github-password-in-git/)
+
+マルチアカウントのためにglobalの`.gitconfig`の`[user]`欄を空けているので、direnvでホームディレクトリに`.envrc`を作ってそこへメインアカウントの情報を入れる。
+
+* [direnvを使って複数のgitコミッタ名を切り替える](http://blog.manaten.net/entry/direnv_git_account)
+
+```
+# 環境変数切り替えたいディレクトリに移動
+$ cd ~
+
+# .envrcを作成
+$ direnv edit .
+```
+
+`.envrc`に以下のようにユーザー情報を書く
+
+```
+export GIT_COMMITTER_NAME="YOUR NAME"
+export GIT_COMMITTER_EMAIL="mail@example.com"
+export GIT_AUTHOR_NAME="YOUR NAME"
+export GIT_AUTHOR_EMAIL="mail@example.com"
+```
+
+これでOSログインユーザーのメインアカウントの設定が完了
+
+#### サブアカウント設定
+
+サブアカウント用のディレクトリを切って、そこ以下でのgitの環境変数をdirenvで制御することでサブアカウント実現をする。
+
+例：
+
+```
+$ mkdir ~/dev_folder/sub_ccount
+$ cd ~/dev_folder/sub_ccount
+$ direnv edit .
+```
+
+メインアカウントと同じく`.envrc`に以下のようにユーザー情報を書く
+
+```
+export GIT_COMMITTER_NAME="YOUR NAME"
+export GIT_COMMITTER_EMAIL="mail@example.com"
+export GIT_AUTHOR_NAME="YOUR NAME"
+export GIT_AUTHOR_EMAIL="mail@example.com"
+```
+
+これで`~/dev_folder/sub_ccount`以下での作業はサブアカウントでの作業になる
 
 ### 参考
 
