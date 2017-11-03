@@ -75,7 +75,7 @@ $ exec $SHELLで反映(シェル再起動)
 #### メインアカウント設定
 リポジトリはhttps形式でcloneするようにして、認証キーは`credential-osxkeychain`で管理するようにする。
 
-* [Caching your GitHub password in Git](https://help.github.com/articles/caching-your-github-password-in-git/)
+* [Caching your GitHub password in Git](https://help.github.com/articles/caching-your-github-password-in-git/)
 
 マルチアカウントのためにglobalの`.gitconfig`の`[user]`欄を空けているので、direnvでホームディレクトリに`.envrc`を作ってそこへメインアカウントの情報を入れる。
 
