@@ -21,3 +21,7 @@
 # 	pushinsteadof = https://github.com/
 [credential]
 	helper = osxkeychain
+[gpg]
+	program = gpg
+[user]
+	signingkey = 2AEE3E6F101A46FB
