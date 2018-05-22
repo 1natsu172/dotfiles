@@ -12,7 +12,6 @@
         "semi": false
       }
     ],
-    "yoda": 0,
     "no-unused-vars": 1
   },
   "globals": {
