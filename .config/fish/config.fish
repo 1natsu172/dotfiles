@@ -1,3 +1,6 @@
+# Change fish colors
+set fish_color_command cyan
+
 # nodebrew
 set -x PATH $HOME/.nodebrew/current/bin $PATH
 

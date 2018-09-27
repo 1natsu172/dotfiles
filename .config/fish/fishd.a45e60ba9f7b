@@ -14,7 +14,7 @@ SET __fish_init_2_39_8:\x1d
 SET __fish_init_2_3_0:\x1d
 SET fish_color_autosuggestion:6272A4
 SET fish_color_cancel:\x2dr
-SET fish_color_command:BD93F9
+SET fish_color_command:cyan
 SET fish_color_comment:6272A4
 SET fish_color_cwd:green
 SET fish_color_cwd_root:red
