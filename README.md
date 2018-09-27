@@ -4,6 +4,8 @@
 
 ## シンボリックリンクをルートに張る
 
+`dotfiles`の中にある`.hoge`類のファイルをもとにルートにシンボリックリンクを張る。
+
 ```
 $ cd ~/
 $ git clone https://github.com/1natsu172/dotfiles.git
@@ -33,7 +35,9 @@ $ brew bundle
 $ brew bundle dump --force
 ```
 
-## シェルのデフォルトをzshにする
+## シェルのデフォルトを変更する
+
+### zshにするなら
 
 * [[MacOSX]ターミナルのデフォルトShellをzshに変更する方法 &middot; DQNEO起業日記](http://dqn.sakusakutto.jp/2014/05/macosx_shell_chsh_zsh.html)
 
@@ -44,6 +48,17 @@ sudo sh -c 'echo $(which zsh) >> /etc/shells'
 # ユーザのデフォルトシェルを変更します。
 chsh -s /usr/local/bin/zsh
 ```
+
+### fishにするなら
+
+```
+# /etc/shells の末尾に /usr/local/bin/fish を追記します。
+sudo sh -c 'echo $(which fish) >> /etc/shells'
+
+# ユーザのデフォルトシェルを変更します。
+chsh -s /usr/local/bin/fish
+```
+
 ## Homebrewの対象ディレクトリがPath優先順位負けするので最優先にする
 
 [Homebrew コマンドが優先的に実行されるようにデフォルトパスに/usr/local/binを追加する](https://qiita.com/n-oshiro/items/3c571a4fcdb023b1fe77)
