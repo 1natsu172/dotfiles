@@ -4,7 +4,7 @@ SPECIFY_FILES="Brewfile" # 複数ファイルは""の中に半角スペース空
 # ドットファイルとドットファイル以外の特定ファイルを回す
 for f in .??* ${SPECIFY_FILES}
 do
-  # 無視したいファイルやディレクトリはこんな風に追加してね
+  # ルートにシンボリックリンクは貼りたくない無視したいファイルやディレクトリはこんな風に追加してね
   [[ ${f} = ".git" ]] && continue
   [[ ${f} = ".gitignore" ]] && continue
   [[ ${f} = ".gitmodules" ]] && continue
