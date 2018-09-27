@@ -1,36 +1,40 @@
-tap "caskroom/cask"
-tap "caskroom/fonts"
 tap "homebrew/bundle"
+tap "homebrew/cask"
+tap "homebrew/cask-fonts"
 tap "homebrew/core"
 tap "homebrew/php"
 tap "sanemat/font"
+brew "bat"
 brew "boost"
 brew "fontconfig"
 brew "gettext"
+brew "composer"
 brew "czmq"
 brew "direnv"
+brew "fish"
 brew "libtool"
 brew "fontforge"
-brew "gdbm"
+brew "fzf"
+brew "ghq"
 brew "gibo"
 brew "git"
 brew "gnupg"
-brew "lua"
 brew "highlight"
+brew "httpie"
 brew "hub"
 brew "libsodium"
 brew "mas"
+brew "php-cs-fixer"
 brew "pinentry-mac"
 brew "rbenv"
 brew "tig"
 brew "tree"
-brew "unixodbc"
 brew "yarn"
 brew "zsh", args: ["without-etcdir"]
-brew "homebrew/php/composer"
-brew "homebrew/php/php-cs-fixer"
 brew "sanemat/font/ricty", args: ["with-powerline"]
 cask "betterzipql"
+cask "font-fira-code"
+cask "lunar"
 cask "qlcolorcode"
 cask "qlimagesize"
 cask "qlmarkdown"
@@ -42,7 +46,6 @@ cask "quicklook-json"
 cask "quicklookase"
 cask "suspicious-package"
 cask "webpquicklook"
-cask "caskroom/fonts/font-fira-code"
 mas "1Password", id: 443987910
 mas "BetterSnapTool", id: 417375580
 mas "Blackmagic Disk Speed Test", id: 425264550
@@ -58,6 +61,8 @@ mas "GarageBand", id: 408980954
 mas "GIF Brewery 3", id: 1081413713
 mas "iD3 Editor", id: 910408628
 mas "iMovie", id: 408981434
+mas "INFOMANIA", id: 1358112362
+mas "Install macOS Mojave", id: 0
 mas "Install macOS Sierra", id: 1127487414
 mas "iPhoto", id: 408981381
 mas "Keynote", id: 409183694
@@ -79,7 +84,6 @@ mas "Snapselect", id: 935700987
 mas "Softmatic QR Perfect", id: 775631122
 mas "Split Lab", id: 986090353
 mas "Tweetbot", id: 557168941
-mas "Twitter", id: 409789998
 mas "WiFi Signal", id: 525912054
 mas "WinArchiver Lite", id: 414855915
 mas "Wunderlist", id: 410628904
