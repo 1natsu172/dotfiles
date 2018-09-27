@@ -2,6 +2,8 @@
 *~
 .config/*
 !.config/fish
+!.config/yarn
+*node_modules
 .zsh/history/
 .direnv
 .envrc
