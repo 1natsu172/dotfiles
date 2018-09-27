@@ -1,0 +1,1 @@
+/Users/1natsu/.config/fisherman/z/conf.d/z.fish

@@ -1,0 +1,1 @@
+/Users/1natsu/.config/fisherman/spin/spin.fish

@@ -1,0 +1,1 @@
+/Users/1natsu/.config/fisherman/ghq/completions/ghq.fish
