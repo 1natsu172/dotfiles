@@ -2,7 +2,7 @@
 set fish_color_command cyan
 
 # sbin path (Homebrew's warning countermeasure)
-set -x fish_user_paths "/usr/local/sbin" $fish_user_paths
+set -g fish_user_paths "/usr/local/sbin" $fish_user_paths
 
 # nodebrew
 set -x PATH $HOME/.nodebrew/current/bin $PATH

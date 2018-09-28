@@ -42,4 +42,4 @@ SET fish_pager_color_prefix:white\x1e\x2d\x2dbold\x1e\x2d\x2dunderline
 SET fish_pager_color_progress:brwhite\x1e\x2d\x2dbackground\x3dcyan
 SET_EXPORT fish_user_paths:/usr/local/sbin\x1e/usr/local/opt/fzf/bin
 SET fisher_active_prompt:bobthefish
-SET fisher_dependency_count:bobthefish\x1egetopts\x1e\x1ez\x1espin\x1ebd\x1ebalias\x1efzf\x1eghq\x1ebass\x1edocker\x2dcompose
+SET fisher_dependency_count:bobthefish\x1egetopts\x1e\x1ez\x1espin\x1ebd\x1ebalias\x1efzf\x1eghq\x1ebass\x1edocker\x2dcompose\x1edocker\x2dmachine

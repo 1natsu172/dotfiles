@@ -1,0 +1,1 @@
+/Users/1natsu/.config/fisherman/docker-machine/completions/docker-machine.fish
