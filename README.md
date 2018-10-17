@@ -128,8 +128,8 @@ export GIT_AUTHOR_EMAIL="mail@example.com"
 例：
 
 ```
-$ mkdir ~/dev_folder/sub_ccount
-$ cd ~/dev_folder/sub_ccount
+$ mkdir ~/dev_folder/sub_account
+$ cd ~/dev_folder/sub_account
 $ direnv edit .
 ```
 
