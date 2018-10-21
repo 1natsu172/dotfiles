@@ -28,3 +28,6 @@ set -x FZF_LEGACY_KEYBINDINGS 0
 
 # balias
 balias g 'git'
+
+# set $BROWSER
+set -x BROWSER open
