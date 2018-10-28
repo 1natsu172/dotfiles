@@ -26,8 +26,8 @@ set -x GPG_TTY (tty)
 # fisher jethrokuan/fzf
 set -x FZF_LEGACY_KEYBINDINGS 0
 
-# balias
-balias g 'git'
+# alias
+alias g='git'
 
 # set $BROWSER
 set -x BROWSER open
