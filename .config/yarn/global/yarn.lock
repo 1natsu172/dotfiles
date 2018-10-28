@@ -2381,10 +2381,10 @@ find-versions@^1.0.0:
     meow "^3.5.0"
     semver-regex "^1.0.0"
 
-firebase-tools@^5.1.1:
-  version "5.1.1"
-  resolved "https://registry.yarnpkg.com/firebase-tools/-/firebase-tools-5.1.1.tgz#0e693c6197bdc4562fd3040d7bbb7e23b5dc415c"
-  integrity sha512-xmg5yO5ro1uUTEjHBCMxkA8tcNh+E2y5CAJLL3mXL/3CjrsDId519Yan2kX+x5MWNNwS0Clm4MznaYWJF7E7nQ==
+firebase-tools@^6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/firebase-tools/-/firebase-tools-6.0.0.tgz#a0820b197c3a0a8aab7bea90a2219f202632e600"
+  integrity sha512-ZTZ+yXgh7EpkoNla1bjRV6IDi6y9Ss+JO1FEEs2Cms9DOzmUMS65uYoPkK3Ox/wgf0pXmKmTf6PcmlJOS5WBiA==
   dependencies:
     JSONStream "^1.2.1"
     archiver "^2.1.1"
