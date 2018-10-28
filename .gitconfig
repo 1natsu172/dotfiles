@@ -27,3 +27,5 @@
 	signingkey = 2AEE3E6F101A46FB
 [rerere]
 	enabled = true
+[hub]
+	protocol = https
