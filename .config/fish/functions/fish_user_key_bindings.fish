@@ -5,4 +5,11 @@ function fish_user_key_bindings
     bind ! bind_bang
     bind '$' bind_dollar
     ### Bash Style Command ###
+
+    ### fish-ghqのctrl+gのショートカットがfisherman3.0からfzfとコンフリクトするようになったので応急処置(conf.d/fish-ghq_key_bindings.fishの中身をコピペ) ###
+    bind \cg '__ghq_crtl_g'
+    if bind -M insert >/dev/null ^/dev/null
+        bind -M insert \cg '__ghq_crtl_g'
+    end
+    ### fish-ghq ###
 end
