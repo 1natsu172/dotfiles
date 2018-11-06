@@ -87,7 +87,7 @@ $ sudo vi /etc/paths
 $ exec $SHELLで反映(シェル再起動)
 
 
-## nodebrewでnode.jsのインスコしたりrubyの環境構築したりする
+## nvmでNodeJS環境構築したり、そのほかrubyの環境構築したりする
 
 しましょう
 
