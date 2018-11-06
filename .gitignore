@@ -3,6 +3,7 @@
 .config/*
 !.config/fish
 !.config/yarn
+.config/yarn/link
 !.config/karabiner
 *node_modules
 .zsh/history/
