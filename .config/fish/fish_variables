@@ -14,6 +14,7 @@ SETUVAR Z_EXCLUDE:/Users/1natsu
 SETUVAR __fish_classic_git_prompt_initialized:\x1d
 SETUVAR __fish_init_2_39_8:\x1d
 SETUVAR __fish_init_2_3_0:\x1d
+SETUVAR __fish_init_3_x:\x1d
 SETUVAR fish_color_autosuggestion:6272A4
 SETUVAR fish_color_cancel:\x2dr
 SETUVAR fish_color_command:cyan
