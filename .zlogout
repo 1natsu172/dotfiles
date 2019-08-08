@@ -1,1 +1,0 @@
-/Users/1natsu/.zprezto/runcoms/zlogout

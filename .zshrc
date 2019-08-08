@@ -1,1 +1,1 @@
-/Users/1natsu/.zprezto/runcoms/zshrc
+# Created by newuser for 5.2
