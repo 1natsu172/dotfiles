@@ -31,6 +31,7 @@ alias gco='g checkout'
 alias gcob='g checkout -b'
 alias gcom='g checkout master'
 alias gcod='g checkout develop'
+alias gpuu='g push -u origin HEAD'
 alias gbdmerged='git branch --merged $1  grep -vE "^*master$1"  xargs -I % git branch -d %'
 alias gpr='git push origin HEAD && hub compare (git symbolic-ref --short HEAD)'
 
