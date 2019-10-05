@@ -32,7 +32,7 @@ alias gcob='g checkout -b'
 alias gcom='g checkout master'
 alias gcod='g checkout develop'
 alias gbdmerged='git branch --merged $1  grep -vE "^*master$1"  xargs -I % git branch -d %'
-alias gpr='git push origin HEAD && hub compare $(git symbolic-ref --short HEAD)'
+alias gpr='git push origin HEAD && hub compare (git symbolic-ref --short HEAD)'
 
 # set $BROWSER
 set -x BROWSER open
