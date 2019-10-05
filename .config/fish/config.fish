@@ -25,6 +25,14 @@ set -x FZF_LEGACY_KEYBINDINGS 0
 
 # alias
 alias g='git'
+alias gst='git status'
+alias gbv='g branch -vv'
+alias gco='g checkout'
+alias gcob='g checkout'
+alias gcom='g checkout master'
+alias gcod='g checkout develop'
+alias gbdmerged='git branch --merged $1  grep -vE "^*master$1"  xargs -I % git branch -d %'
+alias gpr='git push origin HEAD && hub compare $(git symbolic-ref --short HEAD)'
 
 # set $BROWSER
 set -x BROWSER open
