@@ -25,7 +25,7 @@ set -x FZF_LEGACY_KEYBINDINGS 0
 
 # alias
 alias g='git'
-alias gst='git status'
+alias gst='g status'
 alias gbv='g branch -vv'
 alias gco='g checkout'
 alias gcob='g checkout -b'
