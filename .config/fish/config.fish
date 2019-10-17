@@ -38,5 +38,9 @@ alias gpr='git push origin HEAD && hub compare (git symbolic-ref --short HEAD)'
 # set $BROWSER
 set -x BROWSER open
 
-# adb(android debug bridge) command
-set -x PATH $HOME/Library/Android/sdk/platform-tools $PATH
+# Android
+set -x ANDROID_HOME $HOME/Library/Android/sdk
+set -x PATH $ANDROID_HOME/emulator $PATH
+set -x PATH $ANDROID_HOME/tools $PATH
+set -x PATH $ANDROID_HOME/tools/bin $PATH
+set -x PATH $ANDROID_HOME/platform-tools $PATH
