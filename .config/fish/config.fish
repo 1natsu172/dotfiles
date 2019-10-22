@@ -44,3 +44,6 @@ set -x PATH $ANDROID_HOME/emulator $PATH
 set -x PATH $ANDROID_HOME/tools $PATH
 set -x PATH $ANDROID_HOME/tools/bin $PATH
 set -x PATH $ANDROID_HOME/platform-tools $PATH
+
+# thefuck
+thefuck --alias ask | source
