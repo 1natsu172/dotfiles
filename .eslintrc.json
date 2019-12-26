@@ -1,5 +1,5 @@
 {
-  "extends": ["standard", "prettier"],
+  "extends": ["prettier"],
   "env": {
     "browser": true
   },
@@ -9,10 +9,12 @@
       "error",
       {
         "singleQuote": true,
-        "semi": false
+        "semi": false,
+        "trailingComma": "all"
       }
     ],
-    "no-unused-vars": 1
+    "no-unused-vars": 1,
+    "no-console": 1
   },
   "globals": {
     "$": false
