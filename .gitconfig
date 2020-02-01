@@ -29,3 +29,5 @@
 	enabled = true
 [hub]
 	protocol = https
+[pull]
+	ff = only
