@@ -34,10 +34,12 @@ alias gco='g checkout'
 alias gcob='g checkout -b'
 alias gcom='g checkout master'
 alias gcod='g checkout develop'
+alias gpush='g push'
 alias gpuu='g push -u origin HEAD'
 alias gstash='g stash -u'
 alias gpop='g stash pop'
 alias gpull='g pull'
+alias gremov='g remote -v'
 alias gpr='git push origin HEAD && hub compare (git symbolic-ref --short HEAD)'
 
 # set $BROWSER
