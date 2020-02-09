@@ -10,6 +10,10 @@
 [core]
 	excludesfile = /Users/1natsu/.gitignore_global
 	editor = code --wait
+[diff]
+	tool = default-difftool
+[difftool "default-difftool"]
+	cmd = code --wait --diff $LOCAL $REMOTE
 [difftool "sourcetree"]
 	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
 	path = 
@@ -25,6 +29,7 @@
 	program = gpg
 [user]
 	signingkey = 2AEE3E6F101A46FB
+	email = 1natsu172@users.noreply.github.com
 [rerere]
 	enabled = true
 [hub]
