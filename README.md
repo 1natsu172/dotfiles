@@ -4,7 +4,7 @@
 
 *ルートにシンボリックリンク張りたくないファイル*は`install.sh`で除外指定します。
 
-*gitで管理したくないファイル*は`.gitignore`で指定します。
+*git で管理したくないファイル*は`.gitignore`で指定します。
 
 # Usage
 
@@ -18,16 +18,18 @@ $ git clone https://github.com/1natsu172/dotfiles.git
 $ cd dotfiles
 $ sh install.sh
 ```
+
 ## Homebrew
+
 1. まずインストールする
 
-* [https://brew.sh/index_ja.html](https://brew.sh/index_ja.html)
+- [https://brew.sh/index_ja.html](https://brew.sh/index_ja.html)
 
-2. Homebrew bundleでBrewfileからdependenciesのインストール
+2. Homebrew bundle で Brewfile から dependencies のインストール
 
-* [Homebrew-bundle](https://github.com/Homebrew/homebrew-bundle)
+- [Homebrew-bundle](https://github.com/Homebrew/homebrew-bundle)
 
-`cask`も`Homebrew bundle`も今はデフォルトでHomebrewに含まれてるはず
+`cask`も`Homebrew bundle`も今はデフォルトで Homebrew に含まれてるはず
 
 `Brewfile`がある場所で以下コマンド(大抵ルートディレクトリなはず)
 
@@ -35,7 +37,7 @@ $ sh install.sh
 $ brew bundle
 ```
 
-なおBrewfile再生成は以下でできる
+なお Brewfile 再生成は以下でできる
 
 ```
 $ brew bundle dump --force
@@ -43,9 +45,9 @@ $ brew bundle dump --force
 
 ## シェルのデフォルトを変更する
 
-### zshにするなら
+### zsh にするなら
 
-* [[MacOSX]ターミナルのデフォルトShellをzshに変更する方法 &middot; DQNEO起業日記](http://dqn.sakusakutto.jp/2014/05/macosx_shell_chsh_zsh.html)
+- [[MacOSX]ターミナルのデフォルト Shell を zsh に変更する方法 &middot; DQNEO 起業日記](http://dqn.sakusakutto.jp/2014/05/macosx_shell_chsh_zsh.html)
 
 ```
 # /etc/shells の末尾に /usr/local/bin/zsh を追記します。
@@ -55,7 +57,7 @@ sudo sh -c 'echo $(which zsh) >> /etc/shells'
 chsh -s /usr/local/bin/zsh
 ```
 
-### fishにするなら
+### fish にするなら
 
 ```
 # /etc/shells の末尾に /usr/local/bin/fish を追記します。
@@ -65,12 +67,12 @@ sudo sh -c 'echo $(which fish) >> /etc/shells'
 chsh -s /usr/local/bin/fish
 ```
 
-## Homebrewの対象ディレクトリがPath優先順位負けするので最優先にする
+## Homebrew の対象ディレクトリが Path 優先順位負けするので最優先にする
 
-[Homebrew コマンドが優先的に実行されるようにデフォルトパスに/usr/local/binを追加する](https://qiita.com/n-oshiro/items/3c571a4fcdb023b1fe77)
+[Homebrew コマンドが優先的に実行されるようにデフォルトパスに/usr/local/bin を追加する](https://qiita.com/n-oshiro/items/3c571a4fcdb023b1fe77)
 
-* `/etc/paths`の内容を変える
-  * `/usr/local/bin`がHomebrewのアプリケーションディレクトリ、なので一番上へ
+- `/etc/paths`の内容を変える
+  - `/usr/local/bin`が Homebrew のアプリケーションディレクトリ、なので一番上へ
 
 ```
 $ sudo vi /etc/paths
@@ -84,23 +86,23 @@ $ sudo vi /etc/paths
 /sbin
 ```
 
-$ exec $SHELLで反映(シェル再起動)
+$ exec $SHELL で反映(シェル再起動)
 
-
-## nvmでNodeJS環境構築したり、そのほかrubyの環境構築したりする
+## asdf で NodeJS 環境構築したりする
 
 しましょう
 
-## Gitアカウントの設定
+## Git アカウントの設定
 
 ### メインアカウント設定
-リポジトリはhttps形式でcloneするようにして、認証キーは`credential-osxkeychain`で管理するようにする。
 
-* [Caching your GitHub password in Git](https://help.github.com/articles/caching-your-github-password-in-git/)
+リポジトリは https 形式で clone するようにして、認証キーは`credential-osxkeychain`で管理するようにする。
 
-マルチアカウントのためにglobalの`.gitconfig`の`[user]`欄を空けているので、direnvでホームディレクトリに`.envrc`を作ってそこへメインアカウントの情報を入れる。
+- [Caching your GitHub password in Git](https://help.github.com/articles/caching-your-github-password-in-git/)
 
-* [direnvを使って複数のgitコミッタ名を切り替える](http://blog.manaten.net/entry/direnv_git_account)
+マルチアカウントのために global の`.gitconfig`の`[user]`欄を空けているので、direnv でホームディレクトリに`.envrc`を作ってそこへメインアカウントの情報を入れる。
+
+- [direnv を使って複数の git コミッタ名を切り替える](http://blog.manaten.net/entry/direnv_git_account)
 
 ```
 # 環境変数切り替えたいディレクトリに移動
@@ -119,11 +121,11 @@ export GIT_AUTHOR_NAME="YOUR NAME"
 export GIT_AUTHOR_EMAIL="mail@example.com"
 ```
 
-これでOSログインユーザーのメインアカウントの設定が完了
+これで OS ログインユーザーのメインアカウントの設定が完了
 
 ### サブアカウント設定
 
-サブアカウント用のディレクトリを切って、そこ以下でのgitの環境変数をdirenvで制御することでサブアカウント実現をする。
+サブアカウント用のディレクトリを切って、そこ以下での git の環境変数を direnv で制御することでサブアカウント実現をする。
 
 例：
 
@@ -146,4 +148,4 @@ export GIT_AUTHOR_EMAIL="mail@example.com"
 
 ## 参考
 
-* [Macの環境構築自動化 2016年10月版](http://jnst.hateblo.jp/entry/2016/09/30/051636)
+- [Mac の環境構築自動化 2016 年 10 月版](http://jnst.hateblo.jp/entry/2016/09/30/051636)
