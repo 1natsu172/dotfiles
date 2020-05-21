@@ -54,3 +54,6 @@ set -x PATH $ANDROID_HOME/platform-tools $PATH
 
 # thefuck
 thefuck --alias ask | source
+
+# asdf
+source (brew --prefix asdf)/asdf.fish
