@@ -1,46 +1,43 @@
 tap "github/gh"
-tap "heroku/brew"
 tap "homebrew/bundle"
 tap "homebrew/cask"
 tap "homebrew/cask-fonts"
 tap "homebrew/core"
-tap "homebrew/php"
-tap "sanemat/font"
-brew "libtool"
 brew "asdf"
 brew "awscli"
 brew "bat"
-brew "boost"
-brew "fontconfig"
-brew "composer"
-brew "czmq"
 brew "direnv"
 brew "fish"
-brew "fontforge"
 brew "fzf"
 brew "ghq"
 brew "gibo"
 brew "git"
 brew "gnupg"
-brew "highlight"
 brew "httpie"
 brew "hub"
 brew "imagemagick"
-brew "libsodium"
+brew "lft"
 brew "mas"
-brew "node"
-brew "php-cs-fixer"
 brew "pinentry-mac"
-brew "rbenv"
 brew "thefuck"
-brew "tig"
 brew "tree"
 brew "watchman"
 brew "yarn"
-brew "zsh", args: ["without-etcdir"]
 brew "github/gh/gh"
-brew "heroku/brew/heroku"
-brew "sanemat/font/ricty", args: ["with-powerline"]
+cask "1password"
+cask "alfred"
+cask "android-studio"
+cask "bettertouchtool"
+cask "docker"
+cask "google-chrome"
+cask "google-japanese-ime"
+cask "iterm2"
+cask "karabiner-elements"
+cask "parallels"
+cask "slack"
+cask "virtualbox"
+cask "visual-studio-code"
+cask "zoom"
 cask "betterzipql"
 cask "font-fira-code"
 cask "keycastr"
@@ -49,45 +46,22 @@ cask "postman"
 cask "qlcolorcode"
 cask "qlimagesize"
 cask "qlmarkdown"
-cask "qlprettypatch"
 cask "qlstephen"
 cask "qlvideo"
-cask "quicklook-csv"
 cask "quicklook-json"
 cask "quicklookase"
 cask "suspicious-package"
-cask "webpquicklook"
-mas "", id: 418176775
-mas "", id: 1358112362
-mas "", id: 1081413713
-mas "", id: 408980954
-mas "", id: 425264550
-mas "", id: 497799835
-mas "", id: 924891282
-mas "", id: 910408628
-mas "", id: 412814284
-mas "", id: 931571202
-mas "", id: 557168941
-mas "", id: 540348655
-mas "", id: 525912054
-mas "", id: 417375580
-mas "", id: 1274495053
-mas "", id: 591709372
-mas "", id: 410628904
-mas "", id: 929507092
-mas "", id: 445189367
-mas "", id: 420212497
-mas "", id: 411673888
-mas "", id: 412448059
-mas "", id: 408981381
-mas "", id: 409201541
-mas "", id: 775631122
-mas "", id: 414855915
-mas "", id: 408981434
-mas "", id: 413857545
-mas "", id: 409203825
-mas "", id: 539883307
-mas "", id: 443987910
-mas "", id: 409183694
-mas "", id: 986090353
-mas "", id: 1437487517
+mas "bz.tida.MacWinZipperLite", id: 414855915
+mas "com.apple.dt.Xcode", id: 497799835
+mas "com.apple.garageband", id: 408980954
+mas "com.apple.iMovieApp", id: 408981434
+mas "com.apple.iWork.Keynote", id: 409183694
+mas "com.apple.iWork.Numbers", id: 409203825
+mas "com.apple.iWork.Pages", id: 409201541
+mas "com.blackmagic-design.DiskSpeedTest", id: 425264550
+mas "com.helloresolven.GIF-Brewery-3", id: 1081413713
+mas "com.littlehj.Pixave", id: 924891282
+mas "com.microsoft.to-do-mac", id: 1274495053
+mas "com.mizage.Divvy", id: 413857545
+mas "com.pilotmoon.popclip", id: 445189367
+mas "signal", id: 525912054
