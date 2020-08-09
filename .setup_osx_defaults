@@ -153,3 +153,7 @@ defaults write com.apple.finder DisableAllAnimations -boolean true
 
 # クイックルック表示時のアニメーションを0.15秒にする
 defaults write -g QLPanelAnimationDuration -float 0.15
+
+#######################################
+
+echo "Done. Note that some of these changes require a logout/restart to take effect."

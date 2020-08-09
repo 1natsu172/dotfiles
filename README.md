@@ -150,11 +150,11 @@ export GIT_AUTHOR_EMAIL="mail@example.com"
 
 - [Mac の環境構築自動化 2016 年 10 月版](http://jnst.hateblo.jp/entry/2016/09/30/051636)
 
-
 # MacOSXの設定
 
-1. `.setup_osx_defaults` スクリプトを走らせる
-2. 再起動する
+1. 設定 > セキュリティとプライバシー > プライバシー > フルディスクアクセス > ターミナルを許可する
+2. `sh ./.setup_osx_defaults` スクリプトを走らせる
+3. 再起動する
 
 ## 手動でやるリスト
 
