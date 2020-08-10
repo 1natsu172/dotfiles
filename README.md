@@ -91,6 +91,9 @@ sudo sh -c 'echo $(which fish) >> /etc/shells'
 
 # ユーザのデフォルトシェルを変更します。
 chsh -s /usr/local/bin/fish
+
+# fish-ssh-agentに`.ssh/environment`を求められるがないのでつくる
+cd ~; mkdir .ssh; touch .ssh/environment; ssh-agent > .ssh/environment;
 ```
 
 ## Homebrew の対象ディレクトリが Path 優先順位負けするので最優先にする
