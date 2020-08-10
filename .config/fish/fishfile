@@ -6,6 +6,6 @@ decors/fish-docker-machine
 fisherman/fzf
 fisherman/getopts
 decors/fish-ghq
-fisherman/spin
 jethrokuan/z
-tuvistavie/fish-ssh-agent
+danhper/fish-ssh-agent
+fishpkg/fish-spin
