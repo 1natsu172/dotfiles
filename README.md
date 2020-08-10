@@ -25,7 +25,9 @@ $ sh install.sh
 
 - [https://brew.sh/index_ja.html](https://brew.sh/index_ja.html)
 
-2. Homebrew bundle で Brewfile から dependencies のインストール
+2. masを使うときにログイン状態でないといけないのでMac App Storeに手動でログインしておく
+
+3. Homebrew bundle で Brewfile から dependencies のインストール
 
 - [Homebrew-bundle](https://github.com/Homebrew/homebrew-bundle)
 
