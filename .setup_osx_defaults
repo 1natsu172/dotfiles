@@ -141,8 +141,39 @@ defaults write com.apple.dock showMissionControlGestureEnabled -bool false
 # Others
 #######################################
 
-# Finderのファイルを開くときのアニメーションを無効
+# Finder
+
+## ファイルを開くときのアニメーションを無効
 defaults write com.apple.finder DisableAllAnimations -boolean true
+
+
+## ファイル拡張子を表示
+defaults write NSGlobalDomain AppleShowAllExtensions -bool true
+
+## ステータスバーを表示
+defaults write com.apple.finder ShowStatusBar -bool true
+
+## パスバーを表示
+defaults write com.apple.finder ShowPathbar -bool true
+
+## Display full POSIX path as Finder window title
+defaults write com.apple.finder _FXShowPosixPathInTitle -bool true
+
+## When performing a search, search the current folder by default
+defaults write com.apple.finder FXDefaultSearchScope -string "SCcf"
+
+## Enable spring loading for directories
+defaults write NSGlobalDomain com.apple.springing.enabled -bool true
+
+## Remove the spring loading delay for directories
+defaults write NSGlobalDomain com.apple.springing.delay -float 0
+
+## Avoid creating .DS_Store files on network or USB volumes
+defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
+defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
+
+## Show the ~/Library folder
+chflags nohidden ~/Library && xattr -d com.apple.FinderInfo ~/Library
 
 # クイックルック表示時のアニメーションを0.15秒にする
 defaults write -g QLPanelAnimationDuration -float 0.15
