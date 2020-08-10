@@ -175,8 +175,15 @@ defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
 ## Show the ~/Library folder
 chflags nohidden ~/Library && xattr -d com.apple.FinderInfo ~/Library
 
-# クイックルック表示時のアニメーションを0.15秒にする
+# Quicklook
+
+## クイックルック表示時のアニメーションを0.15秒にする
 defaults write -g QLPanelAnimationDuration -float 0.15
+
+## remove the quarantine attribute for after catalina support
+## ref: https://github.com/sindresorhus/quick-look-plugins
+xattr -r ~/Library/QuickLook
+xattr -d -r com.apple.quarantine ~/Library/QuickLook
 
 #######################################
 
