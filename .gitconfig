@@ -36,3 +36,5 @@
 	protocol = https
 [pull]
 	ff = only
+[pack]
+	useSparse = true
