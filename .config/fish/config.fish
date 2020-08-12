@@ -1,5 +1,6 @@
 # Change fish colors
 set fish_color_command cyan
+set -x LSCOLORS gxfxcxdxbxegedabagacad
 
 # sbin path (Homebrew's warning countermeasure)
 set -g fish_user_paths "/usr/local/sbin" $fish_user_paths
