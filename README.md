@@ -90,7 +90,7 @@ chsh -s /usr/local/bin/zsh
 # /etc/shells の末尾に /usr/local/bin/fish を追記します。
 sudo sh -c 'echo $(which fish) >> /etc/shells'
 
-# ユーザのデフォルトシェルを変更します。
+# ユーザのデフォルトシェルをfishに変更
 chsh -s /usr/local/bin/fish
 
 # fish-ssh-agentに`.ssh/environment`を求められるがないのでつくる
@@ -120,7 +120,14 @@ $ exec $SHELL で反映(シェル再起動)
 
 ## asdf で NodeJS 環境構築したりする
 
-しましょう
+[しましょう](https://asdf-vm.com/#/core-manage-asdf-vm)
+
+```
+asdf plugin add nodejs
+asdf install nodejs latest
+asdf list nodejs
+asdf global nodejs <version>
+```
 
 ## Git アカウントの設定
 
