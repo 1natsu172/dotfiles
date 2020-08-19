@@ -30,6 +30,7 @@
 [user]
 	signingkey = 2AEE3E6F101A46FB
 	email = 1natsu172@users.noreply.github.com
+	name = 1natsu
 [rerere]
 	enabled = true
 [hub]
