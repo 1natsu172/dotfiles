@@ -27,6 +27,7 @@ set -x FZF_LEGACY_KEYBINDINGS 0
 # alias
 alias g='git'
 alias gst='g status'
+alias gsts='g status -sb'
 alias gbr='g branch'
 alias gbrv='g branch -vv'
 alias gbrd='g branch -d'
@@ -41,6 +42,8 @@ alias gstash='g stash -u'
 alias gpop='g stash pop'
 alias gpull='g pull'
 alias gremov='g remote -v'
+alias glog='g log'
+alias glogo='g log --oneline'
 alias gpr='git push origin HEAD && hub compare (git symbolic-ref --short HEAD)'
 
 # set $BROWSER
