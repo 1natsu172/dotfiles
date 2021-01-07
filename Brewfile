@@ -39,6 +39,7 @@ cask "betterzip"
 cask "brave-browser"
 cask "carbon-copy-cloner"
 cask "daisydisk"
+cask "discord"
 cask "docker"
 cask "dropbox"
 cask "firefox-developer-edition"
@@ -79,7 +80,6 @@ cask "vlc"
 cask "zoomus"
 mas "Disk Speed Test", id: 425264550
 mas "Divvy", id: 413857545
-mas "GarageBand", id: 408980954
 mas "GarageBand", id: 682658836
 mas "GIF Brewery 3", id: 1081413713
 mas "iMovie", id: 408981434
