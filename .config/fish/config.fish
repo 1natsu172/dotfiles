@@ -61,3 +61,6 @@ thefuck --alias ask | source
 
 # asdf
 source (brew --prefix asdf)/asdf.fish
+
+# jdk
+set -x JAVA_HOME (/usr/libexec/java_home -v $java_version)
