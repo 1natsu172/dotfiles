@@ -91,7 +91,7 @@ chsh -s /usr/local/bin/zsh
 sudo sh -c 'echo $(which fish) >> /etc/shells'
 
 # ユーザのデフォルトシェルをfishに変更
-chsh -s /usr/local/bin/fish
+sudo sh -c 'echo $(which fish) | chsh -s'
 
 # fish-ssh-agentに`.ssh/environment`を求められるがないのでつくる
 cd ~; mkdir .ssh; touch .ssh/environment; ssh-agent > .ssh/environment;
@@ -99,16 +99,17 @@ cd ~; mkdir .ssh; touch .ssh/environment; ssh-agent > .ssh/environment;
 
 ## Homebrew の対象ディレクトリが Path 優先順位負けするので最優先にする
 
-[Homebrew コマンドが優先的に実行されるようにデフォルトパスに/usr/local/bin を追加する](https://qiita.com/n-oshiro/items/3c571a4fcdb023b1fe77)
+[Homebrew コマンドが優先的に実行されるようにデフォルトパスを追加する](https://qiita.com/n-oshiro/items/3c571a4fcdb023b1fe77)
 
 - `/etc/paths`の内容を変える
-  - `/usr/local/bin`が Homebrew のアプリケーションディレクトリ、なので一番上へ
+  - `$(brew --prefix)/bin` して出るパスが Homebrew のアプリケーションディレクトリ、なのでこれを一番上へ追記
 
 ```
 $ sudo vi /etc/paths
 ```
 
 ```/etc/paths
+# $(brew --prefix)/binの出力結果を書く
 /usr/local/bin
 /usr/bin
 /bin
