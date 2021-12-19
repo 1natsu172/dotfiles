@@ -1,11 +1,12 @@
+jorgebucaran/fisher
 edc/bass
 0rax/fish-bd
 oh-my-fish/theme-bobthefish
 brgmnn/fish-docker-compose
 decors/fish-docker-machine
-fisherman/fzf
-fisherman/getopts
 decors/fish-ghq
 jethrokuan/z
 danhper/fish-ssh-agent
-fishpkg/fish-spin
+jethrokuan/fzf
+jorgebucaran/getopts.fish
+americanhanko/fish-spin
