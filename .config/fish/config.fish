@@ -63,7 +63,7 @@ thefuck --alias ask | source
 source (brew --prefix asdf)/asdf.fish
 
 # jdk
-set -x JAVA_HOME (/usr/libexec/java_home -v $java_version)
+set -x JAVA_HOME (/usr/libexec/java_home)
 
 # cargo
 set -g fish_user_paths $HOME/.cargo/bin $fish_user_paths
