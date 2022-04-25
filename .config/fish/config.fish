@@ -81,3 +81,6 @@ set -x JAVA_HOME (/usr/libexec/java_home)
 
 # cargo
 set -g fish_user_paths $HOME/.cargo/bin $fish_user_paths
+
+# starship prompt
+starship init fish | source
