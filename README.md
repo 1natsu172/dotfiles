@@ -13,10 +13,10 @@
 `dotfiles`の中にある`.hoge`類のファイルをもとにルートにシンボリックリンクを張る。
 
 ```
-$ cd ~/
-$ git clone https://github.com/1natsu172/dotfiles.git
-$ cd dotfiles
-$ sh install.sh
+cd ~/
+git clone https://github.com/1natsu172/dotfiles.git
+cd dotfiles
+sh install.sh
 ```
 
 ## Homebrew
@@ -36,13 +36,13 @@ $ sh install.sh
 `Brewfile`がある場所で以下コマンド(大抵ルートディレクトリなはず)
 
 ```
-$ brew bundle
+brew bundle
 ```
 
 なお Brewfile 再生成は以下でできる
 
 ```
-$ brew bundle dump --force
+brew bundle dump --force
 ```
 
 ## MacOSXの設定
@@ -122,7 +122,7 @@ fisher update
   - `$(brew --prefix)/bin` して出るパスが Homebrew のアプリケーションディレクトリ、なのでこれを一番上へ追記
 
 ```
-$ sudo vi /etc/paths
+sudo vi /etc/paths
 ```
 
 ```/etc/paths
@@ -134,7 +134,10 @@ $ sudo vi /etc/paths
 /sbin
 ```
 
-$ exec $SHELL で反映(シェル再起動)
+```
+# 反映(シェル再起動)
+exec $SHELL
+``` 
 
 ## asdf で NodeJS 環境構築したりする
 
@@ -144,7 +147,7 @@ $ exec $SHELL で反映(シェル再起動)
 asdf plugin add nodejs
 asdf install nodejs latest
 asdf list nodejs
-asdf global nodejs <version>
+asdf global nodejs latest
 ```
 
 ## Git アカウントの設定
@@ -161,10 +164,10 @@ asdf global nodejs <version>
 
 ```
 # 環境変数切り替えたいディレクトリに移動
-$ cd ~
+cd ~
 
 # .envrcを作成
-$ direnv edit .
+direnv edit .
 ```
 
 `.envrc`に以下のようにユーザー情報を書く
@@ -185,9 +188,9 @@ export GIT_AUTHOR_EMAIL="mail@example.com"
 例：
 
 ```
-$ mkdir ~/dev_folder/sub_account
-$ cd ~/dev_folder/sub_account
-$ direnv edit .
+mkdir ~/dev_folder/sub_account
+cd ~/dev_folder/sub_account
+direnv edit .
 ```
 
 メインアカウントと同じく`.envrc`に以下のようにユーザー情報を書く
