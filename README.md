@@ -69,6 +69,14 @@ $ brew bundle dump --force
 * 省エネルギー
   * 電源アダプタ > ディスプレイオフまで`5分`
   * 電源アダプタ > ディスプレイがオフのときにコンピュータを自動でスリープさせない > checked
+* アクセシビリティ
+  * ズーム機能
+    * スクロールジェスチャと修飾キーを使ってズーム > checked
+      * `⌥ Option` キーにする
+* Google-Japanese-IME
+  * 環境設定 > 一般 > 基本設定 > スペースの入力 > `半角`
+* [bitdefender central](https://central.bitdefender.com/dashboard) から bitdefender をDL&インストール
+  * caskにないので
 
 ## シェルのデフォルトを変更する
 
@@ -91,10 +99,19 @@ chsh -s /usr/local/bin/zsh
 sudo sh -c 'echo $(which fish) >> /etc/shells'
 
 # ユーザのデフォルトシェルをfishに変更
-sudo sh -c 'echo $(which fish) | chsh -s'
+sudo sh -c 'echo $(which fish)' | chsh -s
 
 # fish-ssh-agentに`.ssh/environment`を求められるがないのでつくる
 cd ~; mkdir .ssh; touch .ssh/environment; ssh-agent > .ssh/environment;
+```
+
+#### fisher のセットアップ
+
+ref: https://github.com/jorgebucaran/fisher#using-your-fish_plugins-file
+
+```
+# .config/fish/fish_plugins を利用して fisher install を回してくれる
+fisher update
 ```
 
 ## Homebrew の対象ディレクトリが Path 優先順位負けするので最優先にする
