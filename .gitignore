@@ -10,3 +10,4 @@
 .direnv
 .envrc
 .zprezto
+Brewfile.lock.json
