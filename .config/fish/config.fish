@@ -46,6 +46,20 @@ alias glog='g log'
 alias glogo='g log --oneline'
 alias gpr='git push origin HEAD && hub compare (git symbolic-ref --short HEAD)'
 
+# ## exa
+if type -q exa
+  alias e='exa --icons --git'
+  alias ls=e
+  alias ea='exa -a --icons --git'
+  alias la=ea
+  alias ee='exa -aahl --icons --git'
+  alias ll=ee
+  alias et='exa -T -L 3 -a -I "node_modules|.git|.cache" --icons'
+  alias lt=et
+  alias eta='exa -T -a -I "node_modules|.git|.cache" --color=always --icons | less -r'
+  alias lta=eta
+end
+
 # set $BROWSER
 set -x BROWSER open
 
