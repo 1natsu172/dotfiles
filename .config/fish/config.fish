@@ -74,7 +74,7 @@ set -x PATH $ANDROID_HOME/platform-tools $PATH
 thefuck --alias ask | source
 
 # asdf
-source (brew --prefix asdf)/asdf.fish
+source (brew --prefix asdf)/libexec/asdf.fish
 
 # jdk
 set -x JAVA_HOME (/usr/libexec/java_home)
