@@ -1,30 +1,39 @@
+#--------------------------------------
+# ref: fish-add-path
+#   https://zenn.dev/estra/articles/zenn-fish-add-path-final-answer
+#--------------------------------------
+
 # Change fish colors
+#-----------------------------------------------------------------------------
 set fish_color_command cyan
-set -x LSCOLORS gxfxcxdxbxegedabagacad
+set -gx LSCOLORS gxfxcxdxbxegedabagacad
 
 # sbin path (Homebrew's warning countermeasure)
+#-----------------------------------------------------------------------------
 set -g fish_user_paths "/usr/local/sbin" $fish_user_paths
 
-# rbenv
-#set -x PATH $HOME/.rbenv/bin $PATH
-#status --is-interactive; and source (rbenv init -|psub)
-
 # yarn
-set -x PATH $HOME/.config/yarn/global/node_modules/.bin $PATH
+#-----------------------------------------------------------------------------
+fish_add_path $HOME/.config/yarn/global/node_modules/.bin
 
 # direnv hook
+#-----------------------------------------------------------------------------
 eval (direnv hook fish)
 
 # hub
+#-----------------------------------------------------------------------------
 eval (hub alias -s)
 
 # GnuPG2 env
-set -x GPG_TTY (tty)
+#-----------------------------------------------------------------------------
+set -gx GPG_TTY (tty)
 
 # fisher jethrokuan/fzf
-set -x FZF_LEGACY_KEYBINDINGS 0
+#-----------------------------------------------------------------------------
+set -gx FZF_LEGACY_KEYBINDINGS 0
 
 # alias
+#-----------------------------------------------------------------------------
 alias g='git'
 alias gst='g status'
 alias gsts='g status -sb'
@@ -46,7 +55,8 @@ alias glog='g log'
 alias glogo='g log --oneline'
 alias gpr='git push origin HEAD && hub compare (git symbolic-ref --short HEAD)'
 
-# ## exa
+## exa
+#-----------------------------------------------------------------------------
 if type -q exa
   alias e='exa --icons --git'
   alias ls=e
@@ -60,34 +70,42 @@ if type -q exa
   alias lta=eta
 end
 
-# set $BROWSER
-set -x BROWSER open
-
-# Android
-set -x ANDROID_HOME $HOME/Library/Android/sdk
-set -x PATH $ANDROID_HOME/emulator $PATH
-set -x PATH $ANDROID_HOME/tools $PATH
-set -x PATH $ANDROID_HOME/tools/bin $PATH
-set -x PATH $ANDROID_HOME/platform-tools $PATH
-
-# thefuck
-thefuck --alias ask | source
-
-# asdf
-source (brew --prefix asdf)/libexec/asdf.fish
-
-# jdk
-set -x JAVA_HOME (/usr/libexec/java_home)
-
-# cargo
-set -g fish_user_paths $HOME/.cargo/bin $fish_user_paths
-
-# corepack
+## corepack
+#-----------------------------------------------------------------------------
 ## Util aliases. This is to treat it as if it were a global installation while passing through corepack.
 ### Managemant via corepack through the meta-command. - https://github.com/nodejs/corepack/tree/cae770694e62f15fed33dd8023649d77d96023c1#corepack-binary-nameversion--args
 alias pnpm='corepack pnpm'
 alias yarn='corepack yarn'
 alias cleancache:corepack='rm -rf ~/.cache/node/corepack/' # Temp patch. reason doesn't exist such command currently…… - https://github.com/nodejs/corepack/issues/114
 
+# set $BROWSER
+#-----------------------------------------------------------------------------
+set -gx BROWSER open
+
+# Android
+#-----------------------------------------------------------------------------
+set -gx ANDROID_HOME $HOME/Library/Android/sdk
+fish_add_path $ANDROID_HOME/emulator
+fish_add_path $ANDROID_HOME/tools
+fish_add_path $ANDROID_HOME/tools/bin
+fish_add_path $ANDROID_HOME/platform-tools
+
+# thefuck
+#-----------------------------------------------------------------------------
+thefuck --alias ask | source
+
+# asdf
+#-----------------------------------------------------------------------------
+source (brew --prefix asdf)/libexec/asdf.fish
+
+# jdk
+#-----------------------------------------------------------------------------
+set -gx JAVA_HOME (/usr/libexec/java_home)
+
+# cargo
+#-----------------------------------------------------------------------------
+set -g fish_user_paths $HOME/.cargo/bin $fish_user_paths
+
 # starship prompt
+#-----------------------------------------------------------------------------
 starship init fish | source
