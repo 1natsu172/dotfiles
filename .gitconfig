@@ -39,3 +39,5 @@
 	ff = only
 [pack]
 	useSparse = true
+[init]
+	defaultBranch = main
