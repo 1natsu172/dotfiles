@@ -1,4 +1,0 @@
-# .prettierrc / For using only Prettier (when not use Eslint --fix together)
-singleQuote: true
-semi: false
-trailingComma: 'all'
