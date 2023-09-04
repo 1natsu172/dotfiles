@@ -74,8 +74,12 @@ end
 #-----------------------------------------------------------------------------
 ## Util aliases. This is to treat it as if it were a global installation while passing through corepack.
 ### Managemant via corepack through the meta-command. - https://github.com/nodejs/corepack/tree/cae770694e62f15fed33dd8023649d77d96023c1#corepack-binary-nameversion--args
-alias pnpm='corepack pnpm'
-alias yarn='corepack yarn'
+alias yarn="corepack yarn"
+alias yarnpkg="corepack yarnpkg"
+alias pnpm="corepack pnpm"
+alias pnpx="corepack pnpx"
+alias npm="corepack npm"
+alias npx="corepack npx"
 alias cleancache:corepack='rm -rf ~/.cache/node/corepack/' # Temp patch. reason doesn't exist such command currently…… - https://github.com/nodejs/corepack/issues/114
 
 # set $BROWSER
