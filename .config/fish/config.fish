@@ -110,6 +110,12 @@ set -gx JAVA_HOME (/usr/libexec/java_home)
 #-----------------------------------------------------------------------------
 set -g fish_user_paths $HOME/.cargo/bin $fish_user_paths
 
+# go lang
+#-----------------------------------------------------------------------------
+# set -gx GOPATH /usr/local/go
+set -gx GOPATH $HOME/go
+fish_add_path $GOPATH/bin
+
 # starship prompt
 #-----------------------------------------------------------------------------
 starship init fish | source
