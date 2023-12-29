@@ -185,7 +185,7 @@ function __bobthefish_git_project_dir -S -a real_pwd -d 'Print the current git p
     or return
 
     pushd $git_dir
-    set git_dir $real_pwd
+    set git_dir (__bobthefish_pwd)
     popd
 
     switch $real_pwd/
@@ -637,12 +637,14 @@ function __bobthefish_prompt_k8s_context -S -d 'Show current Kubernetes context'
     [ "$theme_display_k8s_namespace" = 'yes' ]
     and set -l namespace (__bobthefish_k8s_namespace)
 
-    [ -z $context -o "$context" = 'default' ]
-    and [ -z $namespace -o "$namespace" = 'default' ]
+    [ -z "$context" -o "$context" = 'default' ]
+    and [ -z "$namespace" -o "$namespace" = 'default' ]
     and return
 
-    set -l segment $k8s_glyph ' ' $context
-    [ -n "$namespace" ]
+    set -l segment $k8s_glyph ' '
+    [ "$context" != 'default' ]
+    and set segment $segment $context
+    [ "$namespace" != 'default' ]
     and set segment $segment ':' $namespace
 
     __bobthefish_start_segment $color_k8s
@@ -897,7 +899,7 @@ end
 
 function __bobthefish_prompt_find_file_up -S -d 'Find file(s), going up the parent directories'
     set -l dir "$argv[1]"
-    set -l files $argv[2..]
+    set -l files $argv[2..-1]
 
     if test -z "$dir"
         or test -z "$files"
