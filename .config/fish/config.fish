@@ -100,8 +100,7 @@ set -gx JAVA_HOME (/usr/libexec/java_home)
 
 # cargo
 #-----------------------------------------------------------------------------
-# FIXME: rustup.fishのほうでPATH設定するので不要かもしれないので一旦コメントアウトする。問題なかったら削除。
-# set -g fish_user_paths $HOME/.cargo/bin $fish_user_paths
+# NOTE: rustup.fish で設定している
 
 # go lang
 #-----------------------------------------------------------------------------
