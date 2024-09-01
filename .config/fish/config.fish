@@ -12,8 +12,13 @@ set -gx LSCOLORS gxfxcxdxbxegedabagacad
 #-----------------------------------------------------------------------------
 set -g fish_user_paths "/usr/local/sbin" $fish_user_paths
 
+# mise-en-place
+#-----------------------------------------------------------------------------
+mise activate fish | source
+
 # direnv hook
 #-----------------------------------------------------------------------------
+# miseに乗り換えたらいらなくなるかも
 eval (direnv hook fish)
 
 # GnuPG2 env
