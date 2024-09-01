@@ -15,6 +15,12 @@ set -g fish_user_paths "/usr/local/sbin" $fish_user_paths
 # mise-en-place
 #-----------------------------------------------------------------------------
 mise activate fish | source
+# IDE integration: https://mise.jdx.dev/ide-integration.html
+if status is-interactive
+  mise activate fish | source
+else
+  mise activate fish --shims | source
+end
 
 # direnv hook
 #-----------------------------------------------------------------------------
