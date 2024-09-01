@@ -22,6 +22,10 @@ else
   mise activate fish --shims | source
 end
 
+# aqua
+#-----------------------------------------------------------------------------
+fish_add_path (aqua root-dir)/bin
+
 # GnuPG2 env
 #-----------------------------------------------------------------------------
 set -gx GPG_TTY (tty)
