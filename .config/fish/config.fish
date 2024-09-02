@@ -82,7 +82,6 @@ alias pnpm="corepack pnpm"
 alias pnpx="corepack pnpx"
 alias npm="corepack npm"
 alias npx="corepack npx"
-alias cleancache:corepack='rm -rf ~/.cache/node/corepack/' # Temp patch. reason doesn't exist such command currently…… - https://github.com/nodejs/corepack/issues/114
 
 # set $BROWSER
 #-----------------------------------------------------------------------------
