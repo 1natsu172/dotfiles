@@ -14,12 +14,13 @@ set -g fish_user_paths "/usr/local/sbin" $fish_user_paths
 
 # mise-en-place
 #-----------------------------------------------------------------------------
-mise activate fish | source
 # IDE integration: https://mise.jdx.dev/ide-integration.html
-if status is-interactive
-  mise activate fish | source
+if test "$VSCODE_RESOLVING_ENVIRONMENT" = 1
+    mise activate fish --shims | source
+else if status is-interactive
+    mise activate fish | source
 else
-  mise activate fish --shims | source
+    mise activate fish --shims | source
 end
 
 # aqua
