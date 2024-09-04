@@ -23,6 +23,9 @@ else
     mise activate fish --shims | source
 end
 
+# Workaround for simple-git-hooks :\ https://github.com/toplenboren/simple-git-hooks/blob/0433a0485ea8f2c83e37b7cf7f2ec11e26921887/README.md#i-am-getting-npx-command-not-found-error-in-a-gui-git-client
+set -gx SIMPLE_GIT_HOOKS_RC "$HOME/.config/fish/functions/__my_scripts/.simple-git-hook.rc"
+
 # aqua
 #-----------------------------------------------------------------------------
 fish_add_path (aqua root-dir)/bin
