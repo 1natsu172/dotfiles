@@ -28,7 +28,7 @@
 [gpg]
 	program = gpg
 [user]
-	signingkey = 2AEE3E6F101A46FB
+	signingkey = 3CD5E568C9669802
 	email = 1natsu172@users.noreply.github.com
 	name = 1natsu
 [rerere]
@@ -41,3 +41,5 @@
 	useSparse = true
 [init]
 	defaultBranch = main
+[commit]
+	gpgsign = true
