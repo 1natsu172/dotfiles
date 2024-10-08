@@ -86,6 +86,10 @@ alias pnpx="corepack pnpx"
 alias npm="corepack npm"
 alias npx="corepack npx"
 
+## bun global
+#-----------------------------------------------------------------------------
+fish_add_path $HOME/.bun/bin
+
 # set $BROWSER
 #-----------------------------------------------------------------------------
 set -gx BROWSER open
