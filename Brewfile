@@ -135,6 +135,7 @@ cask "vlc"
 cask "warp"
 cask "whisky"
 cask "zed"
+cask "zen-browser"
 cask "zoom"
 mas "1Password for Safari", id: 1569813296
 mas "Disk Speed Test", id: 425264550
