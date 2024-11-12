@@ -102,6 +102,8 @@ brew bundle dump --force
 * Raycast
   * バックアップファイルを手動インポートする
     * インポートに際して保管しているパスフレーズが別途必要
+* Warp
+  * `BlexMono Nerd Font Mono` fontsize:`28` lineheight:`1.2`
 
 ## シェルのデフォルトを変更する
 
