@@ -1,9 +1,6 @@
 tap "aquaproj/aqua"
 tap "github/gh"
 tap "homebrew/bundle"
-tap "homebrew/cask-drivers"
-tap "homebrew/cask-fonts"
-tap "homebrew/cask-versions"
 tap "homebrew/services"
 tap "rhysd/actionlint", "https://github.com/rhysd/actionlint"
 brew "pycparser"
@@ -30,7 +27,8 @@ brew "wangle"
 brew "fbthrift"
 brew "fb303"
 brew "edencommon"
-brew "exa"
+brew "eza"
+brew "fd"
 brew "unbound", restart_service: true
 brew "gnutls"
 brew "harfbuzz"
@@ -68,10 +66,9 @@ brew "nmap"
 brew "pinentry-mac"
 brew "python@3.10"
 brew "python@3.11"
-brew "tcl-tk"
-brew "python@3.8"
 brew "python@3.9"
 brew "starship"
+brew "tcl-tk"
 brew "thefuck"
 brew "tree"
 brew "watchman"
@@ -100,7 +97,6 @@ cask "font-jetbrains-mono-nerd-font"
 cask "font-monaspace"
 cask "font-monaspace-nerd-font"
 cask "google-chrome"
-cask "google-japanese-ime"
 cask "gpg-suite-no-mail"
 cask "gyazo"
 cask "kap"
@@ -114,9 +110,7 @@ cask "malwarebytes"
 cask "microsoft-edge"
 cask "ngrok"
 cask "orbstack"
-cask "parallels"
 cask "qlcolorcode"
-cask "qlimagesize"
 cask "qlmarkdown"
 cask "qlstephen"
 cask "qlvideo"
@@ -128,6 +122,7 @@ cask "spotify"
 cask "steam"
 cask "suspicious-package"
 cask "tableplus"
+cask "temurin@17"
 cask "the-unarchiver"
 cask "timemachineeditor"
 cask "visual-studio-code"
@@ -141,17 +136,14 @@ mas "1Password for Safari", id: 1569813296
 mas "Disk Speed Test", id: 425264550
 mas "Divvy", id: 413857545
 mas "GarageBand", id: 682658836
-mas "GIF Brewery 3", id: 1081413713
 mas "iMovie", id: 408981434
 mas "Keynote", id: 409183694
 mas "Microsoft To Do", id: 1274495053
 mas "Numbers", id: 409203825
 mas "Pages", id: 409201541
 mas "Pixave", id: 924891282
-mas "PopClip", id: 445189367
 mas "Whisper Transcription", id: 1668083311
 mas "WiFi Signal", id: 525912054
-mas "WinArchiver Lite", id: 414855915
 mas "Xcode", id: 497799835
 vscode "1natsu.insert-br-tag"
 vscode "42crunch.vscode-openapi"
@@ -197,7 +189,9 @@ vscode "ms-vscode-remote.remote-containers"
 vscode "ms-vscode-remote.remote-ssh"
 vscode "ms-vscode-remote.remote-ssh-edit"
 vscode "ms-vscode.atom-keybindings"
+vscode "ms-vscode.azure-repos"
 vscode "ms-vscode.live-server"
+vscode "ms-vscode.remote-explorer"
 vscode "ms-vscode.remote-repositories"
 vscode "ms-vsliveshare.vsliveshare"
 vscode "pomber.git-file-history"
