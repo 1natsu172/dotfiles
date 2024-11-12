@@ -60,18 +60,18 @@ alias glog='g log'
 alias glogo='g log --oneline'
 alias grepow='gh repo view --web --branch=(git rev-parse --short HEAD)'
 
-## exa
+## eza
 #-----------------------------------------------------------------------------
-if type -q exa
-  alias e='exa --icons --git'
+if type -q eza
+  alias e='eza --icons --git'
   alias ls=e
-  alias ea='exa -a --icons --git'
+  alias ea='eza -a --icons --git'
   alias la=ea
-  alias ee='exa -aahl --icons --git'
+  alias ee='eza -aahl --icons --git'
   alias ll=ee
-  alias et='exa -T -L 3 -a -I "node_modules|.git|.cache" --icons'
+  alias et='eza -T -L 3 -a -I "node_modules|.git|.cache" --icons'
   alias lt=et
-  alias eta='exa -T -a -I "node_modules|.git|.cache" --color=always --icons | less -r'
+  alias eta='eza -T -a -I "node_modules|.git|.cache" --color=always --icons | less -r'
   alias lta=eta
 end
 
