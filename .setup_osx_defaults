@@ -79,6 +79,8 @@ defaults write NSGlobalDomain com.apple.keyboard.fnState -bool true
 ## キーリピート高速化
 defaults write NSGlobalDomain KeyRepeat -int 1
 defaults write NSGlobalDomain InitialKeyRepeat -int 13
+## 英数字リピートができるようにする（特殊文字候補をdisableにする）　https://macos-defaults.com/keyboard/applepressandholdenabled.html
+defaults write NSGlobalDomain "ApplePressAndHoldEnabled" -bool "false"
 ## 文頭を自動的に大文字にする => unchecked
 defaults write NSGlobalDomain NSAutomaticCapitalizationEnabled -bool false
 ## スペースバーを２回押してピリオド挿入 => unchecked
