@@ -8,17 +8,15 @@ osascript -e 'tell application "System Preferences" to quit'
 sudo -v
 
 # Keep-alive: update existing `sudo` time stamp until `.macos` has finished
-while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
+while true; do
+  sudo -n true
+  sleep 60
+  kill -0 "$$" || exit
+done 2>/dev/null &
 
 #######################################
 
 # 一般
-
-## 外観モード => ダーク
-defaults write NSGlobalDomain AppleInterfaceStyle -string "Dark"
-
-## アクセントカラー => グリーン
-defaults write NSGlobalDomain AppleAccentColor -int 3
 
 ## サイドバーのアイコンサイズ => 小
 defaults write NSGlobalDomain NSTableViewDefaultSizeMode -int 1
@@ -69,29 +67,10 @@ defaults write com.apple.dock wvous-tr-modifier -int 0
 ## Mission Controlの表示/非表示の時間を0.15秒にする
 defaults write com.apple.dock expose-animation-duration -float 0.15
 
-
 # 言語と地域
 
 ## 優先する言語
 defaults write NSGlobalDomain AppleLanguages -array "ja-JP" "en-JP"
-
-# 通知
-
-## おやすみモード
-### ディスプレイがスリープ中はオンにする => checked
-defaults -currentHost write com.apple.notificationcenterui dndEnabledDisplaySleep -bool true
-
-# アクセシビリティ
-
-## ズーム機能
-### スクロールジェスチャと修飾キーを使ってズーム(⌥optionキー)
-defaults write com.apple.universalaccess closeViewScrollWheelToggle -bool true
-defaults write com.apple.universalaccess HIDScrollZoomModifierMask -int 524288
-
-# サウンド
-
-## メニューバーに音量アイコンを表示
-defaults write com.apple.systemuiserver "NSStatusItem Visible com.apple.menuextra.volume" -bool true
 
 # キーボード
 
@@ -114,7 +93,6 @@ defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadCorner
 defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadRightClick -bool false
 defaults -currentHost write NSGlobalDomain com.apple.trackpad.trackpadCornerClickBehavior -int 1
 defaults -currentHost write NSGlobalDomain com.apple.trackpad.enableSecondaryClick -bool false
-
 
 ## タップでクリック
 defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
@@ -150,7 +128,6 @@ defaults write com.apple.dock showMissionControlGestureEnabled -bool false
 ## ファイルを開くときのアニメーションを無効
 defaults write com.apple.finder DisableAllAnimations -boolean true
 
-
 ## ファイル拡張子を表示
 defaults write NSGlobalDomain AppleShowAllExtensions -bool true
 
@@ -175,9 +152,6 @@ defaults write NSGlobalDomain com.apple.springing.delay -float 0
 ## Avoid creating .DS_Store files on network or USB volumes
 defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
 defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
-
-## Show the ~/Library folder
-chflags nohidden ~/Library && xattr -d com.apple.FinderInfo ~/Library
 
 # Quicklook
 
