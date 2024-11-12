@@ -51,46 +51,59 @@ brew bundle dump --force
 2. `sh ./.setup_osx_defaults` スクリプトを走らせる
 3. 再起動する
 
+※ https://macos-defaults.com/ に多少のリファレンスがある
+
 ## 手動でやるリスト
+
+### MacOSの設定
 
 * デスクトップとDock > デフォルトのWebブラウザ
 * 壁紙 => 変える
-* デスクトップとDock > Mission Control > ショートカット（最下部）> キーボードショートカットとマウスショートカット => `Mission Control`を割り当てを "なし" にする
+* デスクトップとDock > Mission Control > ショートカット（最下部）> キーボードショートカットとマウスショートカット => `Mission Control` と `アプリケーションウィンドウ` の割り当てを "なし" にする
 * ロック画面
-  * 使用していない場合はディスプレイをオフにする => 任意の時間に設定する（推奨は5分後）
-  * スクリーンセーバの開始後またはディスプレイがオフになったあとにパスワードを要求 => 任意の時間に設定する（推奨は5秒後）
+  * 使用していない場合はスクリーンセーバーを開始 => 任意に設定する（最近は "しない" ）
+  * 使用していない場合はディスプレイをオフにする => 任意の時間に設定する（推奨は5分後、最近は "しない"）
+  * スクリーンセーバの開始後またはディスプレイがオフになったあとにパスワードを要求 => 任意の時間に設定する（推奨は5秒後、最近は "1時間後"）
 * プライバシーとセキュリティ => FileVault有効化
 * ネットワーク => ファイアウォール有効化
-* SiriとSpotlight > Spotlightのプライバシー => 除外項目に外付けHDDとTimeMachine指定
+* Spotlight > 検索のプライバシー => 除外項目に外付けHDDとTimeMachine指定
 * ディスプレイ
   * 解像度 => `スペースを拡大` にする
-  * 詳細設定… > 電力 > `ディスプレイがオフのときに自動でスリープさせない` => checked
+* エネルギー > `ディスプレイがオフのときに自動でスリープさせない` => checked
 * キーボード
   * キーボードショートカット…
     * 修飾キー => `Caps Lock` を `^Control` に
     * Spotlight => Spotlight検索を表示をオフ
     * 入力ソース => 前の入力ソースを表示をオフ
-  * テキスト入力 > 入力ソース > 編集… => google-imeの`ひらがな`・`英数`を追加
+  * キーボード > 入力ソース > すべての入力ソース > `スマート引用符とスマートダッシュを使用` をオフ
+  * キーボード > 入力ソース > 日本語-ローマ字入力 > `数字を全角入力` をオフにする
+  * キーボード > 音声入力をオンにする
 * アクセシビリティ
   * ズーム機能
     * スクロールジェスチャと修飾キーを使ってズーム => checked
     * スクロースジェスチャの修飾キー => `⌥ Option` キーにする
-* Google-Japanese-IME
-  * 環境設定 > 一般 > 基本設定 > スペースの入力 > `半角`
+
+#### メモ
+
+* Mission ControlとアプリExposeはOSのトラックパッドの設定ではオフにしておく
+  * デフォルトでは速度遅い問題があり、BTTのジェスチャ経由にしないと解決できない
+  * 
+
+### アプリケーションの設定
+
+* ブラウザ
+  * 検索エンジンクエリにen検索ショートカットを追加する
+    * ショートカットは `e`
+    * クエリは `{google:baseURL}search?q=%s&lr=lang_en&hl=ja`
+* Divvy
+  * バックアップファイルの中身がURIディープリンクなのでブラウザで開くことでimportできる
+* BTT
+  * バックアップファイルを手動インポートしてライセンスファイルを読み込む
+* Raycast
+  * バックアップファイルを手動インポートする
+    * インポートに際して保管しているパスフレーズが別途必要
 
 ## シェルのデフォルトを変更する
-
-### zsh にするなら
-
-- [[MacOSX]ターミナルのデフォルト Shell を zsh に変更する方法 &middot; DQNEO 起業日記](http://dqn.sakusakutto.jp/2014/05/macosx_shell_chsh_zsh.html)
-
-```
-# /etc/shells の末尾に /usr/local/bin/zsh を追記します。
-sudo sh -c 'echo $(which zsh) >> /etc/shells'
-
-# ユーザのデフォルトシェルを変更します。
-chsh -s /usr/local/bin/zsh
-```
 
 ### fish にするなら
 
@@ -99,19 +112,10 @@ chsh -s /usr/local/bin/zsh
 sudo sh -c 'echo $(which fish) >> /etc/shells'
 
 # ユーザのデフォルトシェルをfishに変更
-sudo sh -c 'echo $(which fish)' | chsh -s
+chsh -s $(which fish)
 
 # fish-ssh-agentに`.ssh/environment`を求められるがないのでつくる
 cd ~; mkdir .ssh; touch .ssh/environment; ssh-agent > .ssh/environment;
-```
-
-#### fisher のセットアップ
-
-ref: https://github.com/jorgebucaran/fisher#using-your-fish_plugins-file
-
-```
-# .config/fish/fish_plugins を利用して fisher install を回してくれる
-fisher update
 ```
 
 ## Homebrew の対象ディレクトリが Path 優先順位負けするので最優先にする
@@ -139,24 +143,40 @@ sudo vi /etc/paths
 exec $SHELL
 ``` 
 
-## asdf で NodeJS 環境構築したりする
+## fishのセットアップ
 
-[しましょう](https://asdf-vm.com/#/core-manage-asdf-vm)
+### rustup のセットアップを先にしておく
+
+fish configがrustupの生成するenvで詰まるので先にしておく方が二度手間にならない
+
+ref: https://www.rust-lang.org/ja/tools/install
+
+### fisher のセットアップ
+
+ref: https://github.com/jorgebucaran/fisher#using-your-fish_plugins-file
 
 ```
-asdf plugin add nodejs
-asdf install nodejs latest
-asdf list nodejs
-asdf global nodejs latest
+# .config/fish/fish_plugins を利用して fisher install を回してくれる
+fisher update
 ```
+
+## mise で 各種ランタイム類の用意をする
+
+[mise](https://mise.jdx.dev/getting-started.html)
 
 ## Git アカウントの設定
 
 ### メインアカウント設定
 
-リポジトリは https 形式で clone するようにして、認証キーは`credential-osxkeychain`で管理するようにする。
+リポジトリは https 形式で clone するようにして、認証キーは`credential-osxkeychain`で管理するようにする。また全てのコミットに署名をつけるためにGPGの設定をする。
 
 - [Caching your GitHub password in Git](https://help.github.com/articles/caching-your-github-password-in-git/)
+- GPG署名鍵の設定をする
+  - 鍵保管場所に別途ドキュメント
+
+### [Deprecated] 複数アカウント運用
+
+**今ならmiseでやるのがいいが、やっていない**
 
 マルチアカウントのために global の`.gitconfig`の`[user]`欄を空けているので、direnv でホームディレクトリに`.envrc`を作ってそこへメインアカウントの情報を入れる。
 
