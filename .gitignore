@@ -6,6 +6,7 @@
 .config/yarn/link
 !.config/karabiner
 !.config/starship.toml
+!.config/husky
 *node_modules
 .zsh/history/
 .direnv
