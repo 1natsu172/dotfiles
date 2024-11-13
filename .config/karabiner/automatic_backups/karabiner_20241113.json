@@ -5,53 +5,6 @@
             "complex_modifications": {
                 "rules": [
                     {
-                        "description": "日本語IMの半角スペース入力をスペースキー単体にする（Swap space and left_shift + space when using Japanese IM）",
-                        "manipulators": [
-                            {
-                                "conditions": [
-                                    {
-                                        "input_sources": [
-                                            {
-                                                "input_mode_id": "com.apple.inputmethod.Japanese",
-                                                "input_source_id": "com.apple.inputmethod.Kotoeri.RomajiTyping.Japanese",
-                                                "language": "ja"
-                                            }
-                                        ],
-                                        "type": "input_source_if"
-                                    }
-                                ],
-                                "from": { "key_code": "spacebar" },
-                                "to": [
-                                    {
-                                        "key_code": "spacebar",
-                                        "modifiers": ["left_shift"]
-                                    }
-                                ],
-                                "type": "basic"
-                            },
-                            {
-                                "conditions": [
-                                    {
-                                        "input_sources": [
-                                            {
-                                                "input_mode_id": "com.apple.inputmethod.Japanese",
-                                                "input_source_id": "com.apple.inputmethod.Kotoeri.RomajiTyping.Japanese",
-                                                "language": "ja"
-                                            }
-                                        ],
-                                        "type": "input_source_if"
-                                    }
-                                ],
-                                "from": {
-                                    "key_code": "spacebar",
-                                    "modifiers": { "mandatory": ["left_shift"] }
-                                },
-                                "to": [{ "key_code": "spacebar" }],
-                                "type": "basic"
-                            }
-                        ]
-                    },
-                    {
                         "description": "コマンドキー（左右どちらでも）を単体で押したときに、英数・かなをトグルで切り替える。",
                         "manipulators": [
                             {
