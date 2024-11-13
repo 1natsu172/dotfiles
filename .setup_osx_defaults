@@ -136,6 +136,9 @@ defaults write NSGlobalDomain AppleShowAllExtensions -bool true
 ## ステータスバーを表示
 defaults write com.apple.finder ShowStatusBar -bool true
 
+## タブバーを表示
+defaults write com.apple.finder ShowTabView -bool true
+
 ## パスバーを表示
 defaults write com.apple.finder ShowPathbar -bool true
 
