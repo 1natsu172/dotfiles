@@ -106,6 +106,8 @@ brew bundle dump --force
     * インポートに際して保管しているパスフレーズが別途必要
 * Warp
   * `BlexMono Nerd Font Mono` fontsize:`28` lineheight:`1.2`
+* Whiskey
+  * 必要なWindowsアプリのインストーラーを用意してインストールする
 
 ## シェルのデフォルトを変更する
 
