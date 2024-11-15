@@ -102,10 +102,6 @@ fish_add_path $ANDROID_HOME/tools
 fish_add_path $ANDROID_HOME/tools/bin
 fish_add_path $ANDROID_HOME/platform-tools
 
-# thefuck
-#-----------------------------------------------------------------------------
-thefuck --alias ask | source
-
 # jdk
 #-----------------------------------------------------------------------------
 set -gx JAVA_HOME (/usr/libexec/java_home)
