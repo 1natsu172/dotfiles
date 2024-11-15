@@ -64,9 +64,6 @@ defaults write com.apple.dock wvous-tl-modifier -int 0
 defaults write com.apple.dock wvous-tr-corner -int 4
 defaults write com.apple.dock wvous-tr-modifier -int 0
 
-## Mission Controlの表示/非表示の時間を0.15秒にする
-defaults write com.apple.dock expose-animation-duration -float 0.15
-
 # 言語と地域
 
 ## 優先する言語
@@ -145,23 +142,9 @@ defaults write com.apple.finder ShowPathbar -bool true
 ## Display full POSIX path as Finder window title
 defaults write com.apple.finder _FXShowPosixPathInTitle -bool true
 
-## When performing a search, search the current folder by default
-defaults write com.apple.finder FXDefaultSearchScope -string "SCcf"
-
-## Enable spring loading for directories
-defaults write NSGlobalDomain com.apple.springing.enabled -bool true
-
-## Remove the spring loading delay for directories
-defaults write NSGlobalDomain com.apple.springing.delay -float 0
-
 ## Avoid creating .DS_Store files on network or USB volumes
 defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
 defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
-
-# Quicklook
-
-## クイックルック表示時のアニメーションを0.15秒にする
-defaults write -g QLPanelAnimationDuration -float 0.15
 
 ## remove the quarantine attribute for after catalina support
 ## ref: https://github.com/sindresorhus/quick-look-plugins
