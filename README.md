@@ -242,3 +242,11 @@ export GIT_AUTHOR_EMAIL="mail@example.com"
 ## 参考
 
 - [Mac の環境構築自動化 2016 年 10 月版](http://jnst.hateblo.jp/entry/2016/09/30/051636)
+
+# Trouble shooting
+
+## huskyやsimple-git-hooks実行時にコマンドが見つからない
+
+特殊なケースではPATHを別途通したりshimの再生成をする必要がある。例えばmiseで管理しているランタイムのshimの先にバイナリがあるようなケースが該当する。
+
+例: miseのshimにPATHは通っているのに `pnpm: command not found` エラーになる場合は `mise reshim` を実行する
