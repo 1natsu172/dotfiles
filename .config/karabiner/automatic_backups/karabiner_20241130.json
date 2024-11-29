@@ -6,7 +6,6 @@
                 "rules": [
                     {
                         "description": "日本語IMの半角スペース入力をスペースキー単体にする（Swap space and left_shift + space when using Japanese IM）",
-                        "enabled": false,
                         "manipulators": [
                             {
                                 "conditions": [
@@ -54,7 +53,6 @@
                     },
                     {
                         "description": "コマンドキー（左右どちらでも）を単体で押したときに、英数・かなをトグルで切り替える。",
-                        "enabled": false,
                         "manipulators": [
                             {
                                 "conditions": [
