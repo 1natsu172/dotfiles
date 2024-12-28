@@ -7,6 +7,7 @@
 !.config/karabiner
 !.config/starship.toml
 !.config/husky
+!.config/ghostty
 *node_modules
 .zsh/history/
 .direnv
