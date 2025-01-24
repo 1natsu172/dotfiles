@@ -4,3 +4,6 @@
 # Direnv stuff
 .direnv
 .envrc
+
+# mise stuff
+mise.local.toml
