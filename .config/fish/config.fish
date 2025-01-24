@@ -10,7 +10,7 @@ set -gx LSCOLORS gxfxcxdxbxegedabagacad
 
 # sbin path (Homebrew's warning countermeasure)
 #-----------------------------------------------------------------------------
-set -g fish_user_paths "/usr/local/sbin" $fish_user_paths
+fish_add_path /opt/homebrew/sbin
 
 # mise-en-place
 #-----------------------------------------------------------------------------
