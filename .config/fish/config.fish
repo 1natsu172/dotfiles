@@ -26,6 +26,10 @@ end
 # Workaround for simple-git-hooks :\ https://github.com/toplenboren/simple-git-hooks/blob/0433a0485ea8f2c83e37b7cf7f2ec11e26921887/README.md#i-am-getting-npx-command-not-found-error-in-a-gui-git-client
 set -gx SIMPLE_GIT_HOOKS_RC "$HOME/.config/fish/functions/__my_scripts/.simple-git-hook.rc"
 
+# goose
+#-----------------------------------------------------------------------------
+fish_add_path $HOME/.local/bin
+
 # aqua
 #-----------------------------------------------------------------------------
 fish_add_path (aqua root-dir)/bin
@@ -118,3 +122,6 @@ fish_add_path $GOPATH/bin
 # starship prompt
 #-----------------------------------------------------------------------------
 starship init fish | source
+# Added by OrbStack: command-line tools and integration
+# This won't be added again if you remove it.
+source ~/.orbstack/shell/init2.fish 2>/dev/null || :
