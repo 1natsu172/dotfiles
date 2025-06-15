@@ -49,6 +49,7 @@ alias gst='g status'
 alias gsts='g status -sb'
 alias gbr='g branch'
 alias gbrv='g branch -vv'
+alias gbrvc='g branch --list (git branch --show-current) -vv'
 alias gbrd='g branch -d'
 alias gbrdf='g branch -D'
 alias gbrdmerged='git_delete_merged_local_branch'
@@ -68,16 +69,16 @@ alias gwt='g worktree'
 ## eza
 #-----------------------------------------------------------------------------
 if type -q eza
-  alias e='eza --icons --git'
-  alias ls=e
-  alias ea='eza -a --icons --git'
-  alias la=ea
-  alias ee='eza -aahl --icons --git'
-  alias ll=ee
-  alias et='eza -T -L 3 -a -I "node_modules|.git|.cache" --icons'
-  alias lt=et
-  alias eta='eza -T -a -I "node_modules|.git|.cache" --color=always --icons | less -r'
-  alias lta=eta
+    alias e='eza --icons --git'
+    alias ls=e
+    alias ea='eza -a --icons --git'
+    alias la=ea
+    alias ee='eza -aahl --icons --git'
+    alias ll=ee
+    alias et='eza -T -L 3 -a -I "node_modules|.git|.cache" --icons'
+    alias lt=et
+    alias eta='eza -T -a -I "node_modules|.git|.cache" --color=always --icons | less -r'
+    alias lta=eta
 end
 
 ## corepack
