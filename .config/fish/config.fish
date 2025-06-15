@@ -63,6 +63,7 @@ alias gremov='g remote -v'
 alias glog='g log'
 alias glogo='g log --oneline'
 alias grepow='gh repo view --web --branch=(git rev-parse --short HEAD)'
+alias gwt='g worktree'
 
 ## eza
 #-----------------------------------------------------------------------------
