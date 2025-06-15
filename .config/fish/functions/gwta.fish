@@ -20,7 +20,13 @@ function gwta -d "Create a new git worktree and add it"
     git worktree add "$worktree_path" "$branch_name"
 
     if test $status -eq 0
+        # Fix remote.origin.fetch configuration for the new worktree
+        pushd "$worktree_path"
+        git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
+        popd
+
         echo "Created worktree at: $worktree_path"
+        echo "Fixed remote.origin.fetch configuration"
         echo "Switch to it with: cd $worktree_path"
         echo "Or use 'gwts' to select interactively"
     end
