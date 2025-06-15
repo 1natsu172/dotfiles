@@ -1,2 +1,3 @@
 font-family = "BlexMono Nerd Font Mono"
 font-size = 28
+keybind = shift+enter=text:\n
