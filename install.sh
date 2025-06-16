@@ -5,6 +5,7 @@ SPECIFY_FILES="Brewfile Brewfile.lock.json" # 複数ファイルは""の中に�
 for f in .??* ${SPECIFY_FILES}; do
   # ルートにシンボリックリンクは貼りたくない無視したいファイルやディレクトリはこんな風に追加してね
   [[ ${f} = ".git" ]] && continue
+  [[ ${f} = ".github" ]] && continue
   [[ ${f} = ".gitignore" ]] && continue
   [[ ${f} = ".gitmodules" ]] && continue
   [[ ${f} = ".DS_Store" ]] && continue
