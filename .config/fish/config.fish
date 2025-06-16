@@ -12,6 +12,10 @@ set -gx LSCOLORS gxfxcxdxbxegedabagacad
 #-----------------------------------------------------------------------------
 fish_add_path /opt/homebrew/sbin
 
+# dotfiles bin utilities
+#-----------------------------------------------------------------------------
+fish_add_path $HOME/dotfiles/bin
+
 # mise-en-place
 #-----------------------------------------------------------------------------
 # IDE integration: https://mise.jdx.dev/ide-integration.html
