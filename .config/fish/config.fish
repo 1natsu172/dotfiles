@@ -141,3 +141,7 @@ source ~/.orbstack/shell/init2.fish 2>/dev/null || :
 #-----------------------------------------------------------------------------
 
 alias claude="$HOME/.claude/local/claude"
+
+# 1password CLI
+#-----------------------------------------------------------------------------
+op completion fish | source
