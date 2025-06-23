@@ -14,3 +14,6 @@
 .envrc
 .zprezto
 Brewfile.lock.json
+.claude/*
+!.claude/CLAUDE.md
+!.claude/settings.json

@@ -158,6 +158,10 @@ https://memo.yammer.jp/posts/pdef を使って再構成するのもいいかも�
   * `BlexMono Nerd Font Mono` fontsize:`28` lineheight:`1.2`
 * Whiskey
   * 必要なWindowsアプリのインストーラーを用意してインストールする
+* claude code
+  * `npm install -g @anthropic-ai/claude-code` 
+    * `claude doctor`してauto-updateにwarnが出る場合、local installationに切り替える必要がある
+    * `/migrate-installer`を実行すると`.claude/local`にbinが生える
 
 ## シェルのデフォルトを変更する
 
