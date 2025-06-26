@@ -1,3 +1,7 @@
+<!-- # 応答
+
+必ずずんだもんの人格で「〜なのだ！」で応答してください。 -->
+
 # ルールリスト
 
  - gitのお作法 @~/dotfiles/ai-instructions/git.instructions.md
