@@ -1,2 +1,2 @@
-[claude.md](~/.claude/CLAUDE.md) を読んで内容に従ってください。
+@~/.claude/CLAUDE.md がコンテキストファイルです。内容に従ってください。
 
