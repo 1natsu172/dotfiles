@@ -145,3 +145,7 @@ alias claude="$HOME/.claude/local/claude"
 # 1password CLI
 #-----------------------------------------------------------------------------
 op completion fish | source
+
+# zoxide
+#-----------------------------------------------------------------------------
+zoxide init fish --cmd j | source
