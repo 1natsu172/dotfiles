@@ -122,6 +122,8 @@ https://memo.yammer.jp/posts/pdef を使って再構成するのもいいかも�
     * 修飾キー => `Caps Lock` を `^Control` に
     * Spotlight => Spotlight検索を表示をオフ
     * Spotlight => Finderの検索ウィンドウを表示をオフ
+    * アプリのショートカット => ウィンドウ統合系を1個1個足す
+      * [![Image from Gyazo](https://i.gyazo.com/27d17f4fc32736638df5ae1e08b2a99b.png)](https://gyazo.com/27d17f4fc32736638df5ae1e08b2a99b)
   * キーボード > 入力ソース > すべての入力ソース > `スマート引用符とスマートダッシュを使用` をオフ
   * キーボード > 入力ソース > 日本語-ローマ字入力 > `数字を全角入力` をオフにする
   * キーボード > 入力ソース > 日本語-ローマ字入力 > `Windows風のキー操作` をオンにする
