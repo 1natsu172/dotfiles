@@ -146,7 +146,7 @@ source ~/.orbstack/shell/init2.fish 2>/dev/null || :
 # claude code
 #-----------------------------------------------------------------------------
 
-alias claude="$HOME/.claude/local/claude"
+alias claude="~/.claude/local/claude"
 
 # 1password CLI
 #-----------------------------------------------------------------------------
