@@ -18,6 +18,7 @@ Brewfile.lock.json
 !.claude/CLAUDE.md
 !.claude/settings.json
 !.claude/commands
+!.claude/agents
 .gemini/*
 !.gemini/GEMINI.md
 !.gemini/settings.json
