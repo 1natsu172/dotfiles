@@ -8,9 +8,13 @@
 !.config/starship.toml
 !.config/husky
 !.config/ghostty
+!.config/mise
+!.config/mise/config.toml
 *node_modules
 .zsh/history/
 .direnv
+.env*
+!.env.example
 .envrc
 .zprezto
 Brewfile.lock.json

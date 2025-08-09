@@ -1,0 +1,15 @@
+[tools]
+node = "22"
+bun = "latest"
+ruby = "3.2"
+go = "latest"
+uv = "latest"
+
+[settings]
+experimental = true
+
+[env]
+# !DO NOT COMMIT THIS FILE TO GIT!
+# Load my secret env from the file to this config file and redacts the values
+_.file = { path = "~/dotfiles/.env", redact = true }
+
