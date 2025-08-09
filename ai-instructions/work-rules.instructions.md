@@ -3,16 +3,16 @@
 ## 現場の把握
 
 - プロジェクトに使われているツールやスクリプトを把握すること。
-- パッケージマネージャが何を使われているかを常に思考内容に加えること。
+- パッケージマネージャが何を使われているかを常に認識すること。
   - プロジェクトのパッケージマネージャとは別の情報を参照する場合は「このプロジェクトのパッケージマネージャではどうなるか・関連情報はないか」を思考してください。
-
-例：TypeScriptのプロジェクトの場合
-- package.jsonのdependency,devDependencyなどで利用しているパッケージを把握する
-- package.jsonのpackageManagerフィールドやlockファイルを見てパッケージマネージャーを判別する
-- npxは実際に利用するパッケージマネージャーに合わせる
-  - bun  => npx ではなく `bunx`
-  - yarn => npx ではなく `yarn dlx`
-  - pnpm => npx ではなく `pnpx`
+    - 例：TypeScriptのプロジェクトの場合
+      - package.jsonのdependency,devDependencyなどで利用しているパッケージを把握する
+      - package.jsonのpackageManagerフィールドやlockファイルを見てパッケージマネージャーを判別する
+      - npxは実際に利用するパッケージマネージャーに合わせる
+        - bun  => npx ではなく `bunx`
+        - yarn => npx ではなく `yarn dlx`
+        - pnpm => npx ではなく `pnpx`
+- 【重要】TypeScript同様に各言語ごとにパッケージマネージャやツール構成のプラクティスを作業に反映すること。
 
 ## コンテキストの解釈
 
