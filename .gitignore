@@ -9,6 +9,7 @@
 !.config/husky
 !.config/ghostty
 !.config/mise
+.config/mise/*
 !.config/mise/config.toml
 *node_modules
 .zsh/history/

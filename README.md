@@ -290,6 +290,47 @@ export GIT_AUTHOR_EMAIL="mail@example.com"
 
 - [Mac の環境構築自動化 2016 年 10 月版](http://jnst.hateblo.jp/entry/2016/09/30/051636)
 
+## SOPS
+
+### 前提
+
+以下のファイルが存在することを前提にしている。
+
+- `~/.config/mise/age.txt`
+- `~/dotfiles/.env.enc.json`
+ 
+ > FIXME: 初期セットアップの自動化はopが干渉する＋別に何度もやるものではないため今はやらないがいつかやる
+
+### 既存encを安全かつ簡単にEditする
+
+基本これを使うだけでよい
+
+```bash
+SOPS_EDITOR="$EDITOR -rw" sops edit .env.enc.json && op item edit "ikmbvg3kyvmjkqv2i5o5eftsg4" '\.env\.enc\.json[file]=.env.enc.json'
+```
+
+※ `SOPS_EDITOR="$EDITOR -rw"` はVSCode系でwaitが必要になる問題があるため添えている。VSCode系を使わないなら不要。ref: https://github.com/getsops/sops/issues/380
+※ opはsync目的
+
+### 暗号化
+
+**raw to encrypt**
+
+```bash
+sops encrypt --age=(op read "op://Personal/mise-.env-SOPS/public key") .env.dec.json > .env.enc.json
+```
+
+### 復号化
+
+**encrypt to raw**
+
+```bash
+sops decrypt .env.enc.json > .env.dec.json
+```
+
+※ `SOPS_AGE_KEY_FILE` がない場合は動かないので適切な秘密鍵を参照させる必要あり
+ref: https://mise.jdx.dev/environments/secrets.html & https://getsops.io/docs/#encrypting-using-age
+
 # Trouble shooting
 
 ## huskyやsimple-git-hooks実行時にコマンドが見つからない
