@@ -1,0 +1,72 @@
+{
+  "version": 2,
+  "lines": [
+    [
+      {
+        "id": "5",
+        "type": "git-branch",
+        "color": "magenta"
+      },
+      {
+        "id": "8264b696-60a4-4188-a59c-210ecc9e28cf",
+        "type": "separator"
+      },
+      {
+        "id": "7",
+        "type": "git-changes",
+        "color": "yellow"
+      },
+      {
+        "id": "eea1e928-fff5-4c87-9c67-c41ae35e861e",
+        "type": "separator"
+      },
+      {
+        "id": "097a6dc6-3ac2-46fa-bcc0-7958e9c5a35a",
+        "type": "tokens-total"
+      },
+      {
+        "id": "65444db5-98bf-4f56-877b-5baae495282c",
+        "type": "separator"
+      },
+      {
+        "id": "04a72e98-fd60-4d46-8484-38ecadf3503f",
+        "type": "context-percentage-usable"
+      },
+      {
+        "id": "6",
+        "type": "flex-separator"
+      },
+      {
+        "id": "6ed377cd-c136-4a6f-908b-ff8add66b6e3",
+        "type": "version",
+        "color": "brightBlack"
+      }
+    ],
+    [
+      {
+        "id": "7c840bd7-d044-43f4-bfda-ba6421c7550c",
+        "type": "custom-command",
+        "commandPath": "bunx ccusage statusline",
+        "preserveColors": true,
+        "timeout": 5000
+      }
+    ],
+    []
+  ],
+  "flexMode": "full-minus-40",
+  "compactThreshold": 60,
+  "colorLevel": 3,
+  "inheritSeparatorColors": true,
+  "globalBold": true,
+  "powerline": {
+    "enabled": false,
+    "separators": [
+      ""
+    ],
+    "separatorInvertBackground": [
+      false
+    ],
+    "startCaps": [],
+    "endCaps": []
+  }
+}

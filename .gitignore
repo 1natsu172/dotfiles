@@ -11,6 +11,7 @@
 !.config/mise
 .config/mise/*
 !.config/mise/config.toml
+!.config/ccstatusline
 *node_modules
 .zsh/history/
 .direnv
