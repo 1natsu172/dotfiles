@@ -2,5 +2,6 @@
   "theme": "GitHub",
   "selectedAuthType": "oauth-personal",
   "preferredEditor": "vscode",
-  "usageStatisticsEnabled": false
+  "usageStatisticsEnabled": false,
+  "hasSeenIdeIntegrationNudge": true
 }
