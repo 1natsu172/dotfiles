@@ -1,6 +1,8 @@
 #!/usr/bin/env bun
 
-import { readFileSync, existsSync } from "fs";
+import { readFileSync, existsSync, statSync } from "fs";
+import { tmpdir } from "os";
+import { join } from "path";
 
 interface StatuslineInput {
   session_id: string;
@@ -24,20 +26,12 @@ interface StatuslineInput {
   };
 }
 
-interface TranscriptEntry {
-  type: "user" | "assistant" | "summary";
-  message?: {
-    role: string;
-    content: string | any[];
-  };
-  timestamp?: string;
-  uuid?: string;
-  toolUseResult?: {
-    stdout?: string;
-    stderr?: string;
-    interrupted?: boolean;
-    isImage?: boolean;
-  };
+interface DurationData {
+  sessionId: string;
+  startTimestamp: string;
+  lastUpdate: string;
+  duration: number;
+  status: "active" | "finished" | "interrupted";
 }
 
 interface FormattedTime {
@@ -54,85 +48,48 @@ function parseStatuslineInput(input: string): StatuslineInput | null {
   }
 }
 
-function readTranscriptFile(transcriptPath: string): TranscriptEntry[] {
+function readDurationData(sessionId: string): DurationData | null {
   try {
-    if (!existsSync(transcriptPath)) {
-      return [];
+    const tmpFile = join(tmpdir(), `claude-code-duration-${sessionId}.json`);
+
+    if (!existsSync(tmpFile)) {
+      return null;
     }
 
-    const content = readFileSync(transcriptPath, "utf-8");
-    const lines = content.split("\n").filter((line) => line.trim());
+    const content = readFileSync(tmpFile, "utf-8");
+    const data = JSON.parse(content) as DurationData;
 
-    return lines
-      .map((line) => {
-        try {
-          return JSON.parse(line) as TranscriptEntry;
-        } catch {
-          return null;
-        }
-      })
-      .filter((entry) => entry !== null) as TranscriptEntry[];
+    // TODO: 実際のhookの情報からinturruptかどうかを判断する。現在の実装は期待値通りではない
+    // ファイル更新から5分以上経過している場合は中断とみなす
+    const fileStats = statSync(tmpFile);
+    const now = Date.now();
+    const fileModified = fileStats.mtime.getTime();
+    const timeSinceUpdate = now - fileModified;
+
+    if (data.status === "active" && timeSinceUpdate > 5 * 60 * 1000) {
+      data.status = "interrupted";
+    }
+
+    return data;
   } catch {
-    return [];
+    return null;
   }
 }
 
-function isRealUserMessage(entry: TranscriptEntry): boolean {
-  return (
-    entry.type === "user" &&
-    entry.message?.role === "user" &&
-    !entry.toolUseResult &&
-    entry.timestamp !== undefined
-  );
+function formatDuration(durationMs: number): FormattedTime {
+  const totalSeconds = Math.floor(durationMs / 1000);
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+
+  return {
+    hours: hours > 0 ? hours : undefined,
+    minutes: minutes > 0 ? minutes : undefined,
+    seconds,
+  };
 }
 
-function findLatestUserMessage(
-  entries: TranscriptEntry[]
-): TranscriptEntry | null {
-  for (let i = entries.length - 1; i >= 0; i--) {
-    const entry = entries[i];
-    if (entry && isRealUserMessage(entry)) {
-      return entry;
-    }
-  }
-  return null;
-}
-
-function getLatestMessageTimestamp(entries: TranscriptEntry[]): string | null {
-  for (let i = entries.length - 1; i >= 0; i--) {
-    const entry = entries[i];
-    if (entry && entry.timestamp) {
-      return entry.timestamp;
-    }
-  }
-  return null;
-}
-
-function calculateDuration(
-  fromTimestamp: string,
-  toTimestamp: string
-): FormattedTime {
-  try {
-    const startTime = new Date(fromTimestamp);
-    const endTime = new Date(toTimestamp);
-    const diffMs = endTime.getTime() - startTime.getTime();
-
-    const totalSeconds = Math.floor(diffMs / 1000);
-    const hours = Math.floor(totalSeconds / 3600);
-    const minutes = Math.floor((totalSeconds % 3600) / 60);
-    const seconds = totalSeconds % 60;
-
-    return {
-      hours: hours > 0 ? hours : undefined,
-      minutes: minutes > 0 ? minutes : undefined,
-      seconds,
-    };
-  } catch {
-    return { seconds: 0 };
-  }
-}
-
-function formatDuration(duration: FormattedTime): string {
+function formatDurationString(duration: FormattedTime, status: string): string {
   const parts: string[] = [];
 
   if (duration.hours) {
@@ -143,7 +100,9 @@ function formatDuration(duration: FormattedTime): string {
   }
   parts.push(`${duration.seconds}s`);
 
-  return `💭 ${parts.join(" ")}`;
+  const statusIcon =
+    status === "finished" ? "✅" : status === "interrupted" ? "🗣️" : "💭";
+  return `${statusIcon} ${parts.join(" ")}`;
 }
 
 async function main() {
@@ -159,30 +118,14 @@ async function main() {
       return;
     }
 
-    const entries = readTranscriptFile(statuslineData.transcript_path);
-    if (entries.length === 0) {
-      console.log(formatDuration({ seconds: 0 }));
+    const durationData = readDurationData(statuslineData.session_id);
+    if (!durationData) {
+      console.log(formatDurationString({ seconds: 0 }, "active"));
       return;
     }
 
-    const latestUserMessage = findLatestUserMessage(entries);
-    if (!latestUserMessage || !latestUserMessage.timestamp) {
-      console.log(formatDuration({ seconds: 0 }));
-      return;
-    }
-
-    const latestMessageTimestamp = getLatestMessageTimestamp(entries);
-    if (!latestMessageTimestamp) {
-      console.log(formatDuration({ seconds: 0 }));
-      return;
-    }
-
-    const duration = calculateDuration(
-      latestUserMessage.timestamp,
-      latestMessageTimestamp
-    );
-
-    console.log(formatDuration(duration));
+    const formattedDuration = formatDuration(durationData.duration);
+    console.log(formatDurationString(formattedDuration, durationData.status));
   } catch {
     console.log("❌ Error occurred");
   }

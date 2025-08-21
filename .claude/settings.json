@@ -6,5 +6,37 @@
   },
   "env": {
     "DISABLE_TELEMETRY": "true"
+  },
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/1natsu/dotfiles/bin/claude-utils/user-prompt-submit-hook.sh"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/1natsu/dotfiles/bin/claude-utils/post-tool-use-hook.sh"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/1natsu/dotfiles/bin/claude-utils/finished-responding-hook.sh"
+          }
+        ]
+      }
+    ]
   }
 }
