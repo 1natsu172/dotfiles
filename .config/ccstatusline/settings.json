@@ -39,7 +39,10 @@
       {
         "id": "22b434c8-eaf9-4abb-bad7-cd75f5f50f5d",
         "type": "current-working-dir",
-        "rawValue": true
+        "rawValue": true,
+        "metadata": {
+          "segments": "3"
+        }
       },
       {
         "id": "0ad18ceb-92ec-4901-bca2-471c6559ca27",
