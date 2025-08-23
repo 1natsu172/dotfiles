@@ -13,7 +13,17 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/Users/1natsu/dotfiles/bin/claude-utils/user-prompt-submit-hook.sh"
+            "command": "/Users/1natsu/dotfiles/bin/claude-utils/duration-logic-hooks/user-prompt-submit-hook.sh"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/1natsu/dotfiles/bin/claude-utils/duration-logic-hooks/agent-in-progress-hook.sh"
           }
         ]
       }
@@ -23,7 +33,17 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/Users/1natsu/dotfiles/bin/claude-utils/post-tool-use-hook.sh"
+            "command": "/Users/1natsu/dotfiles/bin/claude-utils/duration-logic-hooks/agent-in-progress-hook.sh"
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/1natsu/dotfiles/bin/claude-utils/duration-logic-hooks/agent-in-progress-hook.sh"
           }
         ]
       }
@@ -33,7 +53,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/Users/1natsu/dotfiles/bin/claude-utils/finished-responding-hook.sh"
+            "command": "/Users/1natsu/dotfiles/bin/claude-utils/duration-logic-hooks/finished-responding-hook.sh"
           }
         ]
       }
