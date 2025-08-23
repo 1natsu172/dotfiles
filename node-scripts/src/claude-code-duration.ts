@@ -1,6 +1,6 @@
 #!/usr/bin/env bun
 
-import { readFileSync, existsSync, statSync } from "fs";
+import { readFileSync, existsSync } from "fs";
 import { tmpdir } from "os";
 import { join } from "path";
 
@@ -58,17 +58,6 @@ function readDurationData(sessionId: string): DurationData | null {
 
     const content = readFileSync(tmpFile, "utf-8");
     const data = JSON.parse(content) as DurationData;
-
-    // TODO: 実際のhookの情報からinturruptかどうかを判断する。現在の実装は期待値通りではない
-    // ファイル更新から5分以上経過している場合は中断とみなす
-    const fileStats = statSync(tmpFile);
-    const now = Date.now();
-    const fileModified = fileStats.mtime.getTime();
-    const timeSinceUpdate = now - fileModified;
-
-    if (data.status === "active" && timeSinceUpdate > 5 * 60 * 1000) {
-      data.status = "interrupted";
-    }
 
     return data;
   } catch {
