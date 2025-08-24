@@ -152,7 +152,12 @@ update_subtree() {
     echo "To: $target_path"
     echo
     
-    if git subtree pull --prefix="$target_path" "$git_url" "$branch" --squash; then
+    if git subtree pull --prefix="$target_path" "$git_url" "$branch" --squash \
+        -m "chore: update $config_key subtree from $author_repo
+
+From: $git_url#$branch
+Path: $target_path
+Category: $category"; then
         echo
         echo "$(tput setaf 2)Successfully updated $config_key. ✔︎$(tput sgr0)"
     else
