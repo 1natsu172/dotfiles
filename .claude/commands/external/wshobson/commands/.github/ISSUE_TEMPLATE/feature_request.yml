@@ -1,0 +1,71 @@
+---
+name: Feature Request
+description: Suggest an enhancement or new feature for existing commands
+title: "[FEATURE] "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for suggesting a feature! Please fill out this template
+        to help us understand your proposal.
+
+        **Note**: For proposing entirely new commands, please use the
+        "New Command Proposal" template instead.
+
+  - type: checkboxes
+    id: preliminary-checks
+    attributes:
+      label: Preliminary Checks
+      description: Please confirm you have completed these steps
+      options:
+        - label: I have read the [Code of Conduct](.github/CODE_OF_CONDUCT.md)
+          required: true
+        - label: >-
+            I have searched existing issues to ensure this is not a duplicate
+          required: true
+        - label: This is an enhancement to existing commands, not a new command
+
+  - type: input
+    id: related-command
+    attributes:
+      label: Related Command(s)
+      description: Which command(s) would this feature enhance?
+      placeholder: e.g., /feature-development, /api-scaffold
+    validations:
+      required: true
+
+  - type: textarea
+    id: feature-description
+    attributes:
+      label: Feature Description
+      description: A clear and concise description of the feature
+      placeholder: Describe what you want to happen...
+    validations:
+      required: true
+
+  - type: textarea
+    id: use-case
+    attributes:
+      label: Use Case
+      description: Explain why this feature would be valuable
+      placeholder: |
+        I need this feature because...
+        It would help me when...
+        Current workarounds are...
+    validations:
+      required: true
+
+  - type: textarea
+    id: implementation-ideas
+    attributes:
+      label: Implementation Ideas
+      description: If you have ideas about how this could be implemented
+      placeholder: Optional thoughts on implementation...
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Any other context, screenshots, or examples
+      placeholder: Add any other context about the feature here...
