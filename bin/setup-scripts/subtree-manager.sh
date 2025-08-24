@@ -152,16 +152,26 @@ update_subtree() {
     echo "To: $target_path"
     echo
     
-    if git subtree pull --prefix="$target_path" "$git_url" "$branch" --squash \
+    # Capture subtree pull output to check if update occurred
+    local pull_output
+    if pull_output=$(git subtree pull --prefix="$target_path" "$git_url" "$branch" --squash \
         -m "chore: update $config_key subtree from $author_repo
 
 From: $git_url#$branch
 Path: $target_path
-Category: $category"; then
+Category: $category" 2>&1); then
         echo
-        echo "$(tput setaf 2)Successfully updated $config_key. ✔︎$(tput sgr0)"
+        echo "$pull_output"
+        
+        # Check if subtree was actually updated
+        if echo "$pull_output" | grep -q "Subtree is already at commit"; then
+            echo "$(tput setaf 3)No updates available for $config_key. Already up to date. ✔︎$(tput sgr0)"
+        else
+            echo "$(tput setaf 2)Successfully updated $config_key. ✔︎$(tput sgr0)"
+        fi
     else
         echo "$(tput setaf 1)Failed to update $config_key. ✗$(tput sgr0)"
+        echo "$pull_output"
         return 1
     fi
 
