@@ -8,7 +8,8 @@ set -euo pipefail
 # Define all subtrees managed in this repository
 # Format: "<category> <config_key> <git_url> <branch> <target_path>"
 readonly SUBTREE_CONFIGS=(
-    "agents claude-agents-wshobson https://github.com/wshobson/agents.git main .claude/agents/external/wshobson/agents"
+    "claude-agents claude-agents-wshobson https://github.com/wshobson/agents.git main .claude/agents/external/wshobson/agents"
+    "claude-slash-commands claude-slash-commands-wshobson https://github.com/wshobson/commands.git main .claude/commands/external/wshobson/commands"
     "test-own testing-subtree https://github.com/1natsu-vacation/subtree-test-children.git main .subtree-testing/subtree-test-children"
     # Add more subtrees here in the future:
     # "agents claude-agents-foo https://github.com/foo/agents.git main .claude/agents/external/foo/agents"
