@@ -331,6 +331,16 @@ sops decrypt .env.enc.json > .env.dec.json
 ※ `SOPS_AGE_KEY_FILE` がない場合は動かないので適切な秘密鍵を参照させる必要あり
 ref: https://mise.jdx.dev/environments/secrets.html & https://getsops.io/docs/#encrypting-using-age
 
+## AI tools
+
+### mcp 
+
+`dotfiles/.mcp.json` が実質mcpサーバーのメモになっている。（なぜこんな運用になるかというと、`~/.claude.json`は秘匿情報がありうるためコミットできないから）。
+
+`dotfiles/.claude/settings.json` で `disabledMcpjsonServers` でこのプロジェクトで有効にするMCPをコントロールしている。
+`~/.claude.json` の `"mcpSevers"` はグローバルスコープすぎてdisableにできないため、本当にマシン上でWideに使いたいものだけにしている。
+実際の様々なケースではプロジェクトごとに `.mcp.json` を用意して、 `settings.json` で管理することが好ましい。
+
 # Trouble shooting
 
 ## huskyやsimple-git-hooks実行時にコマンドが見つからない
