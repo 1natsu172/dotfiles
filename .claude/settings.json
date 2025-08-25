@@ -2,6 +2,40 @@
   "env": {
     "DISABLE_TELEMETRY": "true"
   },
+  "permissions": {
+    "allow": [],
+    "ask": [
+      "Bash(curl:*)",
+      "Bash(wget:*)",
+      "Bash(nc:*)",
+      "Bash(sudo:*)",
+      "Bash(su:*)",
+      "Bash(curl:*)",
+      "Bash(wget:*)",
+      "Bash(ssh:*)",
+      "Bash(rm:*)",
+      "Bash(rm -rf:*)",
+      "Bash(git push:*)",
+      "Bash(git commit:*)",
+      "Bash(git reset:*)",
+      "Bash(git rebase:*)",
+      "Bash(psql:*)",
+      "Bash(mysql:*)",
+      "Bash(mongod:*)",
+      "Bash(npm uninstall:*)",
+      "Bash(npm remove:*)"
+    ],
+    "deny": [
+      "Read(**/.env.*)",
+      "Read(id_rsa)",
+      "Read(id_ed25519)",
+      "Read(**/*token*)",
+      "Read(**/*key*)",
+      "Write(**/.env.*)",
+      "Write(**/secrets/**)",
+      "mcp__supabase__execute_sql"
+    ]
+  },
   "hooks": {
     "UserPromptSubmit": [
       {
