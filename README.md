@@ -71,6 +71,8 @@ This repository contains 75 specialized subagents that extend Claude Code's capa
 - **[devops-troubleshooter](devops-troubleshooter.md)** - Debug production issues, analyze logs, and fix deployment failures
 - **[deployment-engineer](deployment-engineer.md)** - Configure CI/CD pipelines, Docker containers, and cloud deployments
 - **[cloud-architect](cloud-architect.md)** - Design AWS/Azure/GCP infrastructure and optimize cloud costs
+- **[hybrid-cloud-architect](hybrid-cloud-architect.md)** - Design hybrid cloud infrastructure across AWS/Azure/GCP and OpenStack on-premises environments
+- **[kubernetes-architect](kubernetes-architect.md)** - Design cloud-native infrastructure with Kubernetes at its core and GitOps principles across AWS/Azure/GCP and hybrid environments.
 - **[database-optimizer](database-optimizer.md)** - Optimize SQL queries, design efficient indexes, and handle database migrations
 - **[database-admin](database-admin.md)** - Manage database operations, backups, replication, and monitoring
 - **[terraform-specialist](terraform-specialist.md)** - Write advanced Terraform modules, manage state files, and implement IaC best practices
