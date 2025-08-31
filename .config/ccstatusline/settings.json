@@ -53,15 +53,29 @@
         }
       },
       {
+        "id": "eb8011e2-e173-40a2-9161-fd4f0f6ad9e3",
+        "type": "custom-text",
+        "backgroundColor": "bgYellow",
+        "customText": " ",
+        "merge": "no-padding"
+      },
+      {
         "id": "244ef4c5-6f01-4840-b970-96f088ae1158",
         "type": "git-worktree",
         "backgroundColor": "bgMagenta",
         "rawValue": true
       },
       {
+        "id": "74774803-63ad-48b5-8d00-d0a9c76665ac",
+        "type": "custom-text",
+        "backgroundColor": "bgBrightWhite",
+        "customText": "\uf418 ",
+        "merge": "no-padding"
+      },
+      {
         "id": "0ad18ceb-92ec-4901-bca2-471c6559ca27",
         "type": "git-branch",
-        "rawValue": false
+        "rawValue": true
       },
       {
         "id": "636a7e17-c343-4f7a-8815-e1bc1768009b",
