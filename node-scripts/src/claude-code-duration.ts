@@ -40,6 +40,15 @@ interface FormattedTime {
   seconds: number;
 }
 
+// NerdFont icons for different states
+const ICONS = {
+  finished: "\udb80\udd80", // nf-md-comment_check_outline
+  interrupted: "\uf256", // nf-fa-hand_stop_o
+  active: "\udb84\udf4f", // nf-md-head_snowflake_outline
+  error: "\uea87", // nf-cod-error
+  parse_error: "\uebe6", // nf-cod-bracket_error
+} as const;
+
 function parseStatuslineInput(input: string): StatuslineInput | null {
   try {
     return JSON.parse(input);
@@ -89,9 +98,21 @@ function formatDurationString(duration: FormattedTime, status: string): string {
   }
   parts.push(`${duration.seconds}s`);
 
-  const statusIcon =
-    status === "finished" ? "✅" : status === "interrupted" ? "🗣️" : "💭";
+  const statusIcon = getStatusIcon(status);
   return `${statusIcon} ${parts.join(" ")}`;
+}
+
+function getStatusIcon(status: string): string {
+  switch (status) {
+    case "finished":
+      return `\x1b[32m${ICONS.finished}\x1b[0m`;
+    case "interrupted":
+      return `\x1b[33m${ICONS.interrupted}\x1b[0m`;
+    case "active":
+      return `\x1b[36m${ICONS.active}\x1b[0m`;
+    default:
+      return `\x1b[31m${ICONS.error}\x1b[0m`;
+  }
 }
 
 async function main() {
@@ -103,7 +124,7 @@ async function main() {
 
     const statuslineData = parseStatuslineInput(input);
     if (!statuslineData) {
-      console.log("❌ Parse error");
+      console.log(`\x1b[31m${ICONS.parse_error}\x1b[0m Parse error`);
       return;
     }
 
@@ -116,7 +137,7 @@ async function main() {
     const formattedDuration = formatDuration(durationData.duration);
     console.log(formatDurationString(formattedDuration, durationData.status));
   } catch {
-    console.log("❌ Error occurred");
+    console.log(`\x1b[31m${ICONS.error}\x1b[0m Error occurred`);
   }
 }
 
