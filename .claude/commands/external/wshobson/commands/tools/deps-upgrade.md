@@ -464,7 +464,7 @@ def generate_compatibility_matrix(dependencies):
 ## Dependency Compatibility Matrix
 
 | Package | Current | Target | Compatible With | Conflicts | Action Required |
-|---------|---------|--------|-----------------|-----------|-----------------|
+| ------- | ------- | ------ | --------------- | --------- | --------------- |
 """
     
     for pkg, info in matrix.items():
@@ -497,7 +497,7 @@ Implement safe rollback procedures:
 
 **Rollback Manager**
 ```bash
-#!/bin/bash
+#!/usr/bin/env bash
 # rollback-dependencies.sh
 
 # Create rollback point

@@ -1414,7 +1414,7 @@ services:
 Automate optimized builds:
 
 ```bash
-#!/bin/bash
+#!/usr/bin/env bash
 # build-optimize.sh
 
 set -euo pipefail

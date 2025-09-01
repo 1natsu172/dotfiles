@@ -423,7 +423,7 @@ class MigrationRunner:
 
 **Manual Rollback Scripts**
 ```bash
-#!/bin/bash
+#!/usr/bin/env bash
 # rollback_migration.sh
 
 MIGRATION_VERSION=$1

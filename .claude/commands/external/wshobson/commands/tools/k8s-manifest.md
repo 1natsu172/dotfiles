@@ -505,7 +505,7 @@ Create production Helm charts:
 
 **Chart Structure**
 ```bash
-#!/bin/bash
+#!/usr/bin/env bash
 # generate-helm-chart.sh
 
 create_helm_chart() {

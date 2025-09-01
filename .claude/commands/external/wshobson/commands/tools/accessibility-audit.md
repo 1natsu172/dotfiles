@@ -1080,7 +1080,7 @@ jobs:
 
 **Pre-commit Hook**
 ```bash
-#!/bin/bash
+#!/usr/bin/env bash
 # .husky/pre-commit
 
 # Run accessibility tests on changed components

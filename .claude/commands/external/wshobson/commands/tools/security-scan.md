@@ -779,7 +779,7 @@ class DependencyScanner:
         
         # Auto-update script
         plan['automation_scripts']['npm_auto_update'] = """
-#!/bin/bash
+#!/usr/bin/env bash
 # Automated npm dependency updates
 npm audit fix --force
 npm update
@@ -787,7 +787,7 @@ npm audit
 """
         
         plan['automation_scripts']['pip_auto_update'] = """
-#!/bin/bash
+#!/usr/bin/env bash
 # Automated Python dependency updates
 pip install --upgrade pip
 pip-audit --fix
@@ -2313,7 +2313,7 @@ class SecurityReportGenerator:
 
 ## Risk Assessment
 | Risk Category | Current Level | Target Level | Priority |
-|---------------|---------------|--------------|----------|
+| ------------- | ------------- | ------------ | -------- |
 {% for risk in risk_categories %}
 | {{ risk.category }} | {{ risk.current }} | {{ risk.target }} | {{ risk.priority }} |
 {% endfor %}
@@ -2579,12 +2579,12 @@ reports = report_generator.generate_comprehensive_report(sample_results)
 4. **Missing authentication** on admin endpoints
 
 ### Business Impact
-| Risk Category | Probability | Impact | Priority |
-|---------------|-------------|--------|----------|
-| Data Breach | 85% | Critical | P0 |
-| Service Disruption | 60% | High | P1 |
-| Compliance Violation | 90% | Critical | P0 |
-| Reputation Damage | 70% | High | P1 |
+| Risk Category        | Probability | Impact   | Priority |
+| -------------------- | ----------- | -------- | -------- |
+| Data Breach          | 85%         | Critical | P0       |
+| Service Disruption   | 60%         | High     | P1       |
+| Compliance Violation | 90%         | Critical | P0       |
+| Reputation Damage    | 70%         | High     | P1       |
 
 ### Immediate Actions Required (Next 24 Hours)
 1. **Patch SQL injection vulnerability** (2 hours) - [@dev-team]

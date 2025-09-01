@@ -352,13 +352,13 @@ class LicenseAnalyzer:
 - **Compliance Status**: ⚠️ REVIEW REQUIRED
 
 ### License Distribution
-| License | Count | Packages |
-|---------|-------|----------|
-| MIT | 180 | express, lodash, ... |
-| Apache-2.0 | 45 | aws-sdk, ... |
-| BSD-3-Clause | 15 | ... |
-| GPL-3.0 | 3 | [ISSUE] package1, package2, package3 |
-| Unknown | 2 | [ISSUE] mystery-lib, old-package |
+| License      | Count | Packages                             |
+| ------------ | ----- | ------------------------------------ |
+| MIT          | 180   | express, lodash, ...                 |
+| Apache-2.0   | 45    | aws-sdk, ...                         |
+| BSD-3-Clause | 15    | ...                                  |
+| GPL-3.0      | 3     | [ISSUE] package1, package2, package3 |
+| Unknown      | 2     | [ISSUE] mystery-lib, old-package     |
 
 ### Compliance Issues
 
@@ -587,7 +587,7 @@ Generate automated fixes:
 
 **Update Scripts**
 ```bash
-#!/bin/bash
+#!/usr/bin/env bash
 # Auto-update dependencies with security fixes
 
 echo "🔒 Security Update Script"
@@ -650,7 +650,7 @@ This PR updates {len(updates)} dependencies to address security vulnerabilities 
 ### Security Fixes ({sum(1 for u in updates if u['has_security'])})
 
 | Package | Current | Updated | Severity | CVE |
-|---------|---------|---------|----------|-----|
+| ------- | ------- | ------- | -------- | --- |
 """
     
     for update in updates:
@@ -662,7 +662,7 @@ This PR updates {len(updates)} dependencies to address security vulnerabilities 
 ### Other Updates
 
 | Package | Current | Updated | Type | Age |
-|---------|---------|---------|------|-----|
+| ------- | ------- | ------- | ---- | --- |
 """
     
     for update in updates:

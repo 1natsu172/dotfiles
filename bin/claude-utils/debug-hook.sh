@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Claude Code hooks debug script
 # Outputs hook input to debug-claude-hook-{sessionId}.json in cwd

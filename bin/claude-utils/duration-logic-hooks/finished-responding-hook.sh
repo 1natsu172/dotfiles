@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Claude応答完了時に実行されるhook
 # 最終的なdurationを記録してstatusをfinishedに変更

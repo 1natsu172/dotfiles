@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # 古いブランチを削除するスクリプト
 # Usage: ./clean-old-branches.sh [days] [--force]

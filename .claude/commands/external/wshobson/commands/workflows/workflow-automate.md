@@ -586,7 +586,7 @@ repos:
 
 **Development Environment Setup**
 ```bash
-#!/bin/bash
+#!/usr/bin/env bash
 # scripts/setup-dev-environment.sh
 
 set -euo pipefail

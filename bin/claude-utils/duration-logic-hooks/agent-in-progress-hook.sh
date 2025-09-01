@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # ツール使用後に実行されるhook
 # 現在時刻でdurationを更新
