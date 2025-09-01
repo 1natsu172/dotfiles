@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 DOT_DIRECTORY="${HOME}/dotfiles"
 SPECIFY_FILES="Brewfile Brewfile.lock.json" # 複数ファイルは""の中に半角スペース空けで入力しましょう
 
@@ -12,13 +13,13 @@ for f in .??* ${SPECIFY_FILES}; do
   [[ ${f} = ".travis.yml" ]] && continue
   [[ ${f} = ".direnv" ]] && continue
   [[ ${f} = ".envrc" ]] && continue
-  ln -snfv ${DOT_DIRECTORY}/${f} ${HOME}/${f}
+  ln -snfv "${DOT_DIRECTORY}/${f}" "${HOME}/${f}"
 done
 
 # Make bin directory executable
 if [[ -d "${DOT_DIRECTORY}/bin" ]]; then
-  chmod +x ${DOT_DIRECTORY}/bin/*
-  echo $(tput setaf 3)Made bin scripts executable$(tput sgr0)
+  chmod +x "${DOT_DIRECTORY}"/bin/*
+  echo "$(tput setaf 3)Made bin scripts executable$(tput sgr0)"
 fi
 
-echo $(tput setaf 2)Deploy dotfiles complete!. ✔︎$(tput sgr0)
+echo "$(tput setaf 2)Deploy dotfiles complete!. ✔︎$(tput sgr0)"
