@@ -47,12 +47,13 @@ show_help() {
     -d, --dry-run          ダウンロード実行せず、処理内容のみ表示
     -h, --help             このヘルプを表示
 
-URL_FILE: ダウンロードするURLを1行ずつ記載したファイル
+URL_FILE: ダウンロードするURLを1行ずつ記載したファイル(.txt, .md, etc.)
          # で始まる行はコメントとして無視されます
 
 例:
     $SCRIPT_NAME urls.txt
-    $SCRIPT_NAME -c 8 -x 32 -o ~/Videos urls.txt
+    $SCRIPT_NAME -x 2 urls.txt  # aria2cの接続数を2に設定
+    $SCRIPT_NAME -c 8 -x 32 -o ~/Videos urls.txt  # 同時ダウンロード数を8、aria2cの接続数を32、出力ディレクトリを~/Videosに設定
     $SCRIPT_NAME --dry-run urls.txt  # 実行内容の確認
 EOF
 }
