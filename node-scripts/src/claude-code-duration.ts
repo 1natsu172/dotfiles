@@ -1,8 +1,8 @@
 #!/usr/bin/env bun
 
-import { readFileSync, existsSync } from "fs";
-import { tmpdir } from "os";
-import { join } from "path";
+import { existsSync, readFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 
 interface StatuslineInput {
   session_id: string;

@@ -1,22 +1,22 @@
 #!/usr/bin/env bun
 
-import { writeFileSync, existsSync, readFileSync } from "fs";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
 
 const LOG_FILE = "_debug_statusline.json";
 
-function loadExistingLogs(): any[] {
+function loadExistingLogs(): unknown[] {
   if (existsSync(LOG_FILE)) {
     try {
       const content = readFileSync(LOG_FILE, "utf-8");
       return JSON.parse(content);
-    } catch (error) {
+    } catch (_error) {
       return [];
     }
   }
   return [];
 }
 
-function saveLog(logs: any[]): void {
+function saveLog(logs: unknown[]): void {
   try {
     writeFileSync(LOG_FILE, JSON.stringify(logs, null, 2));
   } catch (error) {
@@ -39,7 +39,7 @@ async function main() {
       data: jsonData,
     });
     saveLog(logs);
-  } catch (error) {
+  } catch (_error) {
     logs.push({
       timestamp: new Date().toISOString(),
       error: "JSON解析エラー",
