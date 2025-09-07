@@ -89,6 +89,7 @@ end
 #-----------------------------------------------------------------------------
 ## Util aliases. This is to treat it as if it were a global installation while passing through corepack.
 ### Managemant via corepack through the meta-command. - https://github.com/nodejs/corepack/tree/cae770694e62f15fed33dd8023649d77d96023c1#corepack-binary-nameversion--args
+## After node 25, need switch to global instralled corepack via mise. (https://mise.jdx.dev/dev-tools/backends/npm.html)
 alias yarn="corepack yarn"
 alias yarnpkg="corepack yarnpkg"
 alias pnpm="corepack pnpm"

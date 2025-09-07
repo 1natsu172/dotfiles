@@ -1,5 +1,6 @@
 [tools]
-node = "22"
+node = "24"
+"npm:corepack" = "latest"
 bun = "latest"
 ruby = "3.2"
 go = "latest"
