@@ -35,7 +35,13 @@ A comprehensive collection of specialized AI subagents for [Claude Code](https:/
 
 ## Overview
 
-This repository contains 75 specialized subagents that extend Claude Code's capabilities. Each subagent is an expert in a specific domain, automatically invoked based on context or explicitly called when needed. All agents are configured with specific Claude models based on task complexity for optimal performance and cost-effectiveness.
+This repository contains **77 expert-level subagents** that extend Claude Code's capabilities with deep, specialized knowledge across all areas of software development and business operations. Each subagent has been comprehensively enhanced with:
+
+- **2024/2025 Best Practices** - Latest tools, frameworks, and industry standards
+- **Production-Ready Knowledge** - Real-world scenarios and enterprise patterns
+- **Expert-Level Depth** - 8-12 detailed capability subsections per agent
+- **Modern Tech Stacks** - Current versions and cutting-edge technologies
+- **Optimal Model Selection** - Sonnet/Haiku assignment based on task complexity
 
 ## Available Subagents
 
@@ -43,6 +49,7 @@ This repository contains 75 specialized subagents that extend Claude Code's capa
 - **[backend-architect](backend-architect.md)** - Design RESTful APIs, microservice boundaries, and database schemas
 - **[frontend-developer](frontend-developer.md)** - Build React components, implement responsive layouts, and handle client-side state management
 - **[ui-ux-designer](ui-ux-designer.md)** - Create interface designs, wireframes, and design systems
+- **[ui-visual-validator](ui-visual-validator.md)** - Verify whether UI modifications have achieved their intended goals through rigorous screenshot analysis
 - **[mobile-developer](mobile-developer.md)** - Develop React Native or Flutter apps with native integrations
 - **[graphql-architect](graphql-architect.md)** - Design GraphQL schemas, resolvers, and federation
 - **[architect-reviewer](architect-review.md)** - Reviews code changes for architectural consistency and patterns
@@ -133,28 +140,23 @@ This repository contains 75 specialized subagents that extend Claude Code's capa
 
 ## Model Assignments
 
-All 75 subagents are configured with specific Claude models based on task complexity:
+All 76 subagents are configured with specific Claude models based on task complexity:
 
-### 🚀 Haiku (Fast & Cost-Effective) - 15 agents
+### 🚀 Haiku (Fast & Cost-Effective) - 11 agents
 **Model:** `haiku`
-- `data-scientist` - SQL queries and data analysis
-- `api-documenter` - OpenAPI/Swagger documentation
+- `context-manager` - AI context engineering with vector databases
 - `reference-builder` - Exhaustive technical references and API documentation
-- `business-analyst` - Metrics and KPI tracking
-- `content-marketer` - Blog posts and social media
-- `customer-support` - Support tickets and FAQs
-- `sales-automator` - Cold emails and proposals
-- `search-specialist` - Web research and information gathering
-- `legal-advisor` - Privacy policies and compliance documents
+- `sales-automator` - Modern sales automation with CRM integration
+- `search-specialist` - Expert web research and information synthesis
 - `seo-meta-optimizer` - Meta title and description optimization
 - `seo-keyword-strategist` - Keyword density and semantic analysis
 - `seo-structure-architect` - Content structure and schema markup
 - `seo-snippet-hunter` - Featured snippet formatting
 - `seo-content-refresher` - Content freshness updates
 - `seo-cannibalization-detector` - Keyword overlap detection
-- `seo-content-planner` - Content calendars and outlines
+- `seo-content-planner` - Content calendars and topic clusters
 
-### ⚡ Sonnet (Balanced Performance) - 44 agents
+### ⚡ Sonnet (Balanced Performance) - 45 agents
 **Model:** `sonnet`
 
 **Development & Languages:**
@@ -177,50 +179,72 @@ All 75 subagents are configured with specific Claude models based on task comple
 - `ios-developer` - Native iOS development with Swift/SwiftUI
 - `frontend-developer` - React components and UI
 - `ui-ux-designer` - Interface design and wireframes
+- `ui-visual-validator` - Rigorous UI validation through screenshot analysis
 - `backend-architect` - API design and microservices
 - `mobile-developer` - React Native/Flutter apps
 - `sql-pro` - Complex SQL optimization
 - `graphql-architect` - GraphQL schemas and resolvers
 
 **Infrastructure & Operations:**
-- `devops-troubleshooter` - Production debugging
-- `deployment-engineer` - CI/CD pipelines
-- `database-optimizer` - Query optimization
-- `database-admin` - Database operations
-- `terraform-specialist` - Infrastructure as Code
-- `network-engineer` - Network configuration
-- `dx-optimizer` - Developer experience
-- `data-engineer` - ETL pipelines
+- `devops-troubleshooter` - Production debugging with modern observability
+- `deployment-engineer` - GitOps workflows and platform engineering
+- `cloud-architect` - Multi-cloud expertise with FinOps optimization
+- `hybrid-cloud-architect` - Complex multi-cloud and edge architectures
+- `kubernetes-architect` - Cloud-native infrastructure with service mesh
+- `database-optimizer` - Advanced performance tuning and scalability
+- `database-admin` - Cloud databases and reliability engineering
+- `terraform-specialist` - Advanced IaC with OpenTofu knowledge
+- `network-engineer` - Zero-trust networking and service mesh
+- `security-auditor` - DevSecOps and compliance automation
+- `performance-engineer` - OpenTelemetry and comprehensive optimization
+- `incident-responder` - SRE principles and modern incident management
+- `dx-optimizer` - Developer experience and platform engineering
+- `data-engineer` - Modern data stack and real-time streaming
 
-**Quality & Support:**
-- `test-automator` - Test suite creation
-- `code-reviewer` - Code quality analysis
-- `debugger` - Error investigation
-- `error-detective` - Log analysis
-- `ml-engineer` - ML model deployment
-- `legacy-modernizer` - Framework migrations
-- `payment-integration` - Payment processing
-- `mermaid-expert` - Mermaid diagrams and visual documentation
-- `flutter-expert` - Flutter development
-- `seo-content-auditor` - Content quality and E-E-A-T analysis
-- `seo-authority-builder` - Authority signal optimization
-- `seo-content-writer` - SEO-optimized content creation
+**Quality & AI/ML:**
+- `test-automator` - AI-powered testing with self-healing frameworks
+- `code-reviewer` - Expert code analysis with modern security scanning
+- `ai-engineer` - Advanced LLM integration with RAG and agent systems
+- `ml-engineer` - Production ML with modern frameworks and monitoring
+- `mlops-engineer` - Comprehensive ML infrastructure and automation
+- `data-scientist` - Advanced analytics with cloud platforms
+- `prompt-engineer` - Cutting-edge LLM optimization techniques
 
-### 🧠 Opus (Maximum Capability) - 15 agents
+### 🧠 Opus (Maximum Capability) - 21 agents
 **Model:** `opus`
+
+**Critical Analysis & Architecture:**
 - `ai-engineer` - LLM applications and RAG systems
-- `security-auditor` - Vulnerability analysis
-- `performance-engineer` - Application optimization
-- `incident-responder` - Production incident handling
-- `mlops-engineer` - ML infrastructure
-- `architect-reviewer` - Architectural consistency
-- `cloud-architect` - Cloud infrastructure design
-- `prompt-engineer` - LLM prompt optimization
-- `context-manager` - Multi-agent coordination
-- `quant-analyst` - Financial modeling
-- `risk-manager` - Portfolio risk management
-- `docs-architect` - Comprehensive technical documentation from codebases
-- `tutorial-engineer` - Step-by-step tutorials and educational content
+- `architect-reviewer` - Architectural consistency and patterns
+- `backend-architect` - System architecture and scalability design
+- `cloud-architect` - Multi-cloud infrastructure architecture
+- `code-reviewer` - Critical code quality and security analysis
+- `data-scientist` - Complex analytics and statistical modeling
+- `database-optimizer` - Performance-critical query optimization
+
+**Complex Engineering & Operations:**
+- `hybrid-cloud-architect` - Complex multi-cloud strategies
+- `incident-responder` - Critical production incident handling
+- `kubernetes-architect` - Cloud-native infrastructure design
+- `ml-engineer` - Complex ML model development and deployment
+- `mlops-engineer` - ML infrastructure and automation
+- `performance-engineer` - Advanced application optimization
+- `prompt-engineer` - Advanced LLM optimization techniques
+- `security-auditor` - Comprehensive vulnerability analysis
+- `terraform-specialist` - Infrastructure architecture with IaC
+
+**Business Critical & Compliance:**
+- `context-manager` - Multi-agent coordination for complex tasks
+- `docs-architect` - Comprehensive technical documentation
+- `hr-pro` - Complex HR scenarios and legal compliance
+- `legal-advisor` - Legal analysis and contract review
+- `quant-analyst` - Advanced financial modeling and algorithmic trading
+
+**Model Optimization:**
+Agents are strategically assigned models based on task complexity:
+- **Opus (21)**: Complex reasoning, critical analysis, architecture
+- **Sonnet (45)**: Balanced development and specialized tasks
+- **Haiku (11)**: Fast, focused utility tasks
 
 ## Installation
 
@@ -440,19 +464,25 @@ payment-integration → security-auditor → Validated implementation
 - **error-detective**: Log analysis, error pattern recognition, root cause analysis
 - **search-specialist**: Deep web research, competitive analysis, fact-checking
 
-### 📚 Documentation
-- **api-documenter**: OpenAPI/Swagger specs, API documentation
-- **docs-architect**: Comprehensive technical documentation, architecture guides, system manuals
-- **reference-builder**: Exhaustive API references, configuration guides, parameter documentation
-- **tutorial-engineer**: Step-by-step tutorials, learning paths, educational content
+### 📚 Documentation & Architecture
+- **api-documenter**: AI-powered documentation with modern dev portal architecture
+- **docs-architect**: Comprehensive technical documentation with automated generation
+- **reference-builder**: Exhaustive API references with interactive examples
+- **tutorial-engineer**: AI-enhanced educational content with progressive learning
+- **architect-reviewer**: Master software architecture with modern patterns
+- **graphql-architect**: Modern GraphQL federation and performance optimization
 
-### 💼 Business & Strategy
-- **business-analyst**: KPIs, revenue models, growth projections, investor metrics
-- **risk-manager**: Portfolio risk, hedging strategies, R-multiples, position sizing
-- **content-marketer**: SEO content, blog posts, social media, email campaigns
-- **sales-automator**: Cold emails, follow-ups, proposals, lead nurturing
-- **customer-support**: Support tickets, FAQs, help documentation, troubleshooting
-- **legal-advisor** - Draft privacy policies, terms of service, disclaimers, and legal notices
+### 💼 Business & Specialized Domains
+- **business-analyst**: Advanced BI with AI-powered analytics and strategic frameworks
+- **hr-pro**: Modern HR technology with talent management and compliance
+- **legal-advisor**: Legal technology with contract analysis and compliance automation
+- **content-marketer**: AI-powered content marketing with omnichannel distribution
+- **sales-automator**: Modern sales automation with CRM integration
+- **customer-support**: AI-powered support with conversational automation
+- **quant-analyst**: Advanced quantitative finance with algorithmic trading
+- **risk-manager**: Comprehensive risk management with modern analytics
+- **payment-integration**: Modern payment systems and fintech integration
+- **legacy-modernizer**: Strategic legacy transformation with cloud migration
 
 ## Best Practices
 
