@@ -1,15 +1,21 @@
 ---
 allowed-tools: Bash(git add:*), Bash(git status:*), Bash(git commit:*), Bash(gh)
-argument-hint: [message]
-description: Create a GitHub pull request
+argument-hint: [language]
+description: Create a GitHub pull request with language support (en/ja)
 # model: claude-3-5-haiku-20241022
 ---
 
 # How to Create a Pull Request Using GitHub CLI
 
+Language support: Use `/create-pr [language]` where language can be `en` (default) or `ja`.
+
+Based on the provided argument ($ARGUMENTS), generate PR content in the specified language:
+- No argument or `en`: Generate English PR title and description
+- `ja`: Generate Japanese PR title and description
+
 This guide explains how to create pull requests using GitHub CLI in our project.
 
-**Important**: All PR titles and descriptions should be written in English.
+**Language Instructions**: When generating PR content, use the language specified by the first argument. If argument is `ja`, write PR titles and descriptions in Japanese. Otherwise, use English (default).
 
 ## Prerequisites
 
@@ -39,28 +45,28 @@ This guide explains how to create pull requests using GitHub CLI in our project.
 
    ```bash
    # Basic command structure
-   gh pr create --draft --title "✨(scope): Your descriptive title" --body "Your PR description" --base main 
+   gh pr create --draft --title "feat(scope): Your descriptive title" --body "Your PR description" --base main 
    ```
 
    For more complex PR descriptions with proper formatting, use the `--body-file` option with the exact PR template structure:
 
    ```bash
    # Create PR with proper template structure
-   gh pr create --draft --title "✨(scope): Your descriptive title" --body-file .github/pull_request_template.md --base main
+   gh pr create --draft --title "feat(scope): Your descriptive title" --body-file .github/pull_request_template.md --base main
    ```
 
 ## Best Practices
 
-1. **Language**: Always use English for PR titles and descriptions
+1. **Language**: Use the language specified by the command argument (`$ARGUMENTS`). Default to English if no language specified.
 
-2. **PR Title Format**: Use conventional commit format with emojis
+2. **PR Title Format**: Use conventional commit format without emojis
 
-   - Always include an appropriate emoji at the beginning of the title
-   - Use the actual emoji character (not the code representation like `:sparkles:`)
+   - Use standard conventional commit prefixes (feat, fix, docs, style, refactor, test, chore)
+   - Do not include emojis in the title
    - Examples:
-     - `✨(supabase): Add staging remote configuration`
-     - `🐛(auth): Fix login redirect issue`
-     - `📝(readme): Update installation instructions`
+     - `feat(supabase): Add staging remote configuration`
+     - `fix(auth): Fix login redirect issue`
+     - `docs(readme): Update installation instructions`
 
 3. **Description Template**: Always use our PR template structure from @.github/pull_request_template.md:
 
@@ -76,10 +82,11 @@ This guide explains how to create pull requests using GitHub CLI in our project.
 
 ### Common Mistakes to Avoid
 
-1. **Using Non-English Text**: All PR content must be in English
-2. **Incorrect Section Headers**: Always use the exact section headers from the template
-3. **Adding Custom Sections**: Stick to the sections defined in the template
-4. **Using Outdated Templates**: Always refer to the current @.github/pull_request_template.md file
+1. **Ignoring Language Argument**: Use the language specified in the command argument ($ARGUMENTS)
+2. **Including Emojis**: Do not include emojis in PR titles or descriptions
+3. **Incorrect Section Headers**: Always use the exact section headers from the template
+4. **Adding Custom Sections**: Stick to the sections defined in the template
+5. **Using Outdated Templates**: Always refer to the current @.github/pull_request_template.md file
 
 ### Missing Sections
 
