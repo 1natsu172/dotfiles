@@ -26,6 +26,10 @@
       "headers": {
         "Authorization": "Bearer ${GITHUB_MCP_TOKEN}"
       }
+    },
+    "dev3000": {
+      "type": "http",
+      "url": "http://localhost:3684/api/mcp/mcp"
     }
   }
 }
