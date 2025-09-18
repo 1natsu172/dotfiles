@@ -28,3 +28,10 @@ Brewfile.lock.json
 .gemini/*
 !.gemini/GEMINI.md
 !.gemini/settings.json
+.bun/*
+!.bun/install/
+.bun/install/*
+!.bun/install/global/
+.bun/install/global/*
+!.bun/install/global/package.json
+!.bun/install/global/bun.lockb

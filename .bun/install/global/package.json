@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "@google/gemini-cli": "^0.4.1",
+    "@mizchi/lsmcp": "^0.10.0",
+    "@openai/codex": "^0.34.0",
+    "@typescript/native-preview": "^7.0.0-dev.20250913.1",
+    "dev3000": "^0.0.58",
+    "difit": "^2.2.2",
+    "eas-cli": "^16.19.1"
+  }
+}
