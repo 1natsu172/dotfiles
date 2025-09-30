@@ -1,7 +1,19 @@
 {
-  "theme": "GitHub",
-  "selectedAuthType": "oauth-personal",
-  "preferredEditor": "vscode",
-  "usageStatisticsEnabled": false,
-  "hasSeenIdeIntegrationNudge": true
+  "ide": {
+    "hasSeenNudge": true
+  },
+  "general": {
+    "preferredEditor": "vscode"
+  },
+  "security": {
+    "auth": {
+      "selectedType": "oauth-personal"
+    }
+  },
+  "ui": {
+    "theme": "GitHub"
+  },
+  "privacy": {
+    "usageStatisticsEnabled": false
+  }
 }
