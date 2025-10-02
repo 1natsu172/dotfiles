@@ -306,7 +306,7 @@ export GIT_AUTHOR_EMAIL="mail@example.com"
 基本これを使うだけでよい
 
 ```bash
-SOPS_EDITOR="$EDITOR -rw" sops edit .env.enc.json && op item edit "ikmbvg3kyvmjkqv2i5o5eftsg4" '\.env\.enc\.json[file]=.env.enc.json'
+SOPS_EDITOR="$EDITOR -rw" sops edit .env.enc.json && op document edit "e3hlrchvuntyhkkylmvidnhzdi" .env.enc.json
 ```
 
 ※ `SOPS_EDITOR="$EDITOR -rw"` はVSCode系でwaitが必要になる問題があるため添えている。VSCode系を使わないなら不要。ref: https://github.com/getsops/sops/issues/380
