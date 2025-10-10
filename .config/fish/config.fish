@@ -67,6 +67,7 @@ alias gpull='g pull'
 alias gremov='g remote -v'
 alias glog='g log'
 alias glogo='g log --oneline'
+alias glogor='g log @{upstream} --oneline'
 alias grepow='gh repo view --web --branch=(git rev-parse --short HEAD)'
 alias gwt='g worktree'
 
