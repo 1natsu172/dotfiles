@@ -4,6 +4,16 @@
   },
   "permissions": {
     "allow": [],
+    "deny": [
+      "Read(**/.env.*)",
+      "Read(id_rsa)",
+      "Read(id_ed25519)",
+      "Read(**/*token*)",
+      "Read(**/*key*)",
+      "Write(**/.env.*)",
+      "Write(**/secrets/**)",
+      "mcp__supabase__execute_sql"
+    ],
     "ask": [
       "Bash(curl:*)",
       "Bash(wget:*)",
@@ -24,18 +34,24 @@
       "Bash(mongod:*)",
       "Bash(npm uninstall:*)",
       "Bash(npm remove:*)"
-    ],
-    "deny": [
-      "Read(**/.env.*)",
-      "Read(id_rsa)",
-      "Read(id_ed25519)",
-      "Read(**/*token*)",
-      "Read(**/*key*)",
-      "Write(**/.env.*)",
-      "Write(**/secrets/**)",
-      "mcp__supabase__execute_sql"
     ]
   },
+  "enableAllProjectMcpServers": false,
+  "enabledMcpjsonServers": [
+    "context7",
+    "playwright",
+    "github-pull-requests",
+    "github-issues-readonly",
+    "github-repos-readonly",
+    "github-discussions-readonly",
+    "github-actions-readonly"
+  ],
+  "disabledMcpjsonServers": [
+    "sentry",
+    "socket-mcp",
+    "dev3000",
+    "chrome-devtools"
+  ],
   "hooks": {
     "UserPromptSubmit": [
       {
@@ -111,20 +127,7 @@
     "command": "bunx -y ccstatusline@latest",
     "padding": 0
   },
-  "enableAllProjectMcpServers": false,
-  "enabledMcpjsonServers": [
-    "context7",
-    "playwright",
-    "github-pull-requests",
-    "github-issues-readonly",
-    "github-repos-readonly",
-    "github-discussions-readonly",
-    "github-actions-readonly"
-  ],
-  "disabledMcpjsonServers": [
-    "sentry",
-    "socket-mcp",
-    "dev3000",
-    "chrome-devtools"
-  ]
+  "enabledPlugins": {
+    "claude-code-essentials@claude-code-workflows": true
+  }
 }
