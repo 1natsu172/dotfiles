@@ -114,11 +114,17 @@
   "enableAllProjectMcpServers": false,
   "enabledMcpjsonServers": [
     "context7",
-    "playwright"
+    "playwright",
+    "github-pull-requests",
+    "github-issues-readonly",
+    "github-repos-readonly",
+    "github-discussions-readonly",
+    "github-actions-readonly"
   ],
   "disabledMcpjsonServers": [
     "sentry",
     "socket-mcp",
-    "github"
+    "dev3000",
+    "chrome-devtools"
   ]
 }

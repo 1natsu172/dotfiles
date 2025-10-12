@@ -1,5 +1,40 @@
 {
   "mcpServers": {
+    "github-pull-requests": {
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp/x/pull_requests",
+      "headers": {
+        "Authorization": "Bearer ${GITHUB_MCP_TOKEN}"
+      }
+    },
+    "github-issues-readonly": {
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp/x/issues/readonly",
+      "headers": {
+        "Authorization": "Bearer ${GITHUB_MCP_TOKEN}"
+      }
+    },
+    "github-repos-readonly": {
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp/x/repos/readonly",
+      "headers": {
+        "Authorization": "Bearer ${GITHUB_MCP_TOKEN}"
+      }
+    },
+    "github-discussions-readonly": {
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp/x/discussions/readonly",
+      "headers": {
+        "Authorization": "Bearer ${GITHUB_MCP_TOKEN}"
+      }
+    },
+    "github-actions-readonly": {
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp/x/actions/readonly",
+      "headers": {
+        "Authorization": "Bearer ${GITHUB_MCP_TOKEN}"
+      }
+    },
     "context7": {
       "type": "http",
       "url": "https://mcp.context7.com/mcp"
@@ -19,13 +54,6 @@
         "@playwright/mcp@latest"
       ],
       "env": {}
-    },
-    "github": {
-      "type": "http",
-      "url": "https://api.githubcopilot.com/mcp/",
-      "headers": {
-        "Authorization": "Bearer ${GITHUB_MCP_TOKEN}"
-      }
     },
     "dev3000": {
       "type": "http",
