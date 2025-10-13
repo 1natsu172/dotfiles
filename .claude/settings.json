@@ -128,6 +128,6 @@
     "padding": 0
   },
   "enabledPlugins": {
-    "claude-code-essentials@claude-code-workflows": true
+    "full-stack-orchestration@claude-code-workflows": true
   }
 }
