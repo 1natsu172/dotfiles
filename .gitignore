@@ -25,6 +25,9 @@ Brewfile.lock.json
 !.claude/settings.json
 !.claude/commands
 !.claude/agents
+!.claude/plugins
+.claude/plugins/*
+!.claude/plugins/known_marketplaces.json
 .gemini/*
 !.gemini/GEMINI.md
 !.gemini/settings.json
