@@ -1,12 +1,12 @@
 {
   "dependencies": {
-    "@github/copilot": "^0.0.328",
-    "@google/gemini-cli": "^0.6.1",
+    "@github/copilot": "^0.0.342",
+    "@google/gemini-cli": "^0.9.0",
     "@mizchi/lsmcp": "^0.10.0",
-    "@openai/codex": "^0.42.0",
-    "@typescript/native-preview": "^7.0.0-dev.20250926.1",
-    "dev3000": "^0.0.72",
+    "@openai/codex": "^0.46.0",
+    "@typescript/native-preview": "^7.0.0-dev.20251016.1",
+    "dev3000": "^0.0.93",
     "difit": "^2.2.2",
-    "eas-cli": "^16.19.3"
+    "eas-cli": "^16.23.1"
   }
 }
