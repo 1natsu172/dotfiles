@@ -55,10 +55,6 @@
       ],
       "env": {}
     },
-    "dev3000": {
-      "type": "http",
-      "url": "http://localhost:3684/api/mcp/mcp"
-    },
     "chrome-devtools": {
       "command": "bunx",
       "args": [
