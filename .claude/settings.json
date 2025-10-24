@@ -39,7 +39,6 @@
   "enableAllProjectMcpServers": false,
   "enabledMcpjsonServers": [
     "context7",
-    "playwright",
     "github-pull-requests",
     "github-issues-readonly",
     "github-repos-readonly",
@@ -185,5 +184,5 @@
     "unit-testing@claude-code-workflows": true,
     "web-scripting@claude-code-workflows": false
   },
-  "alwaysThinkingEnabled": false
+  "alwaysThinkingEnabled": true
 }
