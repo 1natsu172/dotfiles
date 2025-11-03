@@ -5,6 +5,46 @@ description: Create a GitHub pull request with language support (en/ja)
 # model: claude-3-5-haiku-20241022
 ---
 
+# Instructions for Claude Code
+
+When creating a PR, follow these steps:
+
+## 1. Analyze branch changes (run in parallel)
+- `git status` - check untracked files
+- `git diff` - check staged/unstaged changes
+- Get default branch: `git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@'`
+- Get merge base: `git merge-base origin/<default-branch> HEAD`
+- Check commits from branch point: `git log --oneline <merge-base>..HEAD`
+- Check diff from branch point: `git diff --stat <merge-base>..HEAD`
+
+This identifies the actual branch divergence point, not the current base branch state.
+
+## 2. Draft PR content
+- Analyze ALL commits from merge base (not just the latest)
+- Title: conventional commit format, no emojis
+- Description: follow @.github/pull_request_template.md structure
+- Language: use `$ARGUMENTS` (default: en, or ja)
+
+## 3. Create PR
+Use `gh pr create --draft` with HEREDOC format. **DO NOT manually push** - `gh pr create` automatically pushes the branch if needed.
+
+```bash
+gh pr create --draft --title "the pr title" --body "$(cat <<'EOF'
+## Summary
+<1-3 bullet points>
+
+## Test plan
+[Bulleted markdown checklist...]
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+EOF
+)"
+```
+
+## 4. Return PR URL to user
+
+---
+
 # How to Create a Pull Request Using GitHub CLI
 
 Language support: Use `/create-pr [language]` where language can be `en` (default) or `ja`.
@@ -80,6 +120,10 @@ This guide explains how to create pull requests using GitHub CLI in our project.
    - Use `--draft` flag in the command
    - Convert to ready for review when complete using `gh pr ready`
 
+6. **Automatic Push**: `gh pr create` automatically handles branch push
+   - No need to run `git push -u origin <branch>` manually
+   - Prevents unnecessary push errors and streamlines workflow
+
 ### Common Mistakes to Avoid
 
 1. **Ignoring Language Argument**: Use the language specified in the command argument ($ARGUMENTS)
@@ -87,6 +131,7 @@ This guide explains how to create pull requests using GitHub CLI in our project.
 3. **Incorrect Section Headers**: Always use the exact section headers from the template
 4. **Adding Custom Sections**: Stick to the sections defined in the template
 5. **Using Outdated Templates**: Always refer to the current @.github/pull_request_template.md file
+6. **Manual Push Before PR**: Avoid running `git push` manually; `gh pr create` handles it automatically
 
 ### Missing Sections
 
