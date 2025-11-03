@@ -1,182 +1,150 @@
 ---
-allowed-tools: Bash(git add:*), Bash(git status:*), Bash(git commit:*), Bash(gh)
+allowed-tools: Bash(git), Bash(gh)
 argument-hint: [language]
 description: Create a GitHub pull request with language support (en/ja)
-# model: claude-3-5-haiku-20241022
 ---
 
-# Instructions for Claude Code
+# Create Pull Request
 
-When creating a PR, follow these steps:
+This command creates a GitHub pull request using git analysis and PR best practices.
 
-## 1. Analyze branch changes (run in parallel)
-- `git status` - check untracked files
-- `git diff` - check staged/unstaged changes
-- Get default branch: `git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@'`
-- Get merge base: `git merge-base origin/<default-branch> HEAD`
-- Check commits from branch point: `git log --oneline <merge-base>..HEAD`
-- Check diff from branch point: `git diff --stat <merge-base>..HEAD`
+## Skills Used
 
-This identifies the actual branch divergence point, not the current base branch state.
+This command leverages two Skills for optimal efficiency:
+- **git-analysis**: Analyzes branch changes, commits, and merge base
+- **github-pr-best-practices**: Applies conventional commits and PR formatting standards
 
-## 2. Draft PR content
-- Analyze ALL commits from merge base (not just the latest)
-- Title: conventional commit format, no emojis
-- Description: follow @.github/pull_request_template.md structure
-- Language: use `$ARGUMENTS` (default: en, or ja)
+## Instructions
 
-## 3. Create PR
-Use `gh pr create --draft` with HEREDOC format. **DO NOT manually push** - `gh pr create` automatically pushes the branch if needed.
+### Step 1: Analyze Branch Changes
+
+Use the `git-analysis` Skill to gather branch information:
+
+1. Run git analysis commands in parallel:
+   - Check current status: `git status`
+   - Check staged changes: `git diff --cached`
+   - Check unstaged changes: `git diff`
+
+2. Get branch divergence information:
+   - Determine default branch
+   - Find merge base
+   - List all commits from merge base to HEAD
+   - Get file change statistics
+
+**Important**: Analyze ALL commits from the merge base, not just the latest commit.
+
+You can use the helper scripts:
+```bash
+bash .claude/skills/git-analysis/scripts/get_branch_diff.sh
+bash .claude/skills/git-analysis/scripts/get_commit_history.sh
+```
+
+### Step 2: Draft PR Content
+
+Use the `github-pr-best-practices` Skill to format PR content:
+
+1. **Language Selection**:
+   - Use `$ARGUMENTS` to determine language
+   - Default: English (`en`)
+   - Supported: `en`, `ja`
+
+2. **PR Title**:
+   - Follow conventional commit format
+   - No emojis
+   - Format: `<type>(<scope>): <description>`
+   - Examples: `feat(auth): add OAuth2 support`, `fix(api): resolve timeout issue`
+
+3. **PR Description Structure**:
+   ```markdown
+   ## Summary
+   - Brief description (1-3 bullet points)
+   - Focus on what and why
+
+   ## Test plan
+   - [ ] Test case 1
+   - [ ] Test case 2
+   - [ ] Verify no regressions
+
+   🤖 Generated with [Claude Code](https://claude.com/claude-code)
+   ```
+
+4. **Template Integration**:
+   - Check if `.github/pull_request_template.md` exists
+   - If exists, follow its structure exactly
+   - Don't modify section headers or add custom sections
+
+### Step 3: Create Pull Request
+
+Execute the PR creation:
 
 ```bash
 gh pr create --draft --title "the pr title" --body "$(cat <<'EOF'
 ## Summary
-<1-3 bullet points>
+<1-3 bullet points in selected language>
 
 ## Test plan
-[Bulleted markdown checklist...]
+<checklist in selected language>
 
 🤖 Generated with [Claude Code](https://claude.com/claude-code)
 EOF
 )"
 ```
 
-## 4. Return PR URL to user
+**Important Notes**:
+- Use HEREDOC format (`cat <<'EOF'`) for multi-line body
+- Always use `--draft` flag
+- Do NOT manually push - `gh pr create` handles it automatically
+- Return the PR URL to the user
 
----
+### Step 4: Return PR URL
 
-# How to Create a Pull Request Using GitHub CLI
+Display the PR URL to the user for easy access.
 
-Language support: Use `/create-pr [language]` where language can be `en` (default) or `ja`.
+## Language Examples
 
-Based on the provided argument ($ARGUMENTS), generate PR content in the specified language:
-- No argument or `en`: Generate English PR title and description
-- `ja`: Generate Japanese PR title and description
+### English (en)
+```markdown
+## Summary
+- Add user authentication with OAuth2
+- Implement token refresh mechanism
 
-This guide explains how to create pull requests using GitHub CLI in our project.
-
-**Language Instructions**: When generating PR content, use the language specified by the first argument. If argument is `ja`, write PR titles and descriptions in Japanese. Otherwise, use English (default).
-
-## Prerequisites
-
-1. Install GitHub CLI if you haven't already:
-
-   ```bash
-   # macOS
-   brew install gh
-
-   # Windows
-   winget install --id GitHub.cli
-
-   # Linux
-   # Follow instructions at https://github.com/cli/cli/blob/trunk/docs/install_linux.md
-   ```
-
-2. Authenticate with GitHub:
-   ```bash
-   gh auth login
-   ```
-
-## Creating a New Pull Request
-
-1. First, prepare your PR description following the template in @.github/pull_request_template.md
-
-2. Use the `gh pr create --draft` command to create a new pull request:
-
-   ```bash
-   # Basic command structure
-   gh pr create --draft --title "feat(scope): Your descriptive title" --body "Your PR description" --base main 
-   ```
-
-   For more complex PR descriptions with proper formatting, use the `--body-file` option with the exact PR template structure:
-
-   ```bash
-   # Create PR with proper template structure
-   gh pr create --draft --title "feat(scope): Your descriptive title" --body-file .github/pull_request_template.md --base main
-   ```
-
-## Best Practices
-
-1. **Language**: Use the language specified by the command argument (`$ARGUMENTS`). Default to English if no language specified.
-
-2. **PR Title Format**: Use conventional commit format without emojis
-
-   - Use standard conventional commit prefixes (feat, fix, docs, style, refactor, test, chore)
-   - Do not include emojis in the title
-   - Examples:
-     - `feat(supabase): Add staging remote configuration`
-     - `fix(auth): Fix login redirect issue`
-     - `docs(readme): Update installation instructions`
-
-3. **Description Template**: Always use our PR template structure from @.github/pull_request_template.md:
-
-4. **Template Accuracy**: Ensure your PR description precisely follows the template structure:
-
-   - Don't modify or rename the PR-Agent sections (`pr_agent:summary` and `pr_agent:walkthrough`)
-   - Keep all section headers exactly as they appear in the template
-   - Don't add custom sections that aren't in the template
-
-5. **Draft PRs**: Start as draft when the work is in progress
-   - Use `--draft` flag in the command
-   - Convert to ready for review when complete using `gh pr ready`
-
-6. **Automatic Push**: `gh pr create` automatically handles branch push
-   - No need to run `git push -u origin <branch>` manually
-   - Prevents unnecessary push errors and streamlines workflow
-
-### Common Mistakes to Avoid
-
-1. **Ignoring Language Argument**: Use the language specified in the command argument ($ARGUMENTS)
-2. **Including Emojis**: Do not include emojis in PR titles or descriptions
-3. **Incorrect Section Headers**: Always use the exact section headers from the template
-4. **Adding Custom Sections**: Stick to the sections defined in the template
-5. **Using Outdated Templates**: Always refer to the current @.github/pull_request_template.md file
-6. **Manual Push Before PR**: Avoid running `git push` manually; `gh pr create` handles it automatically
-
-### Missing Sections
-
-Always include all template sections, even if some are marked as "N/A" or "None"
-
-## Additional GitHub CLI PR Commands
-
-Here are some additional useful GitHub CLI commands for managing PRs:
-
-```bash
-# List your open pull requests
-gh pr list --author "@me"
-
-# Check PR status
-gh pr status
-
-# View a specific PR
-gh pr view <PR-NUMBER>
-
-# Check out a PR branch locally
-gh pr checkout <PR-NUMBER>
-
-# Convert a draft PR to ready for review
-gh pr ready <PR-NUMBER>
-
-# Add reviewers to a PR
-gh pr edit <PR-NUMBER> --add-reviewer username1,username2
-
-# Merge a PR
-gh pr merge <PR-NUMBER> --squash
+## Test plan
+- [ ] Test OAuth2 login flow
+- [ ] Test token refresh
 ```
 
-## Using Templates for PR Creation
+### Japanese (ja)
+```markdown
+## 概要
+- OAuth2によるユーザー認証を追加
+- トークンリフレッシュ機能を実装
 
-To simplify PR creation with consistent descriptions, you can create a template file:
-
-1. Create a file named `pr-template.md` with your PR template
-2. Use it when creating PRs:
-
-```bash
-gh pr create --draft --title "feat(scope): Your title" --body-file pr-template.md --base main
+## テスト計画
+- [ ] OAuth2ログインフローのテスト
+- [ ] トークンリフレッシュのテスト
 ```
 
-## Related Documentation
+## Common Mistakes to Avoid
 
-- [PR Template](.github/pull_request_template.md)
-- [Conventional Commits](https://www.conventionalcommits.org/)
-- [GitHub CLI documentation](https://cli.github.com/manual/)
+Refer to the `github-pr-best-practices` Skill for:
+- Conventional commit format errors
+- Emoji usage (not allowed)
+- Vague descriptions
+- Language mixing
+- Manual push before gh pr create
+- Ignoring ALL commits (must analyze from merge base)
+
+## Quick Reference
+
+```bash
+# This command handles the entire flow:
+# 1. Analyzes git branch state
+# 2. Formats PR following best practices
+# 3. Creates draft PR with proper structure
+# 4. Returns PR URL
+
+# Usage:
+/create-pr          # English PR
+/create-pr en       # English PR (explicit)
+/create-pr ja       # Japanese PR
+```
