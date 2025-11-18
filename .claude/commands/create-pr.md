@@ -35,8 +35,8 @@ Use the `git-analysis` Skill to gather branch information:
 
 You can use the helper scripts:
 ```bash
-bash .claude/skills/git-analysis/scripts/get_branch_diff.sh
-bash .claude/skills/git-analysis/scripts/get_commit_history.sh
+bash @~/.claude/skills/git-analysis/scripts/get_branch_diff.sh
+bash @~/.claude/skills/git-analysis/scripts/get_commit_history.sh
 ```
 
 ### Step 2: Draft PR Content
