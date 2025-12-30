@@ -2,6 +2,10 @@
 *~
 .config/*
 !.config/fish
+# Fish shell - machine/user specific files
+.config/fish/fish_variables
+.config/fish/fish_history
+.config/fish/*.log
 !.config/yarn
 .config/yarn/link
 !.config/karabiner
