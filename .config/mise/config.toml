@@ -2,6 +2,7 @@
 node = "24"
 "npm:corepack" = "latest"
 bun = "latest"
+yarn = "1"
 ruby = "3.2"
 go = "latest"
 uv = "latest"
