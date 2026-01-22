@@ -42,8 +42,7 @@
     "github-pull-requests",
     "github-issues-readonly",
     "github-repos-readonly",
-    "github-discussions-readonly",
-    "github-actions-readonly"
+    "github-discussions-readonly"
   ],
   "hooks": {
     "UserPromptSubmit": [
@@ -199,5 +198,6 @@
     "swift-lsp@claude-plugins-official": true,
     "typescript-lsp@claude-plugins-official": true
   },
-  "alwaysThinkingEnabled": true
+  "alwaysThinkingEnabled": true,
+  "model": "sonnet"
 }
