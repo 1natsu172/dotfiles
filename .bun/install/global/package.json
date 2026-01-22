@@ -7,6 +7,8 @@
     "@typescript/native-preview": "^7.0.0-dev.20251222.1",
     "dev3000": "^0.0.128",
     "difit": "^2.2.7",
-    "eas-cli": "^16.28.0"
+    "eas-cli": "^16.28.0",
+    "typescript": "^5.9.3",
+    "typescript-language-server": "^5.1.3"
   }
 }
