@@ -196,8 +196,10 @@
     "pyright-lsp@claude-plugins-official": true,
     "rust-analyzer-lsp@claude-plugins-official": true,
     "swift-lsp@claude-plugins-official": true,
-    "typescript-lsp@claude-plugins-official": true
+    "typescript-lsp@claude-plugins-official": true,
+    "code-simplifier@claude-plugins-official": true,
+    "superpowers@claude-plugins-official": true,
+    "ui-design@claude-code-workflows": true
   },
-  "alwaysThinkingEnabled": true,
-  "model": "sonnet"
+  "alwaysThinkingEnabled": true
 }
