@@ -1,6 +1,7 @@
 {
   "env": {
-    "DISABLE_TELEMETRY": "true"
+    "DISABLE_TELEMETRY": "true",
+    "ENABLE_TOOL_SEARCH": "true"
   },
   "permissions": {
     "allow": [],
