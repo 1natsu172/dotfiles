@@ -69,7 +69,7 @@
         "id": "74774803-63ad-48b5-8d00-d0a9c76665ac",
         "type": "custom-text",
         "backgroundColor": "bgBrightWhite",
-        "customText": "\uf418 ",
+        "customText": " ",
         "merge": "no-padding"
       },
       {
@@ -105,7 +105,7 @@
     "endCaps": [
       ""
     ],
-    "theme": "nord",
+    "theme": "tokyonight",
     "autoAlign": false
   }
 }
