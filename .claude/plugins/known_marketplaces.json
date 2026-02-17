@@ -5,8 +5,8 @@
       "url": "https://github.com/wshobson/agents.git"
     },
     "installLocation": "/Users/1natsu/.claude/plugins/marketplaces/claude-code-workflows",
-    "lastUpdated": "2026-02-04T07:41:09.709Z",
-    "autoUpdate": true
+    "lastUpdated": "2026-02-17T14:37:35.296Z",
+    "autoUpdate": false
   },
   "claude-plugins-official": {
     "source": {
@@ -14,6 +14,6 @@
       "repo": "anthropics/claude-plugins-official"
     },
     "installLocation": "/Users/1natsu/.claude/plugins/marketplaces/claude-plugins-official",
-    "lastUpdated": "2026-02-04T07:12:24.550Z"
+    "lastUpdated": "2026-02-17T14:43:59.972Z"
   }
 }
