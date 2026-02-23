@@ -1,4 +1,5 @@
 tap "aquaproj/aqua"
+tap "entireio/tap"
 tap "github/gh"
 tap "mobile-dev-inc/tap"
 brew "shellcheck"
@@ -95,6 +96,7 @@ cask "discord"
 cask "distroav"
 cask "docker-desktop"
 cask "dropbox"
+cask "entireio/tap/entire"
 cask "firefox@developer-edition"
 cask "flux-app"
 cask "font-blex-mono-nerd-font"
@@ -143,7 +145,6 @@ mas "Kindle", id: 302584613
 mas "Microsoft To Do", id: 1274495053
 mas "Numbers", id: 409203825
 mas "Pages", id: 409201541
-mas "Pixave", id: 924891282
 mas "Whisper Transcription", id: 1668083311
 mas "WiFi Signal", id: 525912054
 vscode "1natsu.insert-br-tag"
@@ -240,3 +241,4 @@ vscode "wesbos.theme-cobalt2"
 vscode "yzhang.markdown-all-in-one"
 go "cmd/go"
 go "cmd/gofmt"
+go "golang.org/x/tools/gopls"
