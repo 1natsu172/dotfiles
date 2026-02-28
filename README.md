@@ -333,7 +333,12 @@ ref: https://mise.jdx.dev/environments/secrets.html & https://getsops.io/docs/#e
 
 ## AI tools
 
-### mcp 
+### Agent Skills
+
+個人のエージェントスキルは別リポジトリ（[`1natsu-vacation/agent-skills`](https://github.com/1natsu-vacation/agent-skills)）で管理している。
+`bunx skills add 1natsu-vacation/agent-skills -g` でグローバルインストールすると `~/.agents/skills/` に配置され、各エージェント（Claude Code, Cursor, Cline 等）からシンボリックリンク経由で参照される。
+
+### mcp
 
 `dotfiles/.mcp.json` が実質mcpサーバーのメモになっている。（なぜこんな運用になるかというと、`~/.claude.json`は秘匿情報がありうるためコミットできないから）。
 
