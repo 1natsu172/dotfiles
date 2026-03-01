@@ -126,6 +126,60 @@
       "skillFolderHash": "0078663cbdc42e388d2eb9c291dda1a0774eee29",
       "installedAt": "2026-02-27T14:24:32.743Z",
       "updatedAt": "2026-02-27T14:24:32.743Z"
+    },
+    "1natsu-commit": {
+      "source": "1natsu-vacation/agent-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/1natsu-vacation/agent-skills.git",
+      "skillPath": "skills/1natsu-commit/SKILL.md",
+      "skillFolderHash": "74390963d162f2725a479b55d7c092f054802b90",
+      "installedAt": "2026-03-01T15:13:44.976Z",
+      "updatedAt": "2026-03-01T15:13:44.976Z"
+    },
+    "1natsu-conventional-commits": {
+      "source": "1natsu-vacation/agent-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/1natsu-vacation/agent-skills.git",
+      "skillPath": "skills/1natsu-conventional-commits/SKILL.md",
+      "skillFolderHash": "9304a00e01f6387453c23ae0ecf0638d8d6a4c23",
+      "installedAt": "2026-03-01T15:13:44.989Z",
+      "updatedAt": "2026-03-01T15:13:44.989Z"
+    },
+    "1natsu-create-pr": {
+      "source": "1natsu-vacation/agent-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/1natsu-vacation/agent-skills.git",
+      "skillPath": "skills/1natsu-create-pr/SKILL.md",
+      "skillFolderHash": "029d0ada10045f2086b25f901e3738d7fbebb209",
+      "installedAt": "2026-03-01T15:13:45.004Z",
+      "updatedAt": "2026-03-01T15:13:45.004Z"
+    },
+    "1natsu-entire-context": {
+      "source": "1natsu-vacation/agent-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/1natsu-vacation/agent-skills.git",
+      "skillPath": "skills/1natsu-entire-context/SKILL.md",
+      "skillFolderHash": "5261b5b94668113041882bd8d931d9625efdc168",
+      "installedAt": "2026-03-01T15:13:45.021Z",
+      "updatedAt": "2026-03-01T15:13:45.021Z"
+    },
+    "1natsu-error-handling": {
+      "source": "1natsu-vacation/agent-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/1natsu-vacation/agent-skills.git",
+      "skillPath": "skills/1natsu-error-handling/SKILL.md",
+      "skillFolderHash": "b4f35851acef6e5b36ed1b7e9d0dd6a60dae2f42",
+      "installedAt": "2026-03-01T15:13:45.033Z",
+      "updatedAt": "2026-03-01T15:13:45.033Z"
+    },
+    "1natsu-git-analysis": {
+      "source": "1natsu-vacation/agent-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/1natsu-vacation/agent-skills.git",
+      "skillPath": "skills/1natsu-git-analysis/SKILL.md",
+      "skillFolderHash": "36505073d35982ccd88f9f292d0960986d4fe7ab",
+      "installedAt": "2026-03-01T15:13:45.046Z",
+      "updatedAt": "2026-03-01T15:13:45.046Z"
     }
   },
   "dismissed": {

@@ -1,118 +1,60 @@
 ---
 name: 1natsu-commit
-description: Use when creating git commits, writing commit messages, or staging changes. Provides best practices for conventional commits, atomic commits, and clear commit messages that work across any coding agent.
+description: gitコミットの作成、コミットメッセージの記述、変更のステージング時に使用する。Conventional Commitsやアトミックコミット、明確なコミットメッセージのベストプラクティスを提供する。
+license: MIT
+metadata:
+  author: 1natsu
+  version: "1.2.0"
 ---
 
-# Git Commit Best Practices
+# Git コミット ベストプラクティス
 
-Guidelines for creating clean, meaningful git commits.
+クリーンで意味のあるgitコミットを作成するためのガイドライン。
 
-## When to Use
+## いつ使うか
 
-- Creating a git commit
-- Writing or reviewing commit messages
-- Deciding how to stage and group changes
+- gitコミットを作成するとき
+- コミットメッセージを書く・レビューするとき
+- 変更のステージングやグルーピングを決めるとき
 
-## Commit Message Format
+## コミットメッセージのフォーマット
 
-Follow [Conventional Commits](https://www.conventionalcommits.org/):
+[Conventional Commits](https://www.conventionalcommits.org/) に従う。タイプ、description、スコープ、本文、フッターの詳細ルールは `1natsu-conventional-commits` スキルを参照。
 
 ```
 <type>(<scope>): <description>
 
-[optional body]
+[任意の本文]
 
-[optional footer(s)]
+[任意のフッター]
 ```
 
-### Types
+## アトミックコミット
 
-| Type | Purpose |
-|------|---------|
-| `feat` | New feature |
-| `fix` | Bug fix |
-| `docs` | Documentation only |
-| `style` | Formatting, no logic change |
-| `refactor` | Code restructuring, no behavior change |
-| `perf` | Performance improvement |
-| `test` | Adding or updating tests |
-| `build` | Build system or dependencies |
-| `ci` | CI/CD configuration |
-| `chore` | Maintenance tasks |
-| `revert` | Reverting a previous commit |
+各コミットは**1つの論理的な変更**を表すべき：
 
-### Scope (Optional)
+- リファクタリングと機能追加を分離する
+- フォーマット変更とロジック変更を分離する
+- 依存関係の更新とコード変更を分離する
+- 各コミットはコードベースを動作する状態に保つ
 
-Indicates the affected area:
+### ステージング戦略
 
-```
-feat(auth): add OAuth2 login
-fix(api): handle timeout on large payloads
-docs(readme): update installation steps
-```
+- `git add .` や `git add -A` ではなく `git add <具体的なファイル>` を使う
+- コミット前に `git diff --staged` でステージ済みの変更を確認する
+- 生成ファイル、シークレット、環境ファイルのコミットを避ける
 
-### Description Rules
+## よくある間違い
 
-- Use imperative mood: "add" not "added" or "adds"
-- No capitalization of first letter
-- No period at the end
-- Keep under 50 characters when possible
+1. **曖昧なメッセージ**: "fix bug", "update code", "WIP"
+2. **変更が多すぎる**: 無関係な変更を1コミットにまとめる
+3. **シークレットのコミット**: `.env`、APIキー、認証情報
+4. **巨大なコミット**: 多数のファイルにまたがる数百行の変更
+5. **時制の誤り**: "fix" ではなく "fixed"、"add" ではなく "added"
 
-## Atomic Commits
+## 例
 
-Each commit should represent **one logical change**:
-
-- Separate refactoring from feature work
-- Separate formatting changes from logic changes
-- Separate dependency updates from code changes
-- Each commit should leave the codebase in a working state
-
-### Staging Strategy
-
-- Use `git add <specific-files>` instead of `git add .` or `git add -A`
-- Review staged changes with `git diff --staged` before committing
-- Avoid committing generated files, secrets, or environment files
-
-## Commit Body
-
-Use the body for context when the description alone is not enough:
-
-```
-fix(parser): handle nested quotes in CSV fields
-
-The parser was splitting on all commas, including those inside
-quoted strings. Added state tracking for quote depth to correctly
-identify field boundaries.
-```
-
-**Body guidelines:**
-- Separate from description with a blank line
-- Explain **what** and **why**, not **how**
-- Wrap at 72 characters per line
-
-## Footer
-
-Use for breaking changes and issue references:
-
-```
-feat(api): change authentication endpoint
-
-BREAKING CHANGE: /auth/login now requires email instead of username
-
-Refs: #123
-```
-
-## Common Mistakes to Avoid
-
-1. **Vague messages**: "fix bug", "update code", "WIP"
-2. **Too many changes**: mixing unrelated changes in one commit
-3. **Committing secrets**: `.env`, API keys, credentials
-4. **Giant commits**: hundreds of lines across many files
-5. **Wrong tense**: "fixed" instead of "fix", "added" instead of "add"
-
-## Examples
-
-**Good commits:**
+**良いコミット：**
 
 ```
 feat(auth): add two-factor authentication support
@@ -123,12 +65,12 @@ docs(api): document rate limiting headers
 chore(deps): update typescript to 5.4
 ```
 
-**Bad commits:**
+**悪いコミット：**
 
 ```
 update stuff
 fix
 WIP
 asdf
-Merge branch 'main' into feature (unnecessary merge commits)
+Merge branch 'main' into feature（不必要なマージコミット）
 ```
