@@ -87,7 +87,8 @@
     "autoAllowBashIfSandboxed": true,
     "filesystem": {
       "denyRead": ["~/.ssh", "~/.aws", "~/.config/gh"],
-      "denyWrite": ["~/.ssh", "~/.aws", "~/.config/gh", "~/.bashrc", "~/.zshrc", "~/.config/fish"]
+      "denyWrite": ["~/.ssh", "~/.aws", "~/.config/gh", "~/.bashrc", "~/.zshrc", "~/.config/fish"],
+      "allowWrite": ["~/.gnupg"]
     },
     "network": {
       "allowedDomains": ["github.com", "*.githubusercontent.com", "registry.npmjs.org"]
