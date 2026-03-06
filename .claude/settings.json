@@ -82,18 +82,6 @@
       "Bash(printenv *)"
     ]
   },
-  "sandbox": {
-    "enabled": true,
-    "autoAllowBashIfSandboxed": true,
-    "filesystem": {
-      "denyRead": ["~/.ssh", "~/.aws", "~/.config/gh"],
-      "denyWrite": ["~/.ssh", "~/.aws", "~/.config/gh", "~/.bashrc", "~/.zshrc", "~/.config/fish"],
-      "allowWrite": ["~/.gnupg"]
-    },
-    "network": {
-      "allowedDomains": ["github.com", "*.githubusercontent.com", "registry.npmjs.org"]
-    }
-  },
   "enableAllProjectMcpServers": false,
   "enabledMcpjsonServers": [
     "context7",
@@ -253,5 +241,34 @@
     "claude-code-setup@claude-plugins-official": true,
     "skill-creator@claude-plugins-official": true,
     "agent-teams@claude-code-workflows": true
+  },
+  "sandbox": {
+    "enabled": true,
+    "autoAllowBashIfSandboxed": true,
+    "network": {
+      "allowedDomains": [
+        "github.com",
+        "*.githubusercontent.com",
+        "registry.npmjs.org"
+      ]
+    },
+    "filesystem": {
+      "allowWrite": [
+        "~/.gnupg"
+      ],
+      "denyWrite": [
+        "~/.ssh",
+        "~/.aws",
+        "~/.config/gh",
+        "~/.bashrc",
+        "~/.zshrc",
+        "~/.config/fish"
+      ],
+      "denyRead": [
+        "~/.ssh",
+        "~/.aws",
+        "~/.config/gh"
+      ]
+    }
   }
 }
