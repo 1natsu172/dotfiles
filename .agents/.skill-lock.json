@@ -6,9 +6,9 @@
       "sourceType": "github",
       "sourceUrl": "https://github.com/vercel-labs/agent-skills.git",
       "skillPath": "skills/react-best-practices/SKILL.md",
-      "skillFolderHash": "079b06a135401704ea94ab74c7c9d86c92ba259f",
+      "skillFolderHash": "fce8b5a24ff4ff2fc5db6aa1051e03b53c6b5bf1",
       "installedAt": "2026-02-04T07:06:51.509Z",
-      "updatedAt": "2026-02-04T07:06:51.509Z"
+      "updatedAt": "2026-03-06T09:10:24.989Z"
     },
     "vercel-react-native-skills": {
       "source": "vercel-labs/agent-skills",
@@ -60,9 +60,9 @@
       "sourceType": "github",
       "sourceUrl": "https://github.com/expo/skills.git",
       "skillPath": "plugins/upgrading-expo/skills/upgrading-expo/SKILL.md",
-      "skillFolderHash": "cfcc9ba12542031f7332426e2eb1ccf38c113c5e",
+      "skillFolderHash": "eac4fc92f3aac2e1e0034b488193d18abee666d2",
       "installedAt": "2026-02-27T14:24:32.651Z",
-      "updatedAt": "2026-02-27T14:24:32.651Z"
+      "updatedAt": "2026-03-06T09:10:27.146Z"
     },
     "native-data-fetching": {
       "source": "expo/skills",
@@ -150,9 +150,9 @@
       "sourceType": "github",
       "sourceUrl": "https://github.com/1natsu-vacation/agent-skills.git",
       "skillPath": "skills/1natsu-create-pr/SKILL.md",
-      "skillFolderHash": "029d0ada10045f2086b25f901e3738d7fbebb209",
+      "skillFolderHash": "1644e8f20030211c20ad350ec0f92146dc64b19d",
       "installedAt": "2026-03-01T15:13:45.004Z",
-      "updatedAt": "2026-03-01T15:13:45.004Z"
+      "updatedAt": "2026-03-06T09:10:29.265Z"
     },
     "1natsu-entire-context": {
       "source": "1natsu-vacation/agent-skills",
