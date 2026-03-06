@@ -250,6 +250,9 @@
         "github.com",
         "*.githubusercontent.com",
         "registry.npmjs.org"
+      ],
+      "allowUnixSockets": [
+        "~/.gnupg/S.gpg-agent"
       ]
     },
     "filesystem": {
