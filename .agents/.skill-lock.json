@@ -6,9 +6,9 @@
       "sourceType": "github",
       "sourceUrl": "https://github.com/vercel-labs/agent-skills.git",
       "skillPath": "skills/react-best-practices/SKILL.md",
-      "skillFolderHash": "fce8b5a24ff4ff2fc5db6aa1051e03b53c6b5bf1",
+      "skillFolderHash": "18a9a6d17d5958d4ab10405883b80960644dbd5b",
       "installedAt": "2026-02-04T07:06:51.509Z",
-      "updatedAt": "2026-03-06T09:10:24.989Z"
+      "updatedAt": "2026-03-15T15:51:13.572Z"
     },
     "vercel-react-native-skills": {
       "source": "vercel-labs/agent-skills",
@@ -24,9 +24,9 @@
       "sourceType": "github",
       "sourceUrl": "https://github.com/vercel-labs/skills.git",
       "skillPath": "skills/find-skills/SKILL.md",
-      "skillFolderHash": "c2f31172b6f256272305a5e6e7228b258446899f",
+      "skillFolderHash": "3013fdeb8a11b10b1eb795ec3ae8bfca38f7c26d",
       "installedAt": "2026-02-04T07:07:42.872Z",
-      "updatedAt": "2026-02-04T07:07:42.872Z"
+      "updatedAt": "2026-03-15T15:51:15.326Z"
     },
     "web-design-guidelines": {
       "source": "vercel-labs/agent-skills",
@@ -134,7 +134,7 @@
       "skillPath": "skills/1natsu-commit/SKILL.md",
       "skillFolderHash": "74390963d162f2725a479b55d7c092f054802b90",
       "installedAt": "2026-03-01T15:13:44.976Z",
-      "updatedAt": "2026-03-01T15:13:44.976Z"
+      "updatedAt": "2026-03-15T15:53:41.277Z"
     },
     "1natsu-conventional-commits": {
       "source": "1natsu-vacation/agent-skills",
@@ -143,7 +143,7 @@
       "skillPath": "skills/1natsu-conventional-commits/SKILL.md",
       "skillFolderHash": "9304a00e01f6387453c23ae0ecf0638d8d6a4c23",
       "installedAt": "2026-03-01T15:13:44.989Z",
-      "updatedAt": "2026-03-01T15:13:44.989Z"
+      "updatedAt": "2026-03-15T15:53:41.676Z"
     },
     "1natsu-create-pr": {
       "source": "1natsu-vacation/agent-skills",
@@ -152,7 +152,7 @@
       "skillPath": "skills/1natsu-create-pr/SKILL.md",
       "skillFolderHash": "1644e8f20030211c20ad350ec0f92146dc64b19d",
       "installedAt": "2026-03-01T15:13:45.004Z",
-      "updatedAt": "2026-03-06T09:10:29.265Z"
+      "updatedAt": "2026-03-15T15:53:42.405Z"
     },
     "1natsu-entire-context": {
       "source": "1natsu-vacation/agent-skills",
@@ -161,7 +161,7 @@
       "skillPath": "skills/1natsu-entire-context/SKILL.md",
       "skillFolderHash": "5261b5b94668113041882bd8d931d9625efdc168",
       "installedAt": "2026-03-01T15:13:45.021Z",
-      "updatedAt": "2026-03-01T15:13:45.021Z"
+      "updatedAt": "2026-03-15T15:53:42.789Z"
     },
     "1natsu-error-handling": {
       "source": "1natsu-vacation/agent-skills",
@@ -170,7 +170,7 @@
       "skillPath": "skills/1natsu-error-handling/SKILL.md",
       "skillFolderHash": "b4f35851acef6e5b36ed1b7e9d0dd6a60dae2f42",
       "installedAt": "2026-03-01T15:13:45.033Z",
-      "updatedAt": "2026-03-01T15:13:45.033Z"
+      "updatedAt": "2026-03-15T15:53:43.096Z"
     },
     "1natsu-git-analysis": {
       "source": "1natsu-vacation/agent-skills",
@@ -179,7 +179,25 @@
       "skillPath": "skills/1natsu-git-analysis/SKILL.md",
       "skillFolderHash": "36505073d35982ccd88f9f292d0960986d4fe7ab",
       "installedAt": "2026-03-01T15:13:45.046Z",
-      "updatedAt": "2026-03-01T15:13:45.046Z"
+      "updatedAt": "2026-03-15T15:53:43.455Z"
+    },
+    "1natsu-pair-debug": {
+      "source": "1natsu-vacation/agent-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/1natsu-vacation/agent-skills.git",
+      "skillPath": "skills/1natsu-pair-debug/SKILL.md",
+      "skillFolderHash": "3b5c5e95f940b297a3f2ba17c19173c36a056158",
+      "installedAt": "2026-03-15T15:53:43.786Z",
+      "updatedAt": "2026-03-15T15:53:43.786Z"
+    },
+    "1natsu-pr-review-handler": {
+      "source": "1natsu-vacation/agent-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/1natsu-vacation/agent-skills.git",
+      "skillPath": "skills/1natsu-pr-review-handler/SKILL.md",
+      "skillFolderHash": "42f0afa8636f7c4f7e5de508f84adf162e27b4e4",
+      "installedAt": "2026-03-15T15:53:44.107Z",
+      "updatedAt": "2026-03-15T15:53:44.107Z"
     }
   },
   "dismissed": {
@@ -194,6 +212,7 @@
     "github-copilot",
     "kimi-cli",
     "opencode",
+    "warp",
     "claude-code"
   ]
 }
