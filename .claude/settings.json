@@ -273,5 +273,6 @@
         "~/.config/gh"
       ]
     }
-  }
+  },
+  "effortLevel": "high"
 }
