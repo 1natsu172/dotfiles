@@ -246,6 +246,7 @@
     "agent-teams@claude-code-workflows": true,
     "ralph-loop@claude-plugins-official": true
   },
+  "language": "Japanese",
   "sandbox": {
     "enabled": true,
     "autoAllowBashIfSandboxed": true,
@@ -278,5 +279,6 @@
       ]
     }
   },
-  "effortLevel": "high"
+  "effortLevel": "high",
+  "voiceEnabled": true
 }
