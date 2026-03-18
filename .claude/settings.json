@@ -132,6 +132,14 @@
             "command": "/Users/1natsu/dotfiles/bin/claude-utils/duration-logic-hooks/agent-in-progress-hook.sh"
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "afplay /System/Library/Sounds/Pop.aiff"
+          }
+        ]
       }
     ],
     "Stop": [
@@ -148,6 +156,16 @@
           {
             "type": "command",
             "command": "afplay /System/Library/Sounds/Purr.aiff"
+          }
+        ]
+      }
+    ],
+    "StopFailure": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "afplay /System/Library/Sounds/Basso.aiff"
           }
         ]
       }
