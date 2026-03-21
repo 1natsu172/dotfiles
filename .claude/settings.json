@@ -1,6 +1,5 @@
 {
   "env": {
-    "DISABLE_TELEMETRY": "true",
     "ENABLE_TOOL_SEARCH": "true",
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
   },
