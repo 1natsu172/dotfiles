@@ -6,9 +6,9 @@
       "sourceType": "github",
       "sourceUrl": "https://github.com/vercel-labs/agent-skills.git",
       "skillPath": "skills/react-best-practices/SKILL.md",
-      "skillFolderHash": "18a9a6d17d5958d4ab10405883b80960644dbd5b",
+      "skillFolderHash": "69bf4a7eeeaa772290c1c5efd19da0865f903af8",
       "installedAt": "2026-02-04T07:06:51.509Z",
-      "updatedAt": "2026-03-15T15:51:13.572Z"
+      "updatedAt": "2026-03-21T11:16:41.878Z"
     },
     "vercel-react-native-skills": {
       "source": "vercel-labs/agent-skills",
