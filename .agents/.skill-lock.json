@@ -134,7 +134,7 @@
       "skillPath": "skills/1natsu-commit/SKILL.md",
       "skillFolderHash": "74390963d162f2725a479b55d7c092f054802b90",
       "installedAt": "2026-03-01T15:13:44.976Z",
-      "updatedAt": "2026-03-17T07:46:23.677Z"
+      "updatedAt": "2026-03-29T17:12:54.252Z"
     },
     "1natsu-conventional-commits": {
       "source": "1natsu-vacation/agent-skills",
@@ -143,7 +143,7 @@
       "skillPath": "skills/1natsu-conventional-commits/SKILL.md",
       "skillFolderHash": "9304a00e01f6387453c23ae0ecf0638d8d6a4c23",
       "installedAt": "2026-03-01T15:13:44.989Z",
-      "updatedAt": "2026-03-17T07:46:23.993Z"
+      "updatedAt": "2026-03-29T17:12:54.655Z"
     },
     "1natsu-create-pr": {
       "source": "1natsu-vacation/agent-skills",
@@ -152,7 +152,7 @@
       "skillPath": "skills/1natsu-create-pr/SKILL.md",
       "skillFolderHash": "1644e8f20030211c20ad350ec0f92146dc64b19d",
       "installedAt": "2026-03-01T15:13:45.004Z",
-      "updatedAt": "2026-03-17T07:46:24.327Z"
+      "updatedAt": "2026-03-29T17:12:55.350Z"
     },
     "1natsu-entire-context": {
       "source": "1natsu-vacation/agent-skills",
@@ -161,7 +161,7 @@
       "skillPath": "skills/1natsu-entire-context/SKILL.md",
       "skillFolderHash": "5261b5b94668113041882bd8d931d9625efdc168",
       "installedAt": "2026-03-01T15:13:45.021Z",
-      "updatedAt": "2026-03-17T07:46:24.771Z"
+      "updatedAt": "2026-03-29T17:12:56.158Z"
     },
     "1natsu-error-handling": {
       "source": "1natsu-vacation/agent-skills",
@@ -170,7 +170,7 @@
       "skillPath": "skills/1natsu-error-handling/SKILL.md",
       "skillFolderHash": "b4f35851acef6e5b36ed1b7e9d0dd6a60dae2f42",
       "installedAt": "2026-03-01T15:13:45.033Z",
-      "updatedAt": "2026-03-17T07:46:25.440Z"
+      "updatedAt": "2026-03-29T17:12:56.536Z"
     },
     "1natsu-git-analysis": {
       "source": "1natsu-vacation/agent-skills",
@@ -179,7 +179,7 @@
       "skillPath": "skills/1natsu-git-analysis/SKILL.md",
       "skillFolderHash": "36505073d35982ccd88f9f292d0960986d4fe7ab",
       "installedAt": "2026-03-01T15:13:45.046Z",
-      "updatedAt": "2026-03-17T07:46:25.756Z"
+      "updatedAt": "2026-03-29T17:12:56.913Z"
     },
     "1natsu-pair-debug": {
       "source": "1natsu-vacation/agent-skills",
@@ -188,7 +188,7 @@
       "skillPath": "skills/1natsu-pair-debug/SKILL.md",
       "skillFolderHash": "479148c8754d754ded4cb70df0c457165be9f8b2",
       "installedAt": "2026-03-15T15:53:43.786Z",
-      "updatedAt": "2026-03-17T07:46:26.407Z"
+      "updatedAt": "2026-03-29T17:12:57.322Z"
     },
     "1natsu-pr-review-handler": {
       "source": "1natsu-vacation/agent-skills",
@@ -197,7 +197,7 @@
       "skillPath": "skills/1natsu-pr-review-handler/SKILL.md",
       "skillFolderHash": "42f0afa8636f7c4f7e5de508f84adf162e27b4e4",
       "installedAt": "2026-03-15T15:53:44.107Z",
-      "updatedAt": "2026-03-17T07:46:27.286Z"
+      "updatedAt": "2026-03-29T17:12:58.126Z"
     },
     "1natsu-pair-resolve-conflicts": {
       "source": "1natsu-vacation/agent-skills",
@@ -206,7 +206,16 @@
       "skillPath": "skills/1natsu-pair-resolve-conflicts/SKILL.md",
       "skillFolderHash": "1a3b7db62738d0edc1bb10b30618c8d2973f7ab6",
       "installedAt": "2026-03-16T18:09:29.462Z",
-      "updatedAt": "2026-03-17T07:46:26.818Z"
+      "updatedAt": "2026-03-29T17:12:57.755Z"
+    },
+    "1natsu-document-harness": {
+      "source": "1natsu-vacation/agent-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/1natsu-vacation/agent-skills.git",
+      "skillPath": "skills/1natsu-document-harness/SKILL.md",
+      "skillFolderHash": "8e482dfd9f4fcea7372f4e6bcc82cea29453622b",
+      "installedAt": "2026-03-29T17:12:55.787Z",
+      "updatedAt": "2026-03-29T17:12:55.787Z"
     }
   },
   "dismissed": {
@@ -214,9 +223,11 @@
   },
   "lastSelectedAgents": [
     "amp",
+    "antigravity",
     "cline",
     "codex",
     "cursor",
+    "deepagents",
     "gemini-cli",
     "github-copilot",
     "kimi-cli",
