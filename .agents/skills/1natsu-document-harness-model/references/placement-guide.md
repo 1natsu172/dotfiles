@@ -16,8 +16,8 @@
 │  └─ パッケージ直下 CLAUDE.md を更新（200行以下、@参照で詳細へ）
 │
 ├─ 設計背景・アーキテクチャの知識か？
-│  ├─ パッケージレベル → packages/xxx/docs/
-│  └─ アプリレベル → packages/xxx/docs/ or ルート docs/
+│  ├─ 特定パッケージに閉じた知識 → packages/xxx/docs/
+│  └─ リポジトリ全体に関する知識 → ルート docs/
 │
 └─ 機能固有の仕様・データフローか？
    └─ feature ディレクトリ直下の README.md
@@ -31,13 +31,14 @@
 | 特定ファイルパターンの規約 | `.claude/rules/xxx.md` | `paths: ["pattern"]` |
 | パッケージ固有の禁止事項 | `packages/xxx/.claude/rules/xxx.md` | `paths: ["src/**"]` |
 | パッケージの概要と重要な前提 | `packages/xxx/CLAUDE.md` | `@` 参照でインデックス |
-| アーキテクチャの設計背景 | `(packages/xxx/)docs/architecture.md` | 通常の markdown |
-| 外部依存・バッチ処理の仕様 | `(packages/xxx/)docs/xxx.md` | 通常の markdown |
-| 状態遷移・ライフサイクル | `(packages/xxx/)docs/xxx-lifecycle.md` | 通常の markdown |
+| パッケージ固有の設計背景 | `packages/xxx/docs/architecture.md` | 通常の markdown |
+| パッケージ固有の外部依存・バッチ処理 | `packages/xxx/docs/xxx.md` | 通常の markdown |
+| パッケージ固有の状態遷移 | `packages/xxx/docs/xxx-lifecycle.md` | 通常の markdown |
+| リポジトリ全体のアーキテクチャ | `docs/architecture.md` | 通常の markdown |
+| 横断的な設計方針・ADR | `docs/adr/NNNN-title.md` | ADR テンプレート |
 | 機能のデータフロー | `src/features/xxx/README.md` | 通常の markdown |
 | 機能のレイヤー間依存 | `src/features/xxx/README.md` | 通常の markdown |
 | 機能の非自明な設計判断 | `src/features/xxx/README.md` | 通常の markdown |
-| ADR（アーキテクチャ決定記録） | `docs/adr/NNNN-title.md` | ADR テンプレート |
 
 ## 判断に迷った時
 
@@ -46,6 +47,12 @@
 - **「〜すること」「〜してはならない」** と書けるなら → `rules/`
 - **「〜という背景で」「〜の理由で」** と書くなら → `docs/`
 - 両方必要なら、`rules/` に指示を書き、`docs/` に理由の詳細を書く
+
+### ルート docs/ vs パッケージ docs/ で迷う（monorepo）
+
+- その知識が特定パッケージなしでは意味をなさない → `packages/xxx/docs/`
+- 複数パッケージやリポジトリ全体に関係する → ルート `docs/`
+- 迷ったらパッケージ `docs/` に置く。必要に応じてルートに昇格させる
 
 ### docs/ vs feature README で迷う
 

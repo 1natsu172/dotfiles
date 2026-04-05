@@ -6,9 +6,9 @@
       "sourceType": "github",
       "sourceUrl": "https://github.com/vercel-labs/agent-skills.git",
       "skillPath": "skills/react-best-practices/SKILL.md",
-      "skillFolderHash": "bd8feeee219216aac928d1d8e5c61a928dba23dc",
+      "skillFolderHash": "a203aee7243640ceb56ce2c6c4ab286573df5e69",
       "installedAt": "2026-02-04T07:06:51.509Z",
-      "updatedAt": "2026-03-29T20:00:46.449Z"
+      "updatedAt": "2026-04-05T11:39:28.822Z"
     },
     "vercel-react-native-skills": {
       "source": "vercel-labs/agent-skills",
@@ -213,27 +213,27 @@
       "sourceType": "github",
       "sourceUrl": "https://github.com/1natsu-vacation/agent-skills.git",
       "skillPath": "skills/1natsu-document-harness/SKILL.md",
-      "skillFolderHash": "2d6318a67e4d35069418edd79e754fe8b1962567",
+      "skillFolderHash": "f65193c8f4777bbb2489e248db9672fdd689204f",
       "installedAt": "2026-03-29T17:12:55.787Z",
-      "updatedAt": "2026-04-04T20:03:43.737Z"
+      "updatedAt": "2026-04-05T11:39:30.936Z"
     },
     "1natsu-document-harness-audit": {
       "source": "1natsu-vacation/agent-skills",
       "sourceType": "github",
       "sourceUrl": "https://github.com/1natsu-vacation/agent-skills.git",
       "skillPath": "skills/1natsu-document-harness-audit/SKILL.md",
-      "skillFolderHash": "476a13abad57d213d67f0a34986a918802e7f0c5",
+      "skillFolderHash": "a03b5798645f79feadc0e763cfd742205d41a280",
       "installedAt": "2026-04-04T20:03:44.118Z",
-      "updatedAt": "2026-04-04T20:03:44.118Z"
+      "updatedAt": "2026-04-05T11:39:32.709Z"
     },
     "1natsu-document-harness-model": {
       "source": "1natsu-vacation/agent-skills",
       "sourceType": "github",
       "sourceUrl": "https://github.com/1natsu-vacation/agent-skills.git",
       "skillPath": "skills/1natsu-document-harness-model/SKILL.md",
-      "skillFolderHash": "c90aedd87a9edbf51ee5f76e91dfe0d44b643808",
+      "skillFolderHash": "ae192570bd9c1c952bae556b5de71d3a74c61ec4",
       "installedAt": "2026-04-04T20:03:44.515Z",
-      "updatedAt": "2026-04-04T20:03:44.515Z"
+      "updatedAt": "2026-04-05T11:39:34.485Z"
     }
   },
   "dismissed": {
