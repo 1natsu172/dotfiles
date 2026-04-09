@@ -101,6 +101,15 @@
             "command": "/Users/1natsu/dotfiles/bin/claude-utils/duration-logic-hooks/user-prompt-submit-hook.sh"
           }
         ]
+      },
+      {
+        "_tag": "ccstatusline-managed",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bunx -y ccstatusline@latest --hook"
+          }
+        ]
       }
     ],
     "PreToolUse": [
@@ -111,6 +120,16 @@
             "command": "/Users/1natsu/dotfiles/bin/claude-utils/duration-logic-hooks/agent-in-progress-hook.sh"
           }
         ]
+      },
+      {
+        "_tag": "ccstatusline-managed",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bunx -y ccstatusline@latest --hook"
+          }
+        ],
+        "matcher": "Skill"
       }
     ],
     "PostToolUse": [
@@ -297,6 +316,6 @@
       ]
     }
   },
-  "effortLevel": "high",
-  "voiceEnabled": true
+  "voiceEnabled": true,
+  "effortLevel": "high"
 }
