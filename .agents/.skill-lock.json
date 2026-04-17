@@ -234,6 +234,15 @@
       "skillFolderHash": "ae192570bd9c1c952bae556b5de71d3a74c61ec4",
       "installedAt": "2026-04-04T20:03:44.515Z",
       "updatedAt": "2026-04-05T11:39:34.485Z"
+    },
+    "gh-stack": {
+      "source": "github/gh-stack",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/github/gh-stack.git",
+      "skillPath": "skills/gh-stack/SKILL.md",
+      "skillFolderHash": "f900e01d90dd042162d0632dc31ee9541dd07841",
+      "installedAt": "2026-04-17T02:56:17.351Z",
+      "updatedAt": "2026-04-17T02:56:17.351Z"
     }
   },
   "dismissed": {
