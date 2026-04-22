@@ -312,7 +312,25 @@
         "~/.ssh",
         "~/.aws"
       ]
-    }
+    },
+    "excludedCommands": [
+      "gh pr create",
+      "gh pr edit",
+      "gh pr merge",
+      "gh pr close",
+      "gh pr reopen",
+      "gh pr ready",
+      "gh pr comment",
+      "gh pr review",
+      "gh issue create",
+      "gh issue edit",
+      "gh issue close",
+      "gh issue reopen",
+      "gh issue comment",
+      "gh release create",
+      "gh release edit",
+      "gh release delete"
+    ]
   },
   "effortLevel": "xhigh",
   "voiceEnabled": true
