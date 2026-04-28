@@ -8,6 +8,8 @@ go = "latest"
 uv = "latest"
 age = "latest"
 sops = "latest"
+# https://mise.jdx.dev/dev-tools/backends/gem.html
+"gem:cocoapods" = "1.16.2"
 
 [settings]
 experimental = true
