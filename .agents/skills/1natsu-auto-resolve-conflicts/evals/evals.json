@@ -1,0 +1,98 @@
+{
+  "skill_name": "1natsu-auto-resolve-conflicts",
+  "_notes": [
+    "各テストは <skill_path>/evals/fixtures/<id>-<name>.sh を実行して使い捨てリポジトリを作成し、",
+    "そのリポジトリ内で本スキルに従ってコンフリクト解消を実行する。",
+    "スクリプトは標準出力にリポジトリパスを1行で返す。",
+    "expectations は観測可能な事実（git status, コミット内容, 出力テキスト）で記述する。"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "以下を実行してテスト用リポジトリを作成し、その中で `1natsu-auto-resolve-conflicts` スキルに従ってコンフリクトを自動解消してください。\n\n```bash\nREPO_PATH=$(<skill_path>/evals/fixtures/01-simple-import-merge.sh)\ncd \"$REPO_PATH\"\ngit status\n```\n\nその後、merge コミットの作成まで一気に完了させてください。",
+      "expected_output": "src/app.ts に featureA と featureB 両方の import 文が含まれた状態で merge コミットが作成され、コミットメッセージに 'auto-resolved by 1natsu-auto-resolve-conflicts' フットプリントが含まれる。typecheck（tsc --noEmit）が成功する。",
+      "expectations": [
+        "src/app.ts にコンフリクトマーカー（<<<<<<<）が残っていない",
+        "src/app.ts に `import { featureA }` と `import { featureB }` の両方が含まれる",
+        "src/app.ts の関数本体で featureA() と featureB() の両方が呼び出されている",
+        "新しい merge コミットが作成されている（git log の最新コミットが2つの parent を持つ）",
+        "最新コミットのメッセージ末尾に 'auto-resolved by 1natsu-auto-resolve-conflicts' が含まれる",
+        "Phase 3 の typecheck（tsc --noEmit または pnpm/bun の typecheck スクリプト）が実行され、成功している",
+        "出力テキストに 'bail-out' や 'pair-resolve に切り替え' といった撤退提案が含まれない"
+      ],
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "以下を実行してテスト用リポジトリを作成し、その中で `1natsu-auto-resolve-conflicts` スキルに従ってコンフリクトを自動解消してください。\n\n```bash\nREPO_PATH=$(<skill_path>/evals/fixtures/02-integrate-both-sides.sh)\ncd \"$REPO_PATH\"\ngit status\n```\n\nREADME.md のコンフリクトを両側の追記を統合する形で解消し、merge コミットを作成してください。",
+      "expected_output": "README.md に Section A と Section B 両方のセクションが順序統合された形で含まれ、merge コミットが作成される。検証コマンドが見つからない場合は Phase 3 の指示に従いユーザーに 3 択を提示するか、スキップを選択して進む。",
+      "expectations": [
+        "README.md にコンフリクトマーカー（<<<<<<<）が残っていない",
+        "README.md に '## Section A' と '## Section B' の両方の見出しが含まれる",
+        "新しい merge コミットが作成されている",
+        "最新コミットのメッセージ末尾に 'auto-resolved by 1natsu-auto-resolve-conflicts' が含まれる",
+        "出力テキストに、検証コマンドが見つからない場合の取り扱い（3択提示またはスキップの根拠）が言及されている"
+      ],
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "以下を実行してテスト用リポジトリを作成し、その中で `1natsu-auto-resolve-conflicts` スキルに従ってコンフリクトの自動解消を試みてください。\n\n```bash\nREPO_PATH=$(<skill_path>/evals/fixtures/03-api-signature-degrade.sh)\ncd \"$REPO_PATH\"\ngit status\n```\n\nスキルの判断に従って、自動解消するか pair-resolve に bail-out するか決定してください。",
+      "expected_output": "ours が関数シグネチャを変更し、theirs が同関数の呼び出し側を別意図で変更しているため、Auto-No と判定して全体 bail-out。何も適用せず `1natsu-pair-resolve-conflicts` への引き継ぎプロンプトを出力する。",
+      "expectations": [
+        "src/api.ts にコンフリクトマーカー（<<<<<<<）が残っている（未解消のまま）",
+        "新しいコミットが作成されていない（git log で feature/b の HEAD から進んでいない）",
+        "出力テキストに `1natsu-pair-resolve-conflicts` への引き継ぎが明記されている",
+        "出力テキストに bail-out 理由として「関数シグネチャ」「呼び出し側の不整合」「Auto-No」のいずれかに言及がある",
+        "出力に handoff-to-pair-resolve.md のテンプレート 1 相当（全体 bail-out）の構造化された情報が含まれる",
+        "git status が unmerged paths を保持している"
+      ],
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "以下を実行してテスト用リポジトリを作成し、その中で `1natsu-auto-resolve-conflicts` スキルに従ってコンフリクトの自動解消を試みてください。\n\n```bash\nREPO_PATH=$(<skill_path>/evals/fixtures/04-mixed-bail-out.sh)\ncd \"$REPO_PATH\"\ngit status\n```\n\nスキルの判断に従って、安全に自動解消できる部分のみ適用し、残りは pair-resolve に引き渡してください。",
+      "expected_output": "5 ファイル中、Auto-OK と判定された 3 ファイル（README/imports/config.json）は適用され、Auto-No の 2 ファイル（src/auth/policy.ts と db/migrations/2024_01_01_init.sql）は未解消のまま残る。コミットは作成されない。",
+      "expectations": [
+        "docs/README.md にコンフリクトマーカーが残っていない",
+        "src/index.ts にコンフリクトマーカーが残っていない",
+        "config.json にコンフリクトマーカーが残っていない",
+        "src/auth/policy.ts にコンフリクトマーカーが残っている（未解消）",
+        "db/migrations/2024_01_01_init.sql にコンフリクトマーカーが残っている（未解消）",
+        "新しい merge コミットが作成されていない",
+        "出力テキストに `1natsu-pair-resolve-conflicts` への引き継ぎが明記されている",
+        "出力テキストに src/auth/policy.ts と db/migrations の bail-out 理由（auth または DB マイグレーション）が個別に言及されている",
+        "handoff-to-pair-resolve.md のテンプレート 2（混合 bail-out）相当の構造で、適用済み 3 ファイルと未解消 2 ファイルが分離して列挙されている"
+      ],
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "以下を実行してテスト用リポジトリを作成し、その中で `1natsu-auto-resolve-conflicts` スキルに従ってコンフリクトの自動解消を試みてください。\n\n```bash\nREPO_PATH=$(<skill_path>/evals/fixtures/05-rebase-continue-with-validation-failure.sh)\ncd \"$REPO_PATH\"\ngit status\n```\n\nrebase 中のコンフリクトを解消し、検証が通る場合のみ `git rebase --continue` を実行してください。",
+      "expected_output": "src/value.ts のコンフリクトは機械的に解消できるが、解消後の typecheck で型不整合（VALUE が string になる一方で src/math.ts が VALUE * 3 を期待）が検出される。Phase 3 の検証失敗を理由に bail-out し、`git rebase --continue` を実行しない。",
+      "expectations": [
+        "src/value.ts のコンフリクトマーカーは除去されている（解消は適用済み）",
+        "rebase が継続中である（.git/rebase-merge または .git/rebase-apply ディレクトリが存在する、または `git status` で 'You are currently rebasing' 等のメッセージ）",
+        "git rebase --continue が実行されていない（feature ブランチが main に rebase 完了していない）",
+        "出力テキストに typecheck の失敗ログまたは型エラーへの言及がある",
+        "出力テキストに `1natsu-pair-resolve-conflicts` への引き継ぎが明記されている",
+        "handoff-to-pair-resolve.md のテンプレート 4（Phase 3 検証失敗）相当の構造で、失敗カテゴリ・コマンド・出力が含まれている"
+      ],
+      "files": []
+    },
+    {
+      "id": 6,
+      "prompt": "以下を実行してテスト用リポジトリを作成し、その中で `1natsu-auto-resolve-conflicts` スキルに従ってコンフリクトの自動解消を試みてください。\n\n```bash\nREPO_PATH=$(<skill_path>/evals/fixtures/06-lockfile-regenerate.sh)\ncd \"$REPO_PATH\"\ngit status\n```\n\npackage.json と package-lock.json が両側で衝突しています。lockfile は手動マージせず、対応するパッケージマネージャ（`npm install`）で再生成してください。ネットワークアクセスが不可能な場合は Auto-No 扱いで bail-out してください。",
+      "expected_output": "package.json は両側が独立した別ライブラリ（ramda / date-fns）を追加しただけなので Auto-OK で統合（lodash + ramda + date-fns）。package-lock.json は手動マージせず `npm install` で再生成し、`npm ci`（または `npm install --package-lock-only`）相当の frozen 検証で整合確認。検証が通ればコミット完了。ネットワーク不可なら Auto-No で bail-out（テンプレート 7）。",
+      "expectations": [
+        "package.json にコンフリクトマーカーが残っていない",
+        "package.json の dependencies に lodash・ramda・date-fns の3つすべてが含まれる",
+        "package-lock.json が手動マージされていない（コンフリクトマーカーが除去され、かつ新規 `npm install` 実行の痕跡がある、または bail-out した場合は package-lock.json に直接編集していない）",
+        "lockfile を直接 sed/Edit などで編集した形跡がない（report.md または validation-output.txt に `npm install` の実行記録があるか、または bail-out 理由として手動編集を避けた旨の言及がある）",
+        "成功した場合: 新しい merge コミットが作成され、フットプリントが含まれる。コミットメッセージに `regenerated` または `npm install` への言及がある",
+        "bail-out した場合: テンプレート 7（Auto-Regenerate 失敗）相当の構造で、再生成失敗の理由（ネットワーク・キャッシュ等）が明記されている"
+      ],
+      "files": []
+    }
+  ]
+}

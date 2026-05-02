@@ -1,0 +1,26 @@
+{
+  "skill_name": "1natsu-document-harness",
+  "evals": [
+    {
+      "id": 1,
+      "name": "harness-init-basic",
+      "prompt": "私は monorepo プロジェクト（ルート + packages/api, packages/web）で、API リクエストのレートリミット機能を packages/api 配下に実装しました。\n\n実装内容:\n- packages/api/src/middleware/rateLimit.ts を新規作成（IP ベースで 1分間 100req 制限、Redis を使用）\n- packages/api/src/server.ts でミドルウェアを app.use() に追加\n- 設定値（制限閾値、ウィンドウ）は環境変数で外出し（RATE_LIMIT_PER_MINUTE, RATE_LIMIT_WINDOW_SEC）\n\n動作確認も済みました。実装内容をプロジェクトのハーネスドキュメントに反映してください。リポジトリには既に CLAUDE.md と .claude/rules/ と docs/ があります。",
+      "expected_output": "harness が init モードで動作し、現セッションで触れた変更（packages/api のレートリミット）にスコープを絞ってドキュメント化する。3層モデルに従い、指示（rules/）／インデックス（CLAUDE.md @ 参照）／知識（docs/）に振り分ける。スコープ外（packages/web 等）には触れない。",
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "harness-sync-AB-switch",
+      "prompt": "（このセッションでは前のターンで harness を実行済みという想定です）\n\nさきほど packages/api のレートリミットを Redis ベースで実装し、harness で以下のドキュメントを生成しました:\n- .claude/rules/api-rate-limit.md（「Redis を使ってレートリミットする」という指示）\n- docs/api/rate-limit-design.md（Redis を選んだ理由、データ構造、TTL 戦略）\n- CLAUDE.md に @docs/api/rate-limit-design.md の参照を追加\n\nしかし動作確認時に Redis のレイテンシ問題が判明し、Redis ではなく インメモリ（Node プロセス内 LRU キャッシュ）でレートリミットする実装に乗り換えました。コード側の変更:\n- packages/api/src/middleware/rateLimit.ts を Redis 呼び出しから lru-cache を使う実装に書き直し\n- Redis 接続関連の依存と環境変数を削除\n\nドキュメントも追従させてください。",
+      "expected_output": "harness が sync モードで動作することを判定し、前回出力した3つのドキュメントを再読する。Redis ベースの記述（指示・設計理由・データ構造・TTL）を**削除し**、インメモリ LRU の記述に置き換える。古い Redis 前提の記述が残らない。最終報告で「削除した内容」も伝える。",
+      "files": []
+    },
+    {
+      "id": 3,
+      "name": "harness-sync-bugfix",
+      "prompt": "（このセッションでは前のターンで harness を実行済みという想定です）\n\nさきほどパスワードリセット機能を実装し、harness で以下のドキュメントを生成しました:\n- .claude/rules/auth.md に「リセットトークンの有効期限は60分」と追記\n- docs/auth-design.md にトークン発行・検証フローを記載\n\nその後、セキュリティチームのレビューで「60分は長すぎる、15分にすべき」と指摘があり、コードを修正しました（PASSWORD_RESET_TOKEN_TTL_MIN を 60 → 15 に変更）。あわせて、レビューで指摘された「トークンを再利用させない」要件も追加実装しました（使用済みトークンの blacklist テーブルを追加、検証時に blacklist チェックを追加）。\n\nドキュメントを追従させてください。",
+      "expected_output": "harness が sync モードで動作する。rules/auth.md の「60分」を「15分」に書き換え、変更理由（セキュリティチームの指摘）を簡潔に添える。docs/auth-design.md には blacklist テーブルと再利用防止ロジックの記述を追加する。古い「60分」前提の記述が残らない。スコープは認証関連のみで、無関係なドキュメントには触れない。",
+      "files": []
+    }
+  ]
+}

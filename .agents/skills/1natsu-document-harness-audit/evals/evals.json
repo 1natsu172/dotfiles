@@ -1,0 +1,26 @@
+{
+  "skill_name": "1natsu-document-harness-audit",
+  "evals": [
+    {
+      "id": 1,
+      "name": "audit-staleness-code-drift",
+      "prompt": "うちのリポジトリ、しばらく触っていないモジュールが多いんだけど、ドキュメントが実装と乖離してそうで気になる。最近 src/services/AuthService.ts を src/auth/service.ts に移動するリファクタリングをしたり、payment 周りの設定値も変わったはず。docs/architecture.md と docs/payment.md と CLAUDE.md は数ヶ月触っていないので、これらが今のコードと合っているか含めて、ドキュメントを監査してほしい。\n\n注: 現セッションでは私はまだ何も実装変更をしていません。あくまで既存ドキュメント全体の検査をお願いしたいです。",
+      "expected_output": "audit が動作し、現セッションでの変更ではなく既存ドキュメントの検査として処理する。harness sync へリダイレクトしない。コード乖離（ファイルパス・関数名等）と、対象ファイル（docs/architecture.md, docs/payment.md, CLAUDE.md）の参照切れ・不整合・粒度逸脱等を7カテゴリで検出する。提案→確認→実行のフローを取り、自動修正しない。",
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "audit-practice-evolution",
+      "prompt": "このプロジェクトの .claude/rules/ 配下のファイル、結構古くて、当時のモデル前提で書いた MUST / NEVER の連発や冗長な前置きがそのままになっているものが多いと思う。今のモデルなら短く・理由ベースで書けば伝わるはずなので、ドキュメント全体を見直して「表現が陳腐化していて見直すべき箇所」を探してほしい。指示の意図は変えず、書き方だけを今のモデル向けに最適化する方向で。",
+      "expected_output": "audit が動作する。陳腐化カテゴリの「表現の陳腐化」観点で rules/ 配下を中心に検査し、過剰な MUST/NEVER の連発や冗長な前置きを特定する。各検出に対して「指示の意図を変えずに、より短く・理由ベースに書き直す」提案を出す。提案→確認→実行のフロー。harness sync へリダイレクトしない。",
+      "files": []
+    },
+    {
+      "id": 3,
+      "name": "audit-redirect-to-harness-sync",
+      "prompt": "（このセッションでは直前に packages/api のレートリミット機能を実装し、harness で .claude/rules/api-rate-limit.md と docs/api/rate-limit-design.md を生成済みという想定）\n\nやっぱり実装を Redis から インメモリ LRU に乗り換えたので、ドキュメントを監査して整合性を取ってほしい。",
+      "expected_output": "audit が呼ばれたが、内容は『現セッションで自分が直前に書いたドキュメントとの差分追従』であることを判定する。これは audit ではなく harness の sync モードの責務だとユーザーに伝え、harness sync へのリダイレクトを提案する。または、ユーザーに「これは harness sync で扱う領域では？」と確認を取る。勝手に audit を強行しない。",
+      "files": []
+    }
+  ]
+}
