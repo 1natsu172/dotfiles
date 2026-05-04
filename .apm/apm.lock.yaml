@@ -76,6 +76,23 @@ dependencies:
   - .agents/skills/gh-stack
   - .claude/skills/gh-stack
   content_hash: sha256:4d3826e42c409da50644d0140320e1269da137fe139d1d70c90e1498e9915c9e
+- repo_url: microsoft/apm
+  host: github.com
+  resolved_commit: 141fa5b6164b68c5c30200a164c6e3e8358e1e2d
+  virtual_path: packages/apm-guide
+  is_virtual: true
+  package_type: apm_package
+  deployed_files:
+  - .agents/skills/apm-usage
+  - .claude/agents/apm-expert.md
+  - .claude/skills/apm-usage
+  - .codex/agents/apm-expert.toml
+  - .copilot/agents/apm-expert.agent.md
+  deployed_file_hashes:
+    .claude/agents/apm-expert.md: sha256:e710ff88b7e4a96b55cb6a636bdc256b0b255492a87b3a5b008112d01ca441e5
+    .codex/agents/apm-expert.toml: sha256:0b4bec64f7c6ab70df3841237928eaccfb927789d45300870ce56163230498c4
+    .copilot/agents/apm-expert.agent.md: sha256:e710ff88b7e4a96b55cb6a636bdc256b0b255492a87b3a5b008112d01ca441e5
+  content_hash: sha256:3e71e0bd36ab86d6ed3acb70f99d6916605c6851c224420add75723b85a3f9db
 - repo_url: vercel-labs/agent-skills
   host: github.com
   resolved_commit: ce3e64e468f8fa09a2d075d102771838061fdac0

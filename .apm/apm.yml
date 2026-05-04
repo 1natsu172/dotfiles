@@ -9,6 +9,7 @@ dependencies:
   - vercel-labs/agent-skills
   - github/gh-stack
   - expo/skills/plugins/expo
+  - microsoft/apm/packages/apm-guide
   mcp: []
 includes: auto
 scripts: {}
