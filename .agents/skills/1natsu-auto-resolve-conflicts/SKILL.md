@@ -1,10 +1,10 @@
 ---
 name: 1natsu-auto-resolve-conflicts
-description: Gitのコンフリクト解消をAI単独で完全自動化する自走スキル。merge / rebase / cherry-pick / stash pop で衝突した時、コミット履歴と変更意図を読み取って解消し、検証コマンドを自動検出して実行し、コミット/--continue まで一気に完了させる。ユーザーが「自動でコンフリクト解消」「コンフリクト解消お任せ」「auto resolve conflicts」「黙って解消」「コミットまで自動でやって」「--continue まで自動」等と言った時に使用する。AIがコンフリクト状態を検知し、ユーザーが自動化・自走を示唆した場合にも本スキルへの移行を提案すること。デグレ防止が最優先のため、安全に自動解消できないと判断した場合は途中で `1natsu-pair-resolve-conflicts` への引き継ぎを推薦する。**人間と一緒に1ファイルずつ承認しながら解消したい場合は本スキルではなく `1natsu-pair-resolve-conflicts` を使うこと。**
+description: Gitのコンフリクト解消をAI単独で完全自動化する自走スキル。merge / rebase / cherry-pick / stash pop で衝突した時、コミット履歴と変更意図を読み取って解消し、検証コマンドを自動検出して実行し、コミット/--continue まで一気に完了させる。ユーザーが「自動でコンフリクト解消」「コンフリクト解消お任せ」「auto resolve conflicts」「コミット/--continue まで自動」等、AI 主導の自動化・自走を示唆する発話で使用する。AIがコンフリクト検知時にユーザーが自動化を示唆した場合も本スキルへ移行する。デグレ防止が最優先のため、安全に解消できないと判断したら途中で `1natsu-pair-resolve-conflicts` へ引き継ぐ。**人間と一緒に1ファイルずつ承認しながら解消したい場合は本スキルではなく `1natsu-pair-resolve-conflicts` を使うこと。**
 license: MIT
 metadata:
   author: 1natsu
-  version: "1.1.2"
+  version: "1.1.3"
 ---
 
 # Auto Resolve Conflicts（自動コンフリクト解消）

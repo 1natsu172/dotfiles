@@ -1,0 +1,14 @@
+name: 1natsu
+version: 1.0.0
+description: APM project for 1natsu
+author: 1natsu
+dependencies:
+  apm:
+  - vercel-labs/skills
+  - 1natsu-vacation/agent-skills
+  - vercel-labs/agent-skills
+  - github/gh-stack
+  - expo/skills/plugins/expo
+  mcp: []
+includes: auto
+scripts: {}

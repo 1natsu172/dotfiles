@@ -1,0 +1,106 @@
+lockfile_version: '1'
+generated_at: '2026-05-04T09:09:34.726652+00:00'
+apm_version: 0.12.0
+dependencies:
+- repo_url: 1natsu-vacation/agent-skills
+  host: github.com
+  resolved_commit: c4316820939aa8180c6d22c4b5b92590b2ba8022
+  package_type: skill_bundle
+  deployed_files:
+  - .agents/skills/1natsu-auto-resolve-conflicts
+  - .agents/skills/1natsu-commit
+  - .agents/skills/1natsu-conventional-commits
+  - .agents/skills/1natsu-create-pr
+  - .agents/skills/1natsu-document-harness
+  - .agents/skills/1natsu-document-harness-audit
+  - .agents/skills/1natsu-document-harness-model
+  - .agents/skills/1natsu-entire-context
+  - .agents/skills/1natsu-error-handling
+  - .agents/skills/1natsu-git-analysis
+  - .agents/skills/1natsu-pair-debug
+  - .agents/skills/1natsu-pair-resolve-conflicts
+  - .agents/skills/1natsu-pr-review-handler
+  - .claude/skills/1natsu-auto-resolve-conflicts
+  - .claude/skills/1natsu-commit
+  - .claude/skills/1natsu-conventional-commits
+  - .claude/skills/1natsu-create-pr
+  - .claude/skills/1natsu-document-harness
+  - .claude/skills/1natsu-document-harness-audit
+  - .claude/skills/1natsu-document-harness-model
+  - .claude/skills/1natsu-entire-context
+  - .claude/skills/1natsu-error-handling
+  - .claude/skills/1natsu-git-analysis
+  - .claude/skills/1natsu-pair-debug
+  - .claude/skills/1natsu-pair-resolve-conflicts
+  - .claude/skills/1natsu-pr-review-handler
+  content_hash: sha256:4856d5e05e567e27b3dcc8c8ae677a33aa6a2f1304a48a715c0ba98e6a5e7957
+- repo_url: expo/skills
+  host: github.com
+  resolved_commit: 93751dadf0494110893a9f7a2091ca14833d8212
+  virtual_path: plugins/expo
+  is_virtual: true
+  package_type: marketplace_plugin
+  deployed_files:
+  - .agents/skills/building-native-ui
+  - .agents/skills/eas-update-insights
+  - .agents/skills/expo-api-routes
+  - .agents/skills/expo-cicd-workflows
+  - .agents/skills/expo-deployment
+  - .agents/skills/expo-dev-client
+  - .agents/skills/expo-module
+  - .agents/skills/expo-tailwind-setup
+  - .agents/skills/expo-ui-jetpack-compose
+  - .agents/skills/expo-ui-swift-ui
+  - .agents/skills/native-data-fetching
+  - .agents/skills/upgrading-expo
+  - .agents/skills/use-dom
+  - .claude/skills/building-native-ui
+  - .claude/skills/eas-update-insights
+  - .claude/skills/expo-api-routes
+  - .claude/skills/expo-cicd-workflows
+  - .claude/skills/expo-deployment
+  - .claude/skills/expo-dev-client
+  - .claude/skills/expo-module
+  - .claude/skills/expo-tailwind-setup
+  - .claude/skills/expo-ui-jetpack-compose
+  - .claude/skills/expo-ui-swift-ui
+  - .claude/skills/native-data-fetching
+  - .claude/skills/upgrading-expo
+  - .claude/skills/use-dom
+  content_hash: sha256:f7d59a852d3b98d93d6267715de55dcd7f3e7c0e286019ce0b6563290408dd9c
+- repo_url: github/gh-stack
+  host: github.com
+  resolved_commit: ad56830859e643850ce71b39a4f13194073b40b7
+  package_type: skill_bundle
+  deployed_files:
+  - .agents/skills/gh-stack
+  - .claude/skills/gh-stack
+  content_hash: sha256:4d3826e42c409da50644d0140320e1269da137fe139d1d70c90e1498e9915c9e
+- repo_url: vercel-labs/agent-skills
+  host: github.com
+  resolved_commit: ce3e64e468f8fa09a2d075d102771838061fdac0
+  package_type: skill_bundle
+  deployed_files:
+  - .agents/skills/composition-patterns
+  - .agents/skills/deploy-to-vercel
+  - .agents/skills/react-best-practices
+  - .agents/skills/react-native-skills
+  - .agents/skills/react-view-transitions
+  - .agents/skills/vercel-cli-with-tokens
+  - .agents/skills/web-design-guidelines
+  - .claude/skills/composition-patterns
+  - .claude/skills/deploy-to-vercel
+  - .claude/skills/react-best-practices
+  - .claude/skills/react-native-skills
+  - .claude/skills/react-view-transitions
+  - .claude/skills/vercel-cli-with-tokens
+  - .claude/skills/web-design-guidelines
+  content_hash: sha256:5dd20e239a6a323bc0ce5b8190ec67e06240fd214ac96332322fd50f52f2ce68
+- repo_url: vercel-labs/skills
+  host: github.com
+  resolved_commit: 7c0a9af3f8738965b71341712710ac7371089b34
+  package_type: skill_bundle
+  deployed_files:
+  - .agents/skills/find-skills
+  - .claude/skills/find-skills
+  content_hash: sha256:ea1d36c26f29f0d048f56737307ff6fbd9a97de51deee4ecb7a755c3c0e3a691
