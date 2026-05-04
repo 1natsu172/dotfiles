@@ -1,10 +1,11 @@
 lockfile_version: '1'
-generated_at: '2026-05-04T09:09:34.726652+00:00'
-apm_version: 0.12.0
+generated_at: '2026-05-04T19:56:09.223806+00:00'
+apm_version: 0.12.1
 dependencies:
 - repo_url: 1natsu-vacation/agent-skills
   host: github.com
   resolved_commit: c4316820939aa8180c6d22c4b5b92590b2ba8022
+  resolved_ref: v1.0.0
   package_type: skill_bundle
   deployed_files:
   - .agents/skills/1natsu-auto-resolve-conflicts
@@ -33,7 +34,7 @@ dependencies:
   - .claude/skills/1natsu-pair-debug
   - .claude/skills/1natsu-pair-resolve-conflicts
   - .claude/skills/1natsu-pr-review-handler
-  content_hash: sha256:4856d5e05e567e27b3dcc8c8ae677a33aa6a2f1304a48a715c0ba98e6a5e7957
+  content_hash: sha256:1c9dffbefd4bf6560e7c16d242d4c725d024e5dae7c4a9b35a908342bdf6c412
 - repo_url: expo/skills
   host: github.com
   resolved_commit: 93751dadf0494110893a9f7a2091ca14833d8212
@@ -112,7 +113,7 @@ dependencies:
   - .claude/skills/react-view-transitions
   - .claude/skills/vercel-cli-with-tokens
   - .claude/skills/web-design-guidelines
-  content_hash: sha256:5dd20e239a6a323bc0ce5b8190ec67e06240fd214ac96332322fd50f52f2ce68
+  content_hash: sha256:86f6bf734631a025d9e5056346b61a6cfba4d3e05cc20c3f56da75a72599acc4
 - repo_url: vercel-labs/skills
   host: github.com
   resolved_commit: 7c0a9af3f8738965b71341712710ac7371089b34

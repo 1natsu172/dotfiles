@@ -5,11 +5,11 @@ author: 1natsu
 dependencies:
   apm:
   - vercel-labs/skills
-  - 1natsu-vacation/agent-skills
   - vercel-labs/agent-skills
   - github/gh-stack
   - expo/skills/plugins/expo
   - microsoft/apm/packages/apm-guide
+  - 1natsu-vacation/agent-skills#v1.0.0
   mcp: []
 includes: auto
 scripts: {}
