@@ -36,8 +36,6 @@ Brewfile.lock.json
 .claude/skills/*
 !.claude/skills/.gitkeep
 
-# APM
-.apm/apm_modules/
 .gemini/*
 !.gemini/GEMINI.md
 !.gemini/settings.json
@@ -48,3 +46,7 @@ Brewfile.lock.json
 .bun/install/global/*
 !.bun/install/global/package.json
 !.bun/install/global/bun.lockb
+
+# APM dependencies
+.apm/apm_modules/
+apm_modules/
