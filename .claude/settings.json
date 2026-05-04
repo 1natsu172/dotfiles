@@ -284,7 +284,6 @@
   "sandbox": {
     "enabled": true,
     "autoAllowBashIfSandboxed": true,
-    "enableWeakerNetworkIsolation": true,
     "network": {
       "allowedDomains": [
         "github.com",
@@ -314,6 +313,7 @@
         "~/.aws"
       ]
     },
+    "enableWeakerNetworkIsolation": true,
     "excludedCommands": [
       "gh pr create",
       "gh pr edit",
@@ -336,5 +336,13 @@
   "effortLevel": "xhigh",
   "teammateMode": "auto",
   "agentPushNotifEnabled": true,
-  "voiceEnabled": true
+  "voiceEnabled": true,
+  "extraKnownMarketplaces": {
+    "voltagent-subagents": {
+      "source": {
+        "source": "github",
+        "repo": "VoltAgent/awesome-claude-code-subagents"
+      }
+    }
+  }
 }
