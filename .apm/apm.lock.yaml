@@ -1,6 +1,6 @@
 lockfile_version: '1'
-generated_at: '2026-05-04T19:56:09.223806+00:00'
-apm_version: 0.12.1
+generated_at: '2026-05-06T11:36:20.861474+00:00'
+apm_version: 0.12.2
 dependencies:
 - repo_url: 1natsu-vacation/agent-skills
   host: github.com
@@ -37,7 +37,7 @@ dependencies:
   content_hash: sha256:1c9dffbefd4bf6560e7c16d242d4c725d024e5dae7c4a9b35a908342bdf6c412
 - repo_url: expo/skills
   host: github.com
-  resolved_commit: 93751dadf0494110893a9f7a2091ca14833d8212
+  resolved_commit: 786398d3574f33eb6714380f44ec09355819516e
   virtual_path: plugins/expo
   is_virtual: true
   package_type: marketplace_plugin
@@ -68,18 +68,18 @@ dependencies:
   - .claude/skills/native-data-fetching
   - .claude/skills/upgrading-expo
   - .claude/skills/use-dom
-  content_hash: sha256:f7d59a852d3b98d93d6267715de55dcd7f3e7c0e286019ce0b6563290408dd9c
+  content_hash: sha256:c3d635480987c9cdcc8893a9cf55c3930f1135d4e50fc8e60c9ac10838881456
 - repo_url: github/gh-stack
   host: github.com
-  resolved_commit: ad56830859e643850ce71b39a4f13194073b40b7
+  resolved_commit: de00856fdeea80f8eaac9762d7f653a1d69bb852
   package_type: skill_bundle
   deployed_files:
   - .agents/skills/gh-stack
   - .claude/skills/gh-stack
-  content_hash: sha256:4d3826e42c409da50644d0140320e1269da137fe139d1d70c90e1498e9915c9e
+  content_hash: sha256:a6c64062a859b13c7f8fa8fa7bcd272a789b0598afbba2902d52d256e4d20d61
 - repo_url: microsoft/apm
   host: github.com
-  resolved_commit: 141fa5b6164b68c5c30200a164c6e3e8358e1e2d
+  resolved_commit: cb83c891c750a3a14ff8e5c9c8e2831e8a2b31a9
   virtual_path: packages/apm-guide
   is_virtual: true
   package_type: apm_package
@@ -93,10 +93,10 @@ dependencies:
     .claude/agents/apm-expert.md: sha256:e710ff88b7e4a96b55cb6a636bdc256b0b255492a87b3a5b008112d01ca441e5
     .codex/agents/apm-expert.toml: sha256:0b4bec64f7c6ab70df3841237928eaccfb927789d45300870ce56163230498c4
     .copilot/agents/apm-expert.agent.md: sha256:e710ff88b7e4a96b55cb6a636bdc256b0b255492a87b3a5b008112d01ca441e5
-  content_hash: sha256:3e71e0bd36ab86d6ed3acb70f99d6916605c6851c224420add75723b85a3f9db
+  content_hash: sha256:a983d6d99449272227cd43746239599cf791f3cbfe0678c843b1df05c2369a4d
 - repo_url: vercel-labs/agent-skills
   host: github.com
-  resolved_commit: ce3e64e468f8fa09a2d075d102771838061fdac0
+  resolved_commit: b9c8ee0643d87d3c5a953d1e22382ff2ead39229
   package_type: skill_bundle
   deployed_files:
   - .agents/skills/composition-patterns
@@ -113,12 +113,12 @@ dependencies:
   - .claude/skills/react-view-transitions
   - .claude/skills/vercel-cli-with-tokens
   - .claude/skills/web-design-guidelines
-  content_hash: sha256:86f6bf734631a025d9e5056346b61a6cfba4d3e05cc20c3f56da75a72599acc4
+  content_hash: sha256:c45b02280e1329a964cc83f5d96f9628ce4c1bb836f15b75b0ef9b5246ea8889
 - repo_url: vercel-labs/skills
   host: github.com
-  resolved_commit: 7c0a9af3f8738965b71341712710ac7371089b34
+  resolved_commit: eec87fd44fca572d5275a472ea13c31aaceb65d0
   package_type: skill_bundle
   deployed_files:
   - .agents/skills/find-skills
   - .claude/skills/find-skills
-  content_hash: sha256:ea1d36c26f29f0d048f56737307ff6fbd9a97de51deee4ecb7a755c3c0e3a691
+  content_hash: sha256:8e549f0b93a3012abe46998d57ff48d3e8bda23a6d0c1672ee1aefb778045076
