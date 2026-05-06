@@ -5,7 +5,7 @@
       "url": "https://github.com/wshobson/agents.git"
     },
     "installLocation": "/Users/1natsu/.claude/plugins/marketplaces/claude-code-workflows",
-    "lastUpdated": "2026-05-04T14:47:51.189Z",
+    "lastUpdated": "2026-05-05T13:05:46.043Z",
     "autoUpdate": true
   },
   "claude-plugins-official": {
@@ -14,7 +14,7 @@
       "repo": "anthropics/claude-plugins-official"
     },
     "installLocation": "/Users/1natsu/.claude/plugins/marketplaces/claude-plugins-official",
-    "lastUpdated": "2026-05-04T14:47:51.307Z"
+    "lastUpdated": "2026-05-05T13:05:46.159Z"
   },
   "voltagent-subagents": {
     "source": {
