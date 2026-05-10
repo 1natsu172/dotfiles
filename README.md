@@ -342,9 +342,9 @@ ref: https://mise.jdx.dev/environments/secrets.html & https://getsops.io/docs/#e
 
 `dotfiles/.mcp.json` が実質mcpサーバーのメモになっている。（なぜこんな運用になるかというと、`~/.claude.json`は秘匿情報がありうるためコミットできないから）。
 
-`dotfiles/.claude/settings.json` で `disabledMcpjsonServers` でこのdotfilesプロジェクト内で有効にするMCPをコントロールしている。
-`~/.claude.json` の `"mcpSevers"` はグローバルスコープすぎてdisableにできないため、本当にマシン上でWideに使いたいものだけにしている。
-実際の様々なケースではプロジェクトごとに `.mcp.json` を用意して、 `settings.json` で管理することが好ましい。
+`dotfiles/.claude/settings.json` の `enabledMcpjsonServers` はこのdotfilesプロジェクト内でのみ有効にするMCPを記述している。
+`~/.claude.json` の `"mcpSevers"` に書かれているMCPが真のグローバルスコープ設定になっており、マシンWidenなMCPはここに記述する。
+プロジェクト固有のMCPはプロジェクトごとに `.mcp.json` を用意して、 `settings.json` で管理する。またプロジェクトの都合でマシンWidenなMCPをdisableにしたい場合は、個別に `~/.claude.json` のリポジトリスコープの設定でコントロールする（ `/mcp` で操作すると自動で記述される）
 
 # Trouble shooting
 
