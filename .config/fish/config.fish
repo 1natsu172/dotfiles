@@ -72,6 +72,12 @@ fish_add_path (aqua root-dir)/bin
 #-----------------------------------------------------------------------------
 set -gx GPG_TTY (tty)
 
+if status is-interactive
+    if not pgrep -x gpg-agent >/dev/null
+        gpgconf --launch gpg-agent
+    end
+end
+
 # fisher jethrokuan/fzf
 #-----------------------------------------------------------------------------
 set -gx FZF_LEGACY_KEYBINDINGS 0
