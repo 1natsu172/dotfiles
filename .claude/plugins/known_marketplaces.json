@@ -1,12 +1,11 @@
 {
   "claude-code-workflows": {
     "source": {
-      "source": "git",
-      "url": "https://github.com/wshobson/agents.git"
+      "source": "github",
+      "repo": "wshobson/agents"
     },
     "installLocation": "/Users/1natsu/.claude/plugins/marketplaces/claude-code-workflows",
-    "lastUpdated": "2026-05-05T13:05:46.043Z",
-    "autoUpdate": true
+    "lastUpdated": "2026-05-10T05:12:53.334Z"
   },
   "claude-plugins-official": {
     "source": {
@@ -14,14 +13,6 @@
       "repo": "anthropics/claude-plugins-official"
     },
     "installLocation": "/Users/1natsu/.claude/plugins/marketplaces/claude-plugins-official",
-    "lastUpdated": "2026-05-05T13:05:46.159Z"
-  },
-  "voltagent-subagents": {
-    "source": {
-      "source": "github",
-      "repo": "VoltAgent/awesome-claude-code-subagents"
-    },
-    "installLocation": "/Users/1natsu/.claude/plugins/marketplaces/voltagent-subagents",
-    "lastUpdated": "2026-05-03T15:33:38.814Z"
+    "lastUpdated": "2026-05-10T05:13:40.710Z"
   }
 }
