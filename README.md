@@ -336,7 +336,7 @@ ref: https://mise.jdx.dev/environments/secrets.html & https://getsops.io/docs/#e
 ### Agent Skills
 
 個人のエージェントスキルは別リポジトリ（[`1natsu-vacation/agent-skills`](https://github.com/1natsu-vacation/agent-skills)）で管理している。
-`bunx skills add 1natsu-vacation/agent-skills -g` でグローバルインストールすると `~/.agents/skills/` に配置され、各エージェント（Claude Code, Cursor, Cline 等）からシンボリックリンク経由で参照される。
+apmで管理されており、`.apm/apm.yml` でグローバル管理している。`apm install -g` で展開される。
 
 ### mcp
 
@@ -345,6 +345,12 @@ ref: https://mise.jdx.dev/environments/secrets.html & https://getsops.io/docs/#e
 `dotfiles/.claude/settings.json` の `enabledMcpjsonServers` はこのdotfilesプロジェクト内でのみ有効にするMCPを記述している。
 `~/.claude.json` の `"mcpSevers"` に書かれているMCPが真のグローバルスコープ設定になっており、マシンWidenなMCPはここに記述する。
 プロジェクト固有のMCPはプロジェクトごとに `.mcp.json` を用意して、 `settings.json` で管理する。またプロジェクトの都合でマシンWidenなMCPをdisableにしたい場合は、個別に `~/.claude.json` のリポジトリスコープの設定でコントロールする（ `/mcp` で操作すると自動で記述される）
+
+### plugins
+
+marketplaceからuser scopeでグローバル有効にしたものは、 `~/.claude/settings.json` に書き込まれる。
+プロジェクトごとにproject scopeで有効にしたものは `<project_dir>/.claude/settings.json` に書き込まれる。
+プロジェクトごとにlocal scopeで有効にしたものは `<project_dir>/.claude/settings.local.json` に書き込まれる。
 
 # Trouble shooting
 
