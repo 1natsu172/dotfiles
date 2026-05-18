@@ -5,3 +5,4 @@ export PATH="/usr/local/sbin:$PATH"
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 . "$HOME/.cargo/env"
+eval "$(mise activate bash)"
