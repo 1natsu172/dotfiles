@@ -1,0 +1,4 @@
+# Hold newly-published versions for 7 days as a supply-chain defense (Shai-Hulud type).
+# bun does not honor .npmrc's `min-release-age`; this is the equivalent for bun. (oven-sh/bun#22679)
+[install]
+minimumReleaseAge = 604800
