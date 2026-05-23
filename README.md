@@ -352,6 +352,10 @@ marketplaceからuser scopeでグローバル有効にしたものは、 `~/.cla
 プロジェクトごとにproject scopeで有効にしたものは `<project_dir>/.claude/settings.json` に書き込まれる。
 プロジェクトごとにlocal scopeで有効にしたものは `<project_dir>/.claude/settings.local.json` に書き込まれる。
 
+### セキュリティ運用（Sandbox / Permission の二層モデル）
+
+`~/.claude/settings.json` のセキュリティルールは Sandbox と Permission の二層構成。`~/.config/mise/age.txt` は三層で完全遮断、その他の典型シークレット (`.env`, `.npmrc`, `.netrc`, `*secret*`, `id_rsa*` 等) は Claude Code 内蔵 Sandbox deny に任せて Permission 側は最小化、`~/.gitconfig` は公開管理として `sandbox.allowRead` で内蔵 deny を例外解除して git CLI に読ませる、bun のサプライチェーン対策は `~/.bunfig.toml` で別設定。Read/Bash matcher の書式仕様と Sandbox との相互作用を踏まえた設計判断を [docs/claude-code-security.md](./docs/claude-code-security.md) に記録している。
+
 # Trouble shooting
 
 ## huskyやsimple-git-hooks実行時にコマンドが見つからない
