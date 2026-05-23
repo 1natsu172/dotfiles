@@ -97,8 +97,7 @@
       "Bash(rm -rf ~/*)",
       "Bash(chmod 777 *)",
       "Bash(dd *)",
-      "Bash(defaults write *)",
-      "mcp__supabase__execute_sql"
+      "Bash(defaults write *)"
     ],
     "ask": [
       "Bash(curl *)",
