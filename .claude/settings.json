@@ -22,10 +22,6 @@
       "Bash(gh pr create *)",
       "Bash(gh pr edit *)",
       "Bash(gh pr comment *)",
-      "Bash(dirname *)",
-      "Bash(basename *)",
-      "Bash(realpath *)",
-      "Bash(date *)",
       "WebFetch(domain:docs.anthropic.com)",
       "WebFetch(domain:code.claude.com)"
     ],
@@ -111,9 +107,10 @@
       "Bash(rm -rf /*)",
       "Bash(rm -rf ~)",
       "Bash(rm -rf ~/*)",
-      "Bash(chmod 777 *)",
       "Bash(dd *)",
-      "Bash(defaults write *)"
+      "Bash(defaults write *)",
+      "Bash(defaults delete *)",
+      "Bash(defaults import *)"
     ],
     "ask": [
       "Bash(curl *)",
