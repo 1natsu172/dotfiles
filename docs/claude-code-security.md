@@ -1,125 +1,138 @@
-# Claude Code のセキュリティ運用
+# Claude Code のセキュリティ設定
 
-`~/.claude/settings.json` のセキュリティルールは、プロンプトインジェクションや Shai-Hulud 型のサプライチェーン攻撃に対する多層防御として設計している。設計判断の背景と、運用上踏み外しがちなポイントを記録する。設定の実体は `dotfiles/.claude/settings.json` を参照。
+`~/.claude/settings.json` の Sandbox / Permission 設定の仕様と、各ファイルの保護方針をまとめる。脅威モデルはプロンプトインジェクションと Shai-Hulud 型サプライチェーン攻撃。設定の実体は `dotfiles/.claude/settings.json`。
 
-## Sandbox と Permission の役割分担
+## Sandbox と Permission の二層モデル
 
 | レイヤ | 対象 | 設定箇所 |
 |--------|------|----------|
-| Sandbox | bash サブプロセス全体（git CLI / mise / node / 任意の外部プロセス）を OS レベルで物理遮断 | `sandbox.filesystem.denyRead` / `denyWrite` |
-| Sandbox 例外解除 | Claude Code 内蔵の denyRead を上書きして特定パスのみ読み取り許可 | `sandbox.filesystem.allowRead` |
-| Permission (Read tool) | Claude の Read tool 経由 + 一部の Bash 認識ファイルコマンド | `permissions.deny: Read(...)` |
-| Permission (Bash tool) | Claude が叩く Bash 引数文字列 | `permissions.deny: Bash(...)` |
+| Sandbox | bash サブプロセス全体（git / mise / node / 任意の外部プロセス）を OS レベルで制御 | `sandbox.filesystem.denyRead` / `denyWrite` / `allowRead` / `allowWrite` |
+| Permission (Read/Edit/Write) | Claude の Read/Edit/Write tool + Bash 認識ファイルコマンド | `permissions.deny: Read(...)` 等 |
+| Permission (Bash) | Claude が叩く Bash 引数文字列 | `permissions.deny: Bash(...)` |
 
-## Read / Edit deny のパス書式
+仕様:
 
-書式によって解釈が大きく変わる。間違えると全く効かない。
+- **built-in deny は存在しない**。Sandbox の default read は「コンピュータ全体読める」。`~/.aws/credentials` や `~/.ssh/` すら、明示的に `denyRead` しない限り読める。読ませたくないものは自分で列挙する。
+- **Permission の Read/Edit deny は sandbox config にマージされ、bash subprocess にも適用される**。glob 形式（`Read(//**/*.pem)`）もマージされ、subprocess の read を OS レベルで遮断する。
+- **Sandbox の denyRead/denyWrite は Claude の Read/Edit/Write tool には効かない**。built-in file tools は permission system を直接使い、sandbox を通らない。
+- 実機 system prompt の `read.denyOnly` は「sandbox denyRead + Permission Read/Edit deny」の合算。Permission rule 由来のエントリはチルダ形式のみ出て、絶対パス形式は出ない。
 
-| 書式 | 解釈 | 例 |
-|------|------|---|
-| `~/path` | home 相対 | `Read(~/.gitconfig)` |
-| `//path` | 真の絶対パス（leading double-slash） | `Read(//tmp/age.txt)` |
-| `/path` | プロジェクトルート相対（cwd 相対ではない） | `Edit(/src/**/*.ts)` |
-| `path`, `./path` | 現在のディレクトリ相対 | `Read(*.env)` |
-| `**/X` | gitignore セマンティクス、cwd 配下を再帰 | `Read(**/.env)` |
-| `//**/X` | ファイルシステム全体を再帰 | `Read(//**/age.txt)` |
+帰結:
 
-**落とし穴**: `Read(/Users/me/foo)` は絶対パスではなく `<cwd>/Users/me/foo` として解釈される。ホーム配下を狙うなら `~/path` または `//Users/me/path` を使う。
+- あるパスを subprocess と Claude tool の両方から守るには、Permission の Read/Edit/Write deny を書けば足りる（sandbox にマージされる）。
+- sandbox `denyWrite` だけのパスは Claude tool 経由の write を防げない。write 防御には Permission `Edit`/`Write` deny を併記する。
 
-## Read deny の Bash カバー範囲
+## Permission パス書式
 
-tilde 形式 (`Read(~/path)`) や `//**/` 形式の Read deny は、Claude の Read tool だけでなく Bash の `cat`/`head`/`tail`/`sed` 等の認識ファイルコマンドにも自動的に適用される。Edit/Write deny も同じ書式仕様で動作する（実機確認済み）。
+| 書式 | 解釈 |
+|------|------|
+| `~/path` | home 相対 |
+| `//path` | 絶対パス（leading double-slash） |
+| `/path` | プロジェクトルート相対 |
+| `path`, `./path` | カレントディレクトリ相対 |
+| `**/X` | gitignore セマンティクス、cwd 配下を再帰 |
+| `//**/X` | ファイルシステム全体を再帰 |
 
-ただし以下の条件で Bash カバー効果が変わる:
+- `Read(/Users/me/foo)` は絶対パスではなく `<project-root>/Users/me/foo` と解釈される。home を狙うなら `~/path` か `//Users/me/path` を使う。
+- この書式は Permission rule 専用。Sandbox filesystem のパス prefix は別仕様（`/`=絶対、`~/`=home、prefix なし=相対）。
 
-- `sandbox.filesystem.allowRead` に入っているパスは、Permission Read deny の Bash カバー効果が消える。Sandbox 層で OS レベル read が許可されると Permission 層が Bash 経由を見逃すため、別途 Bash deny を明示する必要がある
-- `xxd`/`od`/`wc`/`less`/`bat`/`more` 等の viewer は Read deny でカバーされない。完全遮断したいパスには別途 Bash deny が必要
-- `sed` は read-only 用途 (`sed -n '1,3p' file`) でも Edit 扱いで allowed working directory 制限が走る
+## Read/Edit/Write deny の Bash カバー範囲
+
+- `~/path` 形式・`//**/` 形式の Read/Edit/Write deny は、Claude tool に加え Bash の `cat`/`head`/`tail`/`sed` 等の認識ファイルコマンドにも適用される。
+- `xxd`/`od`/`wc`/`less`/`bat`/`more`/`strings` 等の viewer は Read deny でカバーされない。完全遮断には Bash viewer deny を別途列挙する。
+- `sed` は read-only 用途（`sed -n '1,3p' file`）でも Edit 扱いで、working directory 制限が走る。
+- `allowRead` に入れたパスは Permission Read deny の Bash カバーが外れる（sandbox 層で OS read が許可されるため）。
 
 ## Bash matcher の挙動
 
-- `*` はスラッシュ `/` と leading dot (`.env`, `.npmrc` 等) を貫通する fnmatch 系
-- コマンドライン全体を fnmatch 評価。`head -c 100 ~/.gitconfig` のようなオプション先頭呼び出しも `Bash(head *.gitconfig)` でマッチ
-- シェルオペレータ (`&&`, `||`, `;`, `|` 等) でサブコマンドに分割して個別評価
-- 抜け穴: `.env.local` のような中間ドットサフィックスは `*.env` (末尾) にも `.env.*` (先頭) にもマッチしない。`*.X.*` パターンを別途用意する
-- Bash redirect (`echo X > /path/.npmrc`) は `Write(**/.npmrc)` deny に評価される副次保護
+- `*` はスラッシュ `/` と leading dot（`.env` `.npmrc` 等）を貫通する fnmatch 系。
+- コマンドライン全体を評価する。`head -c 100 ~/.gitconfig` のようなオプション先頭呼び出しも `Bash(head *.gitconfig)` でマッチする。
+- シェルオペレータ（`&&` `||` `;` `|`）でサブコマンドに分割し、個別評価する。
+- 中間ドットサフィックス（`.env.local` 等）は `*.env`（末尾）にも `.env.*`（先頭）にもマッチしない。`*.X.*` を別途用意する。
+- Bash redirect（`echo X > path`）は対応する `Write(...)` deny で評価される。
+- 読み取り専用コマンド（`ls` `cat` `echo` `pwd` `head` `tail` `grep` `find` `wc` `which` `diff` `stat` `du` `cd` `git` の読み取り + `sort` `uniq`）は built-in 認識で、allow への明示は不要。
 
-## built-in 読み取り専用コマンドは allow 不要
+## ファイル別の保護方針
 
-Claude Code は組み込みで読み取り専用コマンドを認識し、権限プロンプト不要で実行する: `ls`, `cat`, `echo`, `pwd`, `head`, `tail`, `grep`, `find`, `wc`, `which`, `diff`, `stat`, `du`, `cd`, `git` の読み取り形式 + `sort`, `uniq`。
+| パス | Read | Write | 区分 |
+|------|------|-------|------|
+| `~/.gitconfig` | 解放 | sandbox `denyWrite` + Permission `Edit`/`Write` deny | 公開 dotfile |
+| `~/.npmrc` | 解放 | sandbox `denyWrite` + Permission `Edit`/`Write` deny | 公開 dotfile |
+| `.env`（プロジェクト内） | 解放 | Permission `Write(**/.env)` deny | read 解放・write 防止 |
+| `~/.config/mise/age.txt` | 全遮断（三層） | 全遮断 | 本丸完全遮断 |
+| 秘密鍵 `*.pem` `*.key` `id_rsa` `id_ed25519` `id_ecdsa` `id_dsa` | Permission `Read(//**/...)` で FS 全体遮断 | — | 明示 deny |
+| `~/.ssh` `~/.aws` `~/.config/gh` `~/.config/op` `~/.kube` `~/.config/1Password` `~/.gnupg/private-keys-v1.d` `~/.docker` | sandbox `denyRead` + Permission `Read` deny | sandbox `denyWrite` | ディレクトリ遮断 |
+| `~/.netrc` | sandbox `denyRead` + Permission `Read` deny | sandbox `denyWrite` + Permission `Edit`/`Write` deny | 認証情報遮断 |
 
-これらを `Bash(cat *)` 等で allow に明示するのは冗長。
+### 公開 dotfile（`~/.gitconfig` / `~/.npmrc`）
 
-## `~/.gitconfig`: 一般 dotfile として扱う
+read を解放し、write のみ防御する。
 
-`~/.gitconfig` は dotfiles リポジトリで公開管理しているため、AI に見せる必要はあるが秘匿価値はない。Claude Code 内蔵の Sandbox denyRead で gitconfig はデフォルトでブロックされるため、git CLI が動かない問題を回避するために `allowRead` で例外解除する。
+read 解放の理由:
 
-- `sandbox.filesystem.allowRead: ["~/.gitconfig"]` で内蔵 deny を解除 → git CLI のサブプロセス read 可能
-- `sandbox.filesystem.denyWrite` に維持 → 書き換え防止
-- Permission Read deny / Bash viewer deny は **書かない**
+- `~/.npmrc`: `min-release-age` 等のサプライチェーン防御や registry/proxy 設定を npm/pnpm subprocess に効かせるため。`denyRead` で塞ぐとこれらが機能しない。
+- `~/.gitconfig`: dotfiles で公開管理する設定で秘匿価値がない。
 
-## `~/.config/mise/age.txt`: 三層遮断（本丸完全遮断）
+write を両経路で防ぐ:
 
-`## SOPS` (README.md) の前提となる age 復号鍵。いかなる経路でも AI に触らせない。
+- sandbox `denyWrite` → subprocess の書き換え。
+- Permission `Edit`/`Write` deny → Claude tool の書き換え（sandbox を通らないため必須）。
 
-- 本丸 (`~/.config/mise/age.txt`) は exact match で明示的に三層遮断:
-  - Sandbox `denyRead` → 物理層。bash サブプロセス（mise 含む）も読めない
-  - Permission `Read(~/.config/mise/age.txt)` → Claude Read tool で本丸直撃
-  - Permission `Bash(<viewer> *age.txt*)` を全 viewer (`cat`/`head`/`tail`/`less`/`bat`/`more`/`wc`/`sort`/`nl`/`tac`/`xxd`/`od`/`strings`) に展開 → Bash サイドチャネル
-- リネーム/別パス保険レイヤ:
-  - `Read(//**/age.txt)` / `Edit(//**/age.txt)` / `Write(//**/age.txt)` でファイルシステム全体カバー（ホーム配下も `/tmp`/`/var/folders` 等も含む）
-  - `Write(//**/age.txt)` の副次保護として Bash redirect (`echo ... > /path/age.txt`) もブロックされる
-  - Bash 経由は `*age.txt*` 系で位置非依存に網羅
+write が即時攻撃面である理由:
 
-unsandbox 時 (`dangerouslyDisableSandbox: true`) でも本丸の三層は維持されることが運用上の重要ポイント。
+- `~/.npmrc`: `registry=` で install 先すり替え、`ignore-scripts=false` で install scripts 実行、`cafile=` で TLS 検証バイパス、`min-release-age` 削除で防御無効化。
+- `~/.gitconfig`: alias 注入や `core.sshCommand` で、通常の git 操作時に任意コード実行。
 
-## その他のシークレット系: Sandbox に任せる
+規律: read 解放したファイルに平文 secret を置かない。`~/.npmrc` の認証トークンは環境変数参照（`_authToken=${NPM_TOKEN}` の形式）で書き、`NPM_TOKEN` は op-cli / mise env 等で注入する。read 解放経路に技術的フォールバックは無く、平文 secret を置けば即漏洩しうる。
 
-`.env`/`.npmrc`/`.netrc`/`*secret*`/`*credential*`/`id_rsa*`/`*.pem`/`*.key`/`*.tfstate*` 等の典型シークレットは Claude Code 内蔵の Sandbox `denyOnly` に glob パターンで含まれているため、Sandbox 有効時はサブプロセスごと OS レベルで物理遮断される。
+### 本丸完全遮断（`~/.config/mise/age.txt`）
 
-これらに対する Permission Bash viewer deny の網羅は冗長化を招くため最小化する:
+`## SOPS`（README.md）の age 復号鍵。いかなる経路でも遮断する。
 
-- Permission Read deny で Claude の Read tool 経由はブロック
-- Bash 経由は Sandbox に任せる
-- unsandbox 時は ask または default モードで都度判断（裏取りシナリオで読みたい時に対応可能）
+- sandbox `denyRead`（exact）→ bash subprocess（mise 含む）の物理遮断。
+- Permission `Read(~/.config/mise/age.txt)` → Claude Read tool 直撃。
+- Permission `Read`/`Edit`/`Write(//**/age.txt)` → FS 全体の `age.txt` をカバー（リネーム・別パス保険）。
+- Permission `Bash(<viewer> *age.txt*)` を全 viewer（`cat`/`head`/`tail`/`less`/`bat`/`more`/`wc`/`sort`/`nl`/`tac`/`xxd`/`od`/`strings`）に展開 → Bash サイドチャネル。
 
-## bun のサプライチェーン対策（Shai-Hulud 型）
+`dangerouslyDisableSandbox: true`（unsandbox）でも Permission 層は維持される。`//**/age.txt` はファイル名が `age.txt` に完全一致するもののみ対象で、`age.txt.bak` 等の派生名はカバーしない。
 
-bun は `.npmrc` の `min-release-age` を読まない ([oven-sh/bun#22679](https://github.com/oven-sh/bun/issues/22679)) ため、`~/.bunfig.toml` の `[install] minimumReleaseAge` で別途設定する必要がある:
+### 秘密鍵・シークレット系
 
-- 単位差に注意: pnpm/npm は **日単位**、bun は **秒単位**（`604800` = 7日）
+built-in deny が無いため、`denyRead` か Permission `Read` deny に明示しない限り、subprocess・Claude tool の双方から読める。
 
-### ccstatusline の運用方針
+- 秘密鍵は Permission `Read(//**/*.pem)` `Read(//**/*.key)` `Read(//**/id_rsa)` `Read(//**/id_ed25519)` `Read(//**/id_ecdsa)` `Read(//**/id_dsa)` で FS 全体を遮断（sandbox マージで subprocess も OS レベル遮断）。
+- `Read(//**/*.key)` は秘密鍵以外の `.key`（i18n キー等）も巻き込みうる。誤爆時は個別調整する。
+- `.env`（プロジェクト内）は開発上の正当な read 用途があるため解放のまま。書き換えのみ `Write(**/.env)` で防止する。
 
-statusLine / hooks で使う `ccstatusline` は、`bunx -y @latest` を避けて `bun add -g` + PATH 経由で運用する。`@latest` で毎起動ごとに fetch する経路はサプライチェーン攻撃の格好の経路（UserPromptSubmit / PreToolUse / statusLine の 3 箇所で頻発）。
+## bun のサプライチェーン対策
 
-- `bun add -g ccstatusline@<固定版>` で global install
-- hook/statusLine command を `ccstatusline --hook` (PATH 経由) に置換
-- 更新時は `bun update -g ccstatusline` で `minimumReleaseAge` が効いた版を取得
+bun は `.npmrc` の `min-release-age` を読まない（[oven-sh/bun#22679](https://github.com/oven-sh/bun/issues/22679)）。`~/.bunfig.toml` の `[install] minimumReleaseAge` で別途設定する。単位は秒（`604800` = 7 日）。pnpm/npm の `min-release-age` は日単位。
 
-PATH に `~/.bun/bin` が通っている前提（mise 経由 bun で自動設定）。
+### ccstatusline
 
-## Sandbox の追加設定
+statusLine / hooks で使う `ccstatusline` は `bunx -y @latest` を避け、`bun add -g ccstatusline@<固定版>` でグローバル導入し、コマンドを `ccstatusline --hook`（PATH 経由）にする。`@latest` の毎起動 fetch（UserPromptSubmit / PreToolUse / statusLine）はサプライチェーン攻撃経路になる。更新は `bun update -g ccstatusline`（`minimumReleaseAge` が効く）。PATH に `~/.bun/bin` が通っている前提。
+
+## Sandbox 追加設定
 
 ### `enableWeakerNetworkIsolation: false`
 
-macOS の Sandbox 内でシステム TLS 信頼サービス (`com.apple.trustd.agent`) へのアクセスを許可するフラグ。Docs 上「セキュリティを低下させ、データ流出の可能性のあるパスを開く」と警告されている。
+macOS Sandbox 内のシステム TLS 信頼サービス（`com.apple.trustd.agent`）へのアクセスを許可するフラグ。`true` はセキュリティを低下させる。
 
-- **`true` が必要なケース**: `httpProxyPort` を MITM プロキシ + カスタム CA と組み合わせて使い、`gh`/`gcloud`/`terraform` 等の Go ベース CLI に TLS 検証させる必要がある環境
-- **本リポジトリの方針**: MITM プロキシを使わないため `false` に設定。`gh auth status` で TLS 検証が動作することを実機確認済み
-- **変更時の確認**: Go ベース CLI が動くかを `gh auth status` または `gh api user` で検証
+- `true` が必要: `httpProxyPort` を MITM プロキシ + カスタム CA と併用し、`gh`/`gcloud`/`terraform` 等の Go ベース CLI に TLS 検証させる環境。
+- 本リポジトリ: MITM プロキシを使わないため `false`。Go ベース CLI の TLS 検証は `gh auth status` / `gh api user` で確認できる。
 
 ## 設定変更時の検証
 
-permission ルールは matcher の挙動が直感に反することが多いため、推測で書かず実機検証する:
+permission matcher は挙動が直感に反するため、推測せず実機検証する。
 
-- ダミーファイルを `$TMPDIR/<test-name>/` または `~/<test-name>/` に作って、Bash と Read tool の両方で deny されるか確認
-- 設定変更は live reload で同セッション内に反映される。sub-agent に検証を渡す方式で完結可能
-- 検証用に settings.json を一時編集した場合は完全復元（バックアップを取って diff zero 確認）
+- ダミーファイルを `$TMPDIR/<test>/` または `~/ghq/<test>/` に作り、Bash と Read tool の両方で deny されるか確認する。
+- 設定は live reload で同セッション内に反映される。
+- built-in deny の有無を確認する時は、sandbox `denyRead` と Permission `Read(...)` deny の両方を外してから確認する（Permission deny が sandbox にマージされて `denyOnly` に出るため、片方だけ外すと出自を誤認する）。
+- 一時編集した settings.json は完全復元する。
 
 ## 関連
 
-- `## SOPS` (README.md): age.txt の用途と運用
-- `## AI tools` (README.md): MCP / plugins / Agent Skills の管理方針
+- `## SOPS`（README.md）: age.txt の用途
+- `## AI tools`（README.md）: MCP / plugins / Agent Skills の管理方針
 - `dotfiles/.claude/settings.json`: 設定の実体
 - `dotfiles/.bunfig.toml`: bun の supply-chain 設定

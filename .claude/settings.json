@@ -37,8 +37,14 @@
       "Read(~/.config/1Password/**)",
       "Read(~/.config/mise/age.txt)",
       "Read(//**/age.txt)",
-      "Read(~/.npmrc)",
+      "Read(//**/*.pem)",
+      "Read(//**/*.key)",
+      "Read(//**/id_rsa)",
+      "Read(//**/id_ed25519)",
+      "Read(//**/id_ecdsa)",
+      "Read(//**/id_dsa)",
       "Read(~/.netrc)",
+      "Edit(~/.gitconfig)",
       "Edit(~/.npmrc)",
       "Edit(~/.netrc)",
       "Edit(~/.config/mise/age.txt)",
@@ -46,6 +52,7 @@
       "Edit(~/.docker/config.json)",
       "Edit(**/.npmrc)",
       "Edit(**/.netrc)",
+      "Write(~/.gitconfig)",
       "Write(~/.npmrc)",
       "Write(~/.netrc)",
       "Write(~/.config/mise/age.txt)",
@@ -348,7 +355,6 @@
         "~/.ssh",
         "~/.aws",
         "~/.config/gh",
-        "~/.npmrc",
         "~/.netrc",
         "~/.gnupg/private-keys-v1.d",
         "~/.kube",
@@ -356,9 +362,6 @@
         "~/.config/op",
         "~/.config/1Password",
         "~/.config/mise/age.txt"
-      ],
-      "allowRead": [
-        "~/.gitconfig"
       ]
     },
     "enableWeakerNetworkIsolation": false,
