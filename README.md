@@ -354,7 +354,9 @@ marketplaceからuser scopeでグローバル有効にしたものは、 `~/.cla
 
 ### セキュリティ運用（Sandbox / Permission の二層モデル）
 
-`~/.claude/settings.json` のセキュリティルールは Sandbox と Permission の二層構成。`~/.config/mise/age.txt` は三層で完全遮断、その他の典型シークレット (`.env`, `.npmrc`, `.netrc`, `*secret*`, `id_rsa*` 等) は Claude Code 内蔵 Sandbox deny に任せて Permission 側は最小化、`~/.gitconfig` は公開管理として `sandbox.allowRead` で内蔵 deny を例外解除して git CLI に読ませる、bun のサプライチェーン対策は `~/.bunfig.toml` で別設定。Read/Bash matcher の書式仕様と Sandbox との相互作用を踏まえた設計判断を [docs/claude-code-security.md](./docs/claude-code-security.md) に記録している。
+`~/.claude/settings.json` の Sandbox / Permission によるセキュリティ設計（脅威モデル＝プロンプトインジェクションとサプライチェーン攻撃）は、ファイル別の保護方針・設計判断・検証済み挙動を [docs/claude-code-security.md](./docs/claude-code-security.md) に集約している（仕様の一次情報は公式 Docs。同 doc 参照）。設定変更時の鉄則は [.claude/rules/claude-code-settings.md](./.claude/rules/claude-code-settings.md)。
+
+> ここに仕様の詳細を再掲しない（ドリフトの温床になるため）。保護方針・delta は上記 doc を参照。
 
 # Trouble shooting
 
