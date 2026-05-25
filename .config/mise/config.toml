@@ -11,6 +11,8 @@ sops = "latest"
 fnox = "latest"
 # https://mise.jdx.dev/dev-tools/backends/gem.html
 "gem:cocoapods" = "1.16.2"
+# https://github.com/perplexityai/bumblebee Check exposure to known software supply-chain compromises.
+"go:github.com/perplexityai/bumblebee/cmd/bumblebee" = "v0.1.1"
 
 [settings]
 experimental = true
