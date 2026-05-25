@@ -29,6 +29,7 @@ Brewfile.lock.json
 !.claude/settings.json
 !.claude/commands
 !.claude/agents
+!.claude/rules
 !.claude/plugins
 .claude/plugins/*
 !.claude/plugins/known_marketplaces.json
