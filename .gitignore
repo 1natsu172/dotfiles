@@ -15,6 +15,9 @@
 !.config/mise
 .config/mise/*
 !.config/mise/config.toml
+!.config/pnpm
+.config/pnpm/*
+!.config/pnpm/config.yaml
 !.config/ccstatusline
 *node_modules
 .zsh/history/

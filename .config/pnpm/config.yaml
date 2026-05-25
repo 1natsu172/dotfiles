@@ -1,0 +1,11 @@
+# Hold newly-published versions for 7 days as a supply-chain defense (Shai-Hulud type).
+# pnpm 11+ reads minimumReleaseAge from config.yaml ONLY (not from .npmrc, any case).
+# Unit is minutes: 10080 = 7 days. Mirrors bunfig `minimumReleaseAge` (604800s) and
+# the `.npmrc` `minimum-release-age` used by pnpm <=10.
+# Requires XDG_CONFIG_HOME to point here (set in fish config.fish); otherwise pnpm
+# falls back to ~/Library/Preferences/pnpm/config.yaml on macOS.
+minimumReleaseAge: 10080
+
+# pnpm 11 also ignores `.npmrc`'s `save-exact`, so keep exact-version pinning here
+# to preserve the behavior declared in `.npmrc` (`save-exact=true`).
+saveExact: true

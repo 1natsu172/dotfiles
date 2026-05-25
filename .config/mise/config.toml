@@ -18,6 +18,11 @@ fnox = "latest"
 experimental = true
 
 [env]
+# Make XDG-aware tools (e.g. pnpm 11+ -> ~/.config/pnpm/config.yaml) use ~/.config
+# instead of the macOS default ~/Library/Preferences. Set here (not per-shell) so
+# fish/bash/zsh and mise shims all inherit it via mise activation. env-paths-based
+# tools (astro, eas-cli, …) ignore XDG and stay in ~/Library.
+XDG_CONFIG_HOME = "{{env.HOME}}/.config"
 SOPS_AGE_KEY_FILE = "{{config_root}}/.config/mise/age.txt"
 # !DO NOT COMMIT THIS FILE TO GIT!
 # Load my secret env from the file to this config file and redacts the values
