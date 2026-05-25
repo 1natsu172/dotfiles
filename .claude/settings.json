@@ -356,8 +356,9 @@
       "allowedDomains": [
         "github.com",
         "*.githubusercontent.com",
+        "api.github.com",
         "registry.npmjs.org",
-        "api.github.com"
+        "npm.flatt.tech"
       ],
       "allowUnixSockets": [
         "~/.gnupg/S.gpg-agent"
@@ -366,7 +367,7 @@
     "filesystem": {
       "allowWrite": [
         "~/.gnupg",
-        "~/ghq"
+        "~/.npm/_cacache"
       ],
       "denyWrite": [
         "~/.ssh",

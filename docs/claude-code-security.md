@@ -12,7 +12,7 @@
 - **built-in deny は無い**。sandbox の default は全 read 可（`~/.aws/credentials`・`~/.ssh/` すら読める）。塞ぐパスは自分で `denyRead` / Permission `Read` deny に列挙する。
 - **Permission の `Read`/`Edit` deny は sandbox 境界にマージ**され subprocess にも効く。逆に **sandbox の `denyRead`/`denyWrite` は Claude の Read/Edit/Write tool には効かない**（tool は permission を直接使う）。
 - **「Edit rules apply to all built-in tools that edit files」**（Docs 原文）。→ 組み込み **Write tool も Edit カテゴリ**。Claude tool の write を縛るのは **`Edit(...)`**（`Write(...)` は組み込み Write tool に無効。実機挙動は `D3`）。
-- sandbox の **write は allowlist**（cwd `.`・`$TMPDIR`・`~/ghq`・`~/.gnupg` 等のみ可）、**read は denylist**（全許可からの除外）。
+- sandbox の **write は allowlist**（cwd `.`・`$TMPDIR`・`~/.gnupg`・`~/.npm`（cache/logs）等のみ可）、**read は denylist**（全許可からの除外）。
 - Permission パス書式の要注意点: **`/path` は絶対でなくプロジェクトルート相対**（絶対は `//path`、home は `~/path`）。取り違えると home 配下を全く守れない。書式詳細は公式 Docs。
 
 ### 帰結（うちの運用判断）
@@ -126,6 +126,14 @@ macOS Sandbox 内のシステム TLS 信頼サービス（`com.apple.trustd.agen
 - `true` が必要: `httpProxyPort` を MITM プロキシ + カスタム CA と併用し Go ベース CLI に TLS 検証させる環境。
 - 本リポジトリ: MITM プロキシを使わないため `false`。gh の TLS 失敗は `excludedCommands: ["gh *"]`（sandbox 外実行）で回避する（「gh」参照）。
 
+### npm install を sandbox 内で通す
+
+sandbox は network を allowlist、write を cwd 中心の allowlist で絞るため、`npm install` には2点の明示許可が要る（実機で発覚）:
+
+- **registry への egress**: `sandbox.network.allowedDomains` に取得先を列挙する。public の `registry.npmjs.org` に加え、scoped パッケージを引く社内 registry（`npm.flatt.tech`）も必要。無いと registry に到達できず install が失敗する。`~/.npmrc` の registry 設定自体は read 解放で効くが、**ネットワーク到達は allowedDomains が別ゲート**なので両方そろえる。
+- **キャッシュ書き込み**: `sandbox.filesystem.allowWrite` に `~/.npm/_cacache`（npm の content-addressable cache）を追加する。sandbox は cwd 外への write を塞ぐため、無いと install がキャッシュ書き込みで失敗する。`~/.npm/_logs` は Claude Code デフォルトで許可済みだが `_cacache` は別途必要。他の `~/.npm` 配下書き込みで失敗するなら `~/.npm` に広げる。
+- broad な `allowedDomains` は exfiltration 経路になりうる（公式 sandboxing の警告）。registry は必要最小限に絞る。
+
 ### GnuPG 署名コミット
 
 署名コミット（`commit.gpgsign=true`、OpenPGP 鍵）は sandbox 外常駐の gpg-agent と Unix socket で通信して署名する（いずれも実機検証で確定）:
@@ -139,7 +147,7 @@ macOS Sandbox 内のシステム TLS 信頼サービス（`com.apple.trustd.agen
 
 permission は挙動が直感に反するため、**推測せず公式 Docs ＋実機で検証する**（`.claude/rules/claude-code-settings.md`）。
 
-- ダミーファイルを `$TMPDIR/<test>/` または `~/ghq/<test>/` に作り、Bash と Read/Edit tool で deny されるか確認する。
+- ダミーファイルを `$TMPDIR/<test>/` または cwd（`./<test>/`）に作り、Bash と Read/Edit tool で deny されるか確認する（どちらも sandbox 書込可）。
 - 設定は live reload で同セッション内に反映される（Bash deny・sandbox filesystem・Read/Edit/Write tool deny いずれも実機確認）。**tool の write 防御は必ず `Edit(...)` deny で試す**。`Write(...)` は組み込み Write tool に効かないため、`Write` だけで試すと「効かない」と誤認する（`D3`）。
 - built-in deny の有無を確認する時は、sandbox `denyRead` と Permission `Read(...)` deny の**両方**を外してから確認する（Permission deny が sandbox にマージされ `denyOnly` に出るため、片方だけ外すと出自を誤認する）。
 - 一時編集した settings.json は完全復元する。Bash の `cp` 復元は sandbox 自己保護（`denyWithinAllow` に settings.json 実体）で拒否されるため、Edit/Write tool で戻す。
