@@ -1,7 +1,10 @@
 {
   "env": {
     "ENABLE_TOOL_SEARCH": "true",
-    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
+    "GIT_SSL_CAINFO": "/opt/homebrew/etc/ca-certificates/cert.pem",
+    "SSL_CERT_FILE": "/opt/homebrew/etc/ca-certificates/cert.pem",
+    "CURL_CA_BUNDLE": "/opt/homebrew/etc/ca-certificates/cert.pem"
   },
   "permissions": {
     "allow": [
@@ -42,6 +45,18 @@
       "Read(//**/id_ed25519)",
       "Read(//**/id_ecdsa)",
       "Read(//**/id_dsa)",
+      "Edit(//**/*.pem)",
+      "Write(//**/*.pem)",
+      "Edit(//**/*.key)",
+      "Write(//**/*.key)",
+      "Edit(//**/id_rsa)",
+      "Write(//**/id_rsa)",
+      "Edit(//**/id_ed25519)",
+      "Write(//**/id_ed25519)",
+      "Edit(//**/id_ecdsa)",
+      "Write(//**/id_ecdsa)",
+      "Edit(//**/id_dsa)",
+      "Write(//**/id_dsa)",
       "Read(~/.netrc)",
       "Edit(~/.gitconfig)",
       "Edit(~/.npmrc)",
@@ -368,6 +383,9 @@
       "allowWrite": [
         "~/.gnupg",
         "~/.npm/_cacache"
+      ],
+      "allowRead": [
+        "/opt/homebrew/etc/ca-certificates/cert.pem"
       ],
       "denyWrite": [
         "~/.ssh",
