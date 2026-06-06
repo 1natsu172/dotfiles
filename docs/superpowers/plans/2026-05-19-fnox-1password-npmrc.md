@@ -2,11 +2,15 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** `.npmrc` の Flatt registry token を平文から取り除き、fnox（keychain → age → 1Password SA chain）経由で npm/yarn/bun 系の子プロセスにのみ注入する。
+**Goal:** `.npmrc` の Flatt registry token を平文から取り除き、fnox（keychain → 1Password SA chain）経由で npm/yarn/bun 系の子プロセスにのみ注入する。
 
-**Architecture:** age 秘密鍵を macOS Keychain に格納し、それで 1Password SA token を復号、SA token で op CLI を叩いて Flatt token を取得。`~/dotfiles/bin/fnox-shims/` 配下の PATH shim が npm 系コマンドを `fnox exec -- mise x -- <tool>` でラップし、token を親シェル env に出さず子プロセスにのみ渡す。
+**Architecture:** SA token を macOS Keychain に格納し、fnox keychain provider で取得して 1Password provider の認証に渡す。op_personal が op CLI 経由で Flatt token を live fetch。`~/dotfiles/bin/fnox-shims/` 配下の PATH shim が npm 系コマンドを `fnox exec -- mise x -- <tool>` でラップし、token を親シェル env に出さず子プロセスにのみ渡す。
 
-**Tech Stack:** fnox 1.25.0, 1Password CLI (op) 2.34.0, age 1.3.1, mise, fish/bash/zsh, macOS Keychain
+> 補足: 本来は keychain → age → op の 3 段 chain が理想（fnox docs 推奨パターン）だが、
+> 実機 1.25.1 で age provider の `identity` 未実装のため、暫定で age 層を省く。
+> fnox 側の実装追従後に再導入する（spec 冒頭の「暫定構成について」参照）。
+
+**Tech Stack:** fnox 1.25.1, 1Password CLI (op) 2.34.0, mise, fish/bash/zsh, macOS Keychain
 
 ---
 
@@ -15,15 +19,15 @@
 このタスクは **秘匿情報の実値を扱う工程（USER 専任）** と **ファイル/設定の編集工程（AGENT 可）** が混在する。各タスクに `[AGENT]` / `[USER]` / `[VERIFY]` のラベルを付ける。
 
 - `[AGENT]`: Claude が実施可能（ファイル作成・編集、symlink 配置等）
-- `[USER]`: ユーザーが手で行う。SA token / age 秘密鍵などの実値を扱うため Claude にやらせない
+- `[USER]`: ユーザーが手で行う。SA token などの実値を扱うため Claude にやらせない
 - `[VERIFY]`: 検証コマンド。秘匿値を端末に出さない形（prefix 判定 / 終了コード）で確認する
 
 **秘匿値の扱い原則:**
-- Claude は `~/.config/mise/age.txt` を**読まない**（私有鍵が同居するため）。公開鍵が必要なときは USER が `awk` で抽出して値を渡す
+- Claude は `~/.config/mise/age.txt` を**読まない、触らない**（本タスクでは age を使わないため、参照すらしない）
 - `fnox get` の検証は値を素で print せず `| grep -q '^prefix'` 等で判定する
 
 **実装順序の鉄則（npm を壊さないため）:**
-`.npmrc` の placeholder 化（Task 7）は、**fnox が FLATT_NPM_TOKEN を解決できると確認できた後（Task 4 VERIFY 通過後）かつ shim が PATH に乗った後（Task 5-6 完了後）**に行う。順序を守らないと npm install が 401 で壊れる。
+`.npmrc` の placeholder 化（Task 6）は、**fnox が FLATT_NPM_TOKEN を解決できると確認できた後（Task 4 VERIFY 通過後）かつ shim が PATH に乗った後（Task 5 完了後）**に行う。順序を守らないと npm install が 401 で壊れる。
 
 **コミット方針:**
 ユーザーの運用ルール上、コミットは明示許可があるまで行わない。各タスク末尾の「コミット候補」は、実行時にユーザーへ確認してから実施する。
@@ -36,12 +40,12 @@
 |---|---|---|
 | `~/dotfiles/bin/_fnox_npm_shim` | 新規 (AGENT) | tool 名判定 + `fnox exec -- mise x` ディスパッチ + `--deploy` で symlink 生成 |
 | `~/dotfiles/bin/fnox-shims/<tool>` | 生成物 (deploy) | `../_fnox_npm_shim` への相対 symlink。gitignore 対象 |
-| `~/dotfiles/.config/fnox/config.toml` | 新規 (AGENT 雛形 + USER 値投入) | provider chain 定義 + secret 参照。平文値は持たない |
+| `~/dotfiles/.config/fnox/config.toml` | 新規 (AGENT 雛形 + USER 値投入) | keychain + op_personal provider と FLATT_NPM_TOKEN の op:// 参照。平文値は持たない |
 | `~/dotfiles/.config/mise/config.toml` | 修正 (AGENT) | `[env]` に `_.path` を 1 行追加 |
 | `~/dotfiles/.npmrc` | 修正 (AGENT) | token を `${FLATT_NPM_TOKEN}` placeholder 化 |
 | `~/dotfiles/.gitignore` | 修正 (AGENT) | `!.config/fnox` と `bin/fnox-shims/` を追加 |
 | `~/dotfiles/install.sh` | 修正 (AGENT) | deploy ステップ追加 |
-| macOS Keychain (service=`fnox`) | USER | age 秘密鍵を格納 |
+| macOS Keychain (service=`fnox`, key=`op-sa-personal`) | USER | SA token を格納 |
 | 1Password Personal vault SA | USER | fnox が op を叩くための service account |
 
 ---
@@ -51,7 +55,7 @@
 **Files:**
 - Create: `~/dotfiles/bin/_fnox_npm_shim`
 
-- [ ] **Step 1: dispatcher スクリプトを作成**
+- [x] **Step 1: dispatcher スクリプトを作成**
 
 `~/dotfiles/bin/_fnox_npm_shim` を以下の内容で作成:
 
@@ -85,21 +89,21 @@ tool="${0##*/}"
 exec fnox exec -- mise x -- "${tool}" "$@"
 ```
 
-- [ ] **Step 2: 実行権限を付与**
+- [x] **Step 2: 実行権限を付与**
 
 Run: `chmod +x ~/dotfiles/bin/_fnox_npm_shim`
 
-- [ ] **Step 3: deploy が symlink を正しく生成するか検証**
+- [x] **Step 3: deploy が symlink を正しく生成するか検証**
 
 Run: `~/dotfiles/bin/_fnox_npm_shim --deploy`
 Expected: `npm`, `npx`, `yarn`, `bun`, `bunx`, `pnpm`, `pnpx` の symlink 作成ログが出る
 
-- [ ] **Step 4: symlink の中身を確認**
+- [x] **Step 4: symlink の中身を確認**
 
 Run: `ls -la ~/dotfiles/bin/fnox-shims/`
 Expected: 各 tool が `../_fnox_npm_shim` を指す symlink になっている
 
-- [ ] **Step 5: deploy の冪等性を確認**
+- [x] **Step 5: deploy の冪等性を確認**
 
 Run: `~/dotfiles/bin/_fnox_npm_shim --deploy && ls -la ~/dotfiles/bin/fnox-shims/`
 Expected: エラーなく再実行でき、symlink 構成は変わらない
@@ -118,21 +122,15 @@ git commit -m "feat(bin): add fnox exec shim dispatcher for npm-family tools"
 **Files:**
 - Create: `~/dotfiles/.config/fnox/config.toml`
 
-- [ ] **Step 1: config ディレクトリと雛形を作成**
+- [ ] **Step 1: config を作成**
 
-`~/dotfiles/.config/fnox/config.toml` を以下で作成（`recipients` と `OP_SA_PERSONAL` の値は Task 3-4 で投入されるため placeholder）:
+`~/dotfiles/.config/fnox/config.toml` を以下の内容で作成:
 
 ```toml
-# OS keychain で秘密鍵を保護する provider
+# OS keychain で秘匿値を保護する provider
 [providers.keychain]
 type = "keychain"
 service = "fnox"
-
-# Age 暗号化で secret を保管。秘密鍵は keychain から取得（disk に鍵ファイルを置かない）
-[providers.age]
-type = "age"
-recipients = ["age1REPLACE_WITH_PUBLIC_KEY"]
-identity = { provider = "keychain", value = "age-key" }
 
 # Personal vault 用の 1Password service account
 [providers.op_personal]
@@ -140,103 +138,85 @@ type = "1password"
 token = { secret = "OP_SA_PERSONAL" }
 
 [secrets]
-# age 秘密鍵そのもの（実体は keychain 内、ここは参照のみ）
-age-key = { provider = "keychain", value = "age-key" }
+# SA トークン本体（実体は macOS Keychain 内、ここは参照のみ）
+OP_SA_PERSONAL = { provider = "keychain", value = "op-sa-personal" }
 
 # 実際に欲しい secret（op から live で fetch）
 FLATT_NPM_TOKEN = { provider = "op_personal", value = "op://Personal/slhx4rnaex4ectm6hxblqyiu7y/credential" }
 ```
 
-注: `OP_SA_PERSONAL` の `[secrets]` 行はここに書かない。Task 3 の `fnox set ... --global` が自動追記する。
+> 注: Task 3 で `fnox set OP_SA_PERSONAL --provider keychain --global` を実行すると、
+> 既にここで宣言した `OP_SA_PERSONAL = { ... }` の参照と整合した状態で keychain item が作成される。
+> fnox は同名の secret が `[secrets]` に既存の場合、provider 設定を尊重して値だけ keychain に書き込む。
 
-- [ ] **Step 2: ファイルが正しい TOML か確認**
+- [ ] **Step 2: TOML パースが通ることを確認 `[VERIFY]`**
 
-Run: `fnox -c ~/dotfiles/.config/fnox/config.toml provider list 2>&1 || true`
-Expected: provider 一覧（keychain / age / op_personal）が出る。secret 解決エラーが出ても TOML パース自体が通っていれば OK
+Run: `fnox -c ~/dotfiles/.config/fnox/config.toml provider list 2>&1 | head`
+Expected: provider 一覧（keychain / op_personal）が出る。
+（secret 解決はまだだが、TOML パース自体が通っていればこの段階では OK）
 
-**コミット候補:** Task 4 完了後にまとめて（recipient 投入後）。
+**コミット候補:** Task 4 完了後にまとめて（chain 動作確認後）。
 
 ---
 
-## Task 3: 秘匿値の bootstrap `[USER]`
+## Task 3: 秘匿値 bootstrap `[USER]`
 
-> このタスクは実値（SA token / age 秘密鍵）を扱うため **ユーザーが手で実施**する。
-> `~/.config/mise/age.txt` は **read-only 参照のみ**。削除・移動・改変しない。
+> このタスクは実値（SA token）を扱うため **ユーザーが手で実施**する。
+> 本タスクでは age を使わないため、`~/.config/mise/age.txt` には**触れない**。
 
 - [ ] **Step 1: 1Password service account を作成**
 
 1Password 管理画面で service account（例: `fnox-personal-npm`）を作成し、**Personal vault への read-only access** に絞る。発行された `ops_xxx` トークンを控える。
 
-- [ ] **Step 2: age 公開鍵を抽出して Claude に渡す**
-
-Run（fish, read-only）: `awk '/public key:/{print $NF}' ~/.config/mise/age.txt`
-出力された `age1xxx...` を Task 4 で config に投入するため控える / Claude に伝える。
-（公開鍵は秘匿情報ではないため共有可）
-
-- [ ] **Step 3: age 秘密鍵を Keychain に登録**
+- [ ] **Step 2: SA token を Keychain に登録**
 
 Run（fish）:
 ```fish
-awk '/^AGE-SECRET-KEY/' ~/.config/mise/age.txt | \
-    fnox set age-key --provider keychain --global
+echo "ops_xxx" | fnox set OP_SA_PERSONAL --provider keychain --global
 ```
+- `ops_xxx` は実値に置き換える
+- `--global` で `~/.config/fnox/config.toml` の `[secrets]` の参照と整合
+- 実体は macOS Keychain の service=`fnox`, key=`op-sa-personal` 配下に格納
+- stdin pipe で渡すため shell history / ps に値が露出しない
 - 初回 fnox 起動時の Keychain ダイアログで「Always Allow」を選ぶ
-- `~/.config/fnox/config.toml` の `[secrets]` に `age-key` 参照が追記される（実体は Keychain）
-- stdin pipe なので値は shell history / ps に残らない
 
-- [ ] **Step 4: SA token を age 暗号化して config に格納**
-
-Run（fish, interactive prompt で hidden input）:
+別法（interactive prompt、hidden input、より安全）:
 ```fish
-fnox set OP_SA_PERSONAL --provider age --global
+fnox set OP_SA_PERSONAL --provider keychain --global
 # プロンプトに ops_xxx を貼り付け（画面に出ない）
 ```
-- `~/.config/fnox/config.toml` の `[secrets]` に age 暗号文が追記される
 
 ---
 
-## Task 4: recipient 投入と fnox 解決チェーンの検証 `[AGENT]` + `[VERIFY]`
+## Task 4: fnox chain 解決の検証 `[VERIFY]`
 
-**Files:**
-- Modify: `~/dotfiles/.config/fnox/config.toml`（`recipients` の placeholder を実値に）
+- [ ] **Step 1: keychain → SA token 取得の確認**
 
-- [ ] **Step 1: recipient を実際の公開鍵に置換 `[AGENT]`**
-
-`~/dotfiles/.config/fnox/config.toml` の
-`recipients = ["age1REPLACE_WITH_PUBLIC_KEY"]`
-を Task 3-Step2 で得た実値 `recipients = ["age1xxx..."]` に置換。
-
-- [ ] **Step 2: keychain → age 鍵取得の確認 `[VERIFY]`**
-
-Run: `fnox -c ~/.config/fnox/config.toml get age-key | grep -q '^AGE-SECRET-KEY' && echo OK || echo NG`
+Run: `fnox get OP_SA_PERSONAL | grep -q '^ops_' && echo OK || echo NG`
 Expected: `OK`（値は print しない）
 
-- [ ] **Step 3: age 復号で SA token が取れる確認 `[VERIFY]`**
+- [ ] **Step 2: keychain → op_personal 連携で Flatt token が取れる確認**
 
-Run: `fnox -c ~/.config/fnox/config.toml get OP_SA_PERSONAL | grep -q '^ops_' && echo OK || echo NG`
-Expected: `OK`
+Run: `fnox get FLATT_NPM_TOKEN | grep -q '^tg_' && echo OK || echo NG`
+Expected: `OK`（chain 全体が機能）
 
-- [ ] **Step 4: op 連携で Flatt token が取れる確認 `[VERIFY]`**
-
-Run: `fnox -c ~/.config/fnox/config.toml get FLATT_NPM_TOKEN | grep -q '^tg_' && echo OK || echo NG`
-Expected: `OK`（keychain → age → op の chain 全体が機能）
-
-> ここが通らなければ Task 7（.npmrc 書き換え）に進まない。npm が壊れる。
+> ここが通らなければ Task 6（.npmrc 書き換え）に進まない。npm が壊れる。
 
 **コミット候補（要ユーザー承認）:**
 ```bash
-git add .config/fnox/config.toml .gitignore   # .gitignore は Task 5 で更新後にまとめる手もある
-git commit -m "feat(fnox): add keychain->age->1password secret chain config"
+git add .config/fnox/config.toml
+git commit -m "feat(fnox): add keychain->1password secret chain config"
 ```
-（暗号文と op:// 参照のみで平文秘匿値は含まれないことを確認してからコミット）
+（fnox.toml には provider 参照と op:// URI のみで平文秘匿値が無いことを確認してからコミット）
 
 ---
 
-## Task 5: mise PATH 投入と .gitignore 更新 `[AGENT]`
+## Task 5: mise PATH 投入と .gitignore + install.sh `[AGENT]`
 
 **Files:**
 - Modify: `~/dotfiles/.config/mise/config.toml`
 - Modify: `~/dotfiles/.gitignore`
+- Modify: `~/dotfiles/install.sh`
 
 - [ ] **Step 1: mise config に `_.path` を追加**
 
@@ -261,30 +241,7 @@ _.path = ["~/dotfiles/bin/fnox-shims"]
 bin/fnox-shims/
 ```
 
-- [ ] **Step 3: fnox config が追跡対象、shims が無視対象であることを確認 `[VERIFY]`**
-
-Run:
-```bash
-cd ~/dotfiles
-git check-ignore -v .config/fnox/config.toml; echo "exit=$?"   # 追跡対象なら exit=1（無視されない）
-git check-ignore -v bin/fnox-shims/npm; echo "exit=$?"          # 無視対象なら exit=0
-```
-Expected: `config.toml` は無視されない（exit=1）、`fnox-shims/npm` は無視される（exit=0）
-
-**コミット候補（要ユーザー承認）:**
-```bash
-git add .config/mise/config.toml .gitignore
-git commit -m "feat(mise): prepend fnox-shims to PATH via env._.path"
-```
-
----
-
-## Task 6: install.sh に deploy ステップ追加 `[AGENT]`
-
-**Files:**
-- Modify: `~/dotfiles/install.sh`
-
-- [ ] **Step 1: install.sh の deploy ステップを追記**
+- [ ] **Step 3: install.sh に deploy ステップを追加**
 
 `~/dotfiles/install.sh` の `echo "...Deploy dotfiles complete..."` 行の**前**に以下を挿入:
 
@@ -295,26 +252,36 @@ if [[ -x "${DOT_DIRECTORY}/bin/_fnox_npm_shim" ]]; then
 fi
 ```
 
-- [ ] **Step 2: install.sh を実行して全体が通るか確認 `[VERIFY]`**
+- [ ] **Step 4: gitignore の効きを確認 `[VERIFY]`**
+
+Run:
+```bash
+cd ~/dotfiles
+git check-ignore -v .config/fnox/config.toml; echo "exit=$?"   # 追跡対象なら exit=1
+git check-ignore -v bin/fnox-shims/npm; echo "exit=$?"          # 無視対象なら exit=0
+```
+Expected: `config.toml` は無視されない（exit=1）、`fnox-shims/npm` は無視される（exit=0）
+
+- [ ] **Step 5: install.sh を実行 `[VERIFY]`**
 
 Run: `bash ~/dotfiles/install.sh`
 Expected: 既存の symlink 配置 + fnox-shims deploy が完走、エラーなし
 
-- [ ] **Step 3: PATH 投入の確認（新しい fish を開いて） `[VERIFY]`**
+- [ ] **Step 6: PATH に shim が乗っているか確認（新しい fish セッションで） `[VERIFY]`**
 
-新しい fish セッションで Run: `which npm`
+新しい fish を開いて Run: `which npm`
 Expected: `~/dotfiles/bin/fnox-shims/npm` を指す
-（もし mise shims が先に来ていたら spec の検証ポイント参照。`_.path` の prepend 順を確認）
+（もし mise shims が先に来ていたら spec の検証ポイント参照）
 
 **コミット候補（要ユーザー承認）:**
 ```bash
-git add install.sh
-git commit -m "feat(install): deploy fnox shim symlinks on setup"
+git add .config/mise/config.toml .gitignore install.sh
+git commit -m "feat(mise,install): wire fnox shims into PATH and install flow"
 ```
 
 ---
 
-## Task 7: .npmrc の placeholder 化 `[AGENT]`（必ず Task 4 VERIFY 通過後）
+## Task 6: .npmrc の placeholder 化 `[AGENT]`（必ず Task 4 VERIFY 通過後）
 
 **Files:**
 - Modify: `~/dotfiles/.npmrc`
@@ -346,7 +313,7 @@ git commit -m "feat(npmrc): replace plaintext registry token with fnox env place
 
 ---
 
-## Task 8: エンドツーエンド検証 `[VERIFY]`（新しいシェルで）
+## Task 7: エンドツーエンド検証 `[VERIFY]`（新しいシェルで）
 
 新しい fish セッションを開いて以下を順に確認:
 
@@ -355,9 +322,9 @@ git commit -m "feat(npmrc): replace plaintext registry token with fnox env place
 Run: `which npm`
 Expected: `~/dotfiles/bin/fnox-shims/npm`
 
-- [ ] **Step 2: 親シェル env に token が漏れていない**
+- [ ] **Step 2: 親シェル env に secret が漏れていない**
 
-Run: `env | grep -E 'FLATT_NPM_TOKEN|AGE-SECRET' ; echo "exit=$?"`
+Run: `env | grep -E 'FLATT_NPM_TOKEN|OP_SA_PERSONAL' ; echo "exit=$?"`
 Expected: 何も出ない（exit=1）
 
 - [ ] **Step 3: npm 子プロセス内で展開される**
@@ -374,7 +341,7 @@ Expected: 認証ユーザー名が返る（401 でない）
 
 Run:
 ```bash
-bash -c 'env | grep FLATT_NPM_TOKEN; echo "leak_exit=$?"'
+bash -c 'env | grep -E "FLATT_NPM_TOKEN|OP_SA_PERSONAL"; echo "leak_exit=$?"'
 bash -c 'npm whoami --registry https://npm.flatt.tech/'
 ```
 Expected: 1 行目 leak なし（leak_exit=1）、2 行目 認証成功
@@ -382,16 +349,16 @@ Expected: 1 行目 leak なし（leak_exit=1）、2 行目 認証成功
 - [ ] **Step 6: Claude Code（sandbox）経路**
 
 Claude Code の Bash tool で Run: `npm whoami --registry https://npm.flatt.tech/`
-Expected: 認証成功（sandbox 内 keychain → age → op chain が機能）
+Expected: 認証成功（sandbox 内 keychain → op chain が機能）
 
 - [ ] **Step 7: age.txt 不変確認**
 
 Run: `ls -la ~/.config/mise/age.txt; shasum ~/.config/mise/age.txt`
-Expected: 本タスク開始前と mtime / sha が一致（read-only 参照のみだった）
+Expected: 本タスク開始前と mtime / sha が一致（一切触らなかったこと）
 
 ---
 
-## Task 9: 旧トークンのローテーション `[USER]`（セキュリティ必須）
+## Task 8: 旧トークンのローテーション `[USER]`（セキュリティ必須）
 
 > 現行 `tg_anon_xxx` は git 履歴（9e8f86d 他）経由で GitHub
 > （`github.com/1natsu172/dotfiles`）に push 済み ＝ **既に露出している**。
@@ -418,14 +385,15 @@ Expected: 新トークンで認証成功
 
 ## Self-Review（spec カバレッジ）
 
-- spec A（fnox config）→ Task 2, 4 ✅
+- spec A（fnox config）→ Task 2 ✅
 - spec B（dispatcher）→ Task 1 ✅
-- spec C（shim 配置）→ Task 1, 6 ✅
+- spec C（shim 配置）→ Task 1, 5 ✅
 - spec D（mise PATH）→ Task 5 ✅
-- spec E（.npmrc）→ Task 7 ✅
+- spec E（.npmrc）→ Task 6 ✅
 - spec F（.gitignore）→ Task 5 ✅
-- spec G（install.sh）→ Task 6 ✅
+- spec G（install.sh）→ Task 5 ✅
 - spec H（bootstrap）→ Task 3 ✅
-- spec 検証手順 → Task 8 ✅
-- spec 受容リスク（postinstall, sops, age.txt 存続）→ Out of scope として spec に記載済み、本計画では age.txt を Task 3/8 で read-only 厳守 ✅
-- 追加: git 履歴の token 露出 → Task 9（ローテーション）で対応 ✅
+- spec 検証手順 → Task 4, 7 ✅
+- spec 受容リスク（postinstall, sops, age.txt 存続）→ Out of scope として spec に記載済み、本計画では age.txt を Task 3/7 で一切触らない ✅
+- 追加: git 履歴の token 露出 → Task 8（ローテーション）で対応 ✅
+- 追加: 暫定構成（age 抜き）→ spec 冒頭 + 計画冒頭で明示、将来 age を再導入する余地を Out of scope に明記 ✅
