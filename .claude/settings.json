@@ -142,6 +142,8 @@
       "Bash(tac *age.txt)",
       "Bash(gh auth token)",
       "Bash(gh secret *)",
+      "Bash(fnox get *)",
+      "Bash(fnox export *)",
       "Bash(gh repo delete *)",
       "Bash(gh gist create *)",
       "Bash(gh ssh-key *)",
@@ -384,9 +386,6 @@
         "~/.gnupg",
         "~/.npm/_cacache"
       ],
-      "allowRead": [
-        "/opt/homebrew/etc/ca-certificates/cert.pem"
-      ],
       "denyWrite": [
         "~/.ssh",
         "~/.aws",
@@ -418,11 +417,15 @@
         "~/.config/op",
         "~/.config/1Password",
         "~/.config/mise/age.txt"
+      ],
+      "allowRead": [
+        "/opt/homebrew/etc/ca-certificates/cert.pem"
       ]
     },
     "enableWeakerNetworkIsolation": false,
     "excludedCommands": [
-      "gh *"
+      "gh *",
+      "fnox *"
     ]
   },
   "effortLevel": "xhigh",
