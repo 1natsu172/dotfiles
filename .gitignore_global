@@ -7,3 +7,6 @@
 
 # mise stuff
 mise.local.toml
+
+# AI stuff
+**/.claude/settings.local.json
