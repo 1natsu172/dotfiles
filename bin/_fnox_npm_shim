@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+# fnox exec で wrap して呼ぶ tool 群の dispatcher。
+# 起動時の $0 ファイル名から tool 名を判定し、mise x 経由で実体を呼ぶ。
+# 親シェル env に secret を露出させず、tool 子プロセスにのみ注入する。
+#
+# 拡張: tool を増やす場合は FNOX_WRAPPED_TOOLS に追記して install.sh を再実行。
+
+set -euo pipefail
+
+# 単一の真実: fnox exec で wrap したい tool 名の列挙
+FNOX_WRAPPED_TOOLS=(npm npx yarn bun bunx pnpm pnpx)
+
+# --- Deploy モード: install.sh から呼ばれる ---
+if [[ "${1:-}" == "--deploy" ]]; then
+    bin_dir="$(cd "$(dirname "$0")" && pwd)"
+    target_dir="${bin_dir}/fnox-shims"
+    mkdir -p "$target_dir"
+    self_name="$(basename "$0")"
+    for tool in "${FNOX_WRAPPED_TOOLS[@]}"; do
+        ln -snfv "../${self_name}" "${target_dir}/${tool}"
+    done
+    exit 0
+fi
+
+# --- 通常のディスパッチ ---
+# `mise which` で実体バイナリの絶対パスを解決してから fnox exec で起動する。
+# - `mise x -- <tool>` は PATH 検索が走り、PATH 先頭の本ディレクトリ
+#   (fnox-shims/<tool>) を再帰的に拾って無限ループするため使わない。
+# - パスをハードコードもしない。`mise which` が現在の mise 設定(プロジェクト別
+#   バージョン含む)に基づき実体パスを返すので、インストール構造の変化に追従する。
+tool="${0##*/}"
+real="$(mise which "${tool}")"
+exec fnox exec -- "${real}" "$@"
