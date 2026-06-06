@@ -1,0 +1,16 @@
+# OS keychain で秘匿値を保護する provider
+[providers.keychain]
+type = "keychain"
+service = "fnox"
+
+# Personal vault 用の 1Password service account
+[providers.op_personal_develop]
+type = "1password"
+token = { secret = "OP_SA_PERSONAL_DEVELOP" }
+
+[secrets]
+# SA トークン本体（実体は macOS Keychain 内、ここは参照のみ）
+OP_SA_PERSONAL_DEVELOP = { provider = "keychain", value = "OP_SA_PERSONAL_DEVELOP" }
+
+# 実際に欲しい secret（op から live で fetch）
+FLATT_NPM_TOKEN = { provider = "op_personal_develop", value = "op://personal-develop/ut45f4nuxkaoquisyrolp2vqqe/credential" }

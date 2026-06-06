@@ -18,6 +18,9 @@
 !.config/pnpm
 .config/pnpm/*
 !.config/pnpm/config.yaml
+!.config/fnox
+.config/fnox/*
+!.config/fnox/config.toml
 !.config/ccstatusline
 *node_modules
 .zsh/history/
