@@ -22,4 +22,10 @@ if [[ -d "${DOT_DIRECTORY}/bin" ]]; then
   echo "$(tput setaf 3)Made bin scripts executable$(tput sgr0)"
 fi
 
+# Deploy fnox shim symlinks (npm/yarn/bun/... -> _fnox_npm_shim). Idempotent.
+if [[ -x "${DOT_DIRECTORY}/bin/_fnox_npm_shim" ]]; then
+  "${DOT_DIRECTORY}/bin/_fnox_npm_shim" --deploy
+  echo "$(tput setaf 3)Deployed fnox shims$(tput sgr0)"
+fi
+
 echo "$(tput setaf 2)Deploy dotfiles complete!. ✔︎$(tput sgr0)"
