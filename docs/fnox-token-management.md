@@ -96,6 +96,53 @@ Claude Code の sandbox 内では op（Go 製）が TLS 検証に失敗するた
 `excludedCommands` で sandbox 外実行させる。あわせて `fnox get`/`fnox export`（値出力経路）は
 deny する。詳細・根拠は [docs/claude-code-security.md](./claude-code-security.md) の「fnox」節。
 
+## 無効化 / 緊急回避
+
+shim・fnox・op・mise の想定外バグや upstream の破壊的変更で npm/bun 等が打てなくなった時の
+逃げ道。**失敗クラスごとに効くレイヤが違う**ので 2 系統を用意し、別レイヤで噛み合わせる。
+
+| 失敗クラス | 症状 | 回避策 |
+|---|---|---|
+| (a) fnox / op の障害・upstream 破壊 | `fnox exec` が動かず token 注入が落ちる | `FNOX_SHIM_BYPASS` を非空にして実行 |
+| (b) dispatcher / `mise which` 自体のバグ | PATH shim 経路が壊れる（(a) も `mise which` に依存するため効かない） | `bin/fnox-shims/` の symlink を撤去 |
+
+### (a) `FNOX_SHIM_BYPASS`（per-command / per-shell / per-dir）
+
+dispatcher は `FNOX_SHIM_BYPASS` が非空だと、`mise which` で実体だけ解決し `fnox exec` を
+飛ばして直接起動する。**token は注入されない**ので、認証が要る操作（private registry への
+publish 等）はその間失敗する点に注意。
+
+```sh
+FNOX_SHIM_BYPASS=1 npm ci        # その 1 コマンドだけ素通し
+export FNOX_SHIM_BYPASS=1        # そのシェル全体
+# direnv / mise の env に置けば per-dir
+```
+
+実体バイナリの解決は `mise which` に依存する（前方互換のため。[注入機構](#注入機構path-shim-fish-corepack-共存)参照）。
+`mise which` 自体が壊れている場合はこの経路も効かない → (b) へ。
+
+### (b) shim 撤去（PATH 層ごと無効化）
+
+```sh
+rm bin/fnox-shims/*    # or: rm -rf bin/fnox-shims
+```
+
+PATH 先頭の `fnox-shims/` が空になり、次の PATH エントリ（mise shims）に fall through する。
+fnox を一切通さず素の npm/bun が動く。復旧は `./install.sh`（`--deploy` で冪等に再生成）。
+
+### fish の過渡期 caveat
+
+移行期間中の `config.fish` の corepack エイリアス（`alias npm="fnox exec -- corepack npm"` 等）は
+symlink を参照せず `fnox exec` を直接呼ぶため、**上記 2 つの回避策をどちらも無視する**
+（(a) は `fnox exec` 自体を飛ばせない、(b) は symlink 非依存）。fish で緊急回避したい時は:
+
+- bash/zsh で叩く（そちらは `FNOX_SHIM_BYPASS` が効く）、または
+- その場で `alias npm='corepack npm'` 等に退避する。
+
+この制約は corepack → mise `packageManager` 移行（[既知の制約・別タスク](#既知の制約別タスク)）で
+エイリアスを撤去すれば解消する。撤去後は fish も PATH shim 経由になり、2 つの回避策が全シェルで
+一様に効く（バイパス機構を fish 用に作り込まないのはこのため）。
+
 ## 既知の制約・別タスク
 
 - **npm 子・孫プロセス（postinstall 等）の env には token が乗る**。npm が `.npmrc` の `${VAR}` を

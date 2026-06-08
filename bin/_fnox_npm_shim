@@ -4,6 +4,8 @@
 # 親シェル env に secret を露出させず、tool 子プロセスにのみ注入する。
 #
 # 拡張: tool を増やす場合は FNOX_WRAPPED_TOOLS に追記して install.sh を再実行。
+# 緊急回避: 環境変数 FNOX_SHIM_BYPASS を非空にすると fnox exec を飛ばして実体を直接
+# 起動する（token 非注入）。docs/fnox-token-management.md「無効化 / 緊急回避」参照。
 
 set -euo pipefail
 
@@ -37,5 +39,14 @@ if ! real="$(mise which "${tool}" 2>/dev/null)" || [[ -z "${real}" ]]; then
     echo "fnox-shim: '${tool}' を mise で解決できません。mise 管理対象か、また" \
          "現在のディレクトリの mise 設定が trust 済みか確認してください（mise trust）。" >&2
     exit 127
+fi
+
+# 緊急回避: FNOX_SHIM_BYPASS が非空なら fnox exec を飛ばして実体を直接起動する。
+# fnox/op の障害や upstream 破壊で `fnox exec` が動かなくなった時の逃げ道（token は
+# 注入されないので認証が要る操作はその間失敗する）。実体解決は `mise which` に依存する
+# ため、それ自体が壊れている場合はこの経路も効かない → `bin/fnox-shims/` の symlink を
+# 撤去して PATH 層ごと無効化する（同上 doc 参照）。
+if [[ -n "${FNOX_SHIM_BYPASS:-}" ]]; then
+    exec "${real}" "$@"
 fi
 exec fnox exec -- "${real}" "$@"
