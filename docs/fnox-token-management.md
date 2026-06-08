@@ -118,7 +118,7 @@ export FNOX_SHIM_BYPASS=1        # そのシェル全体
 # direnv / mise の env に置けば per-dir
 ```
 
-実体バイナリの解決は `mise which` に依存する（前方互換のため。[注入機構](#注入機構path-shim-fish-corepack-共存)参照）。
+実体バイナリの解決は `mise which` に依存する（前方互換のため。[注入機構](#注入機構path-shim--fish-corepack-共存)参照）。
 `mise which` 自体が壊れている場合はこの経路も効かない → (b) へ。
 
 ### (b) shim 撤去（PATH 層ごと無効化）
