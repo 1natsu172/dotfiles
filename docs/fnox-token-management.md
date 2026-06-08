@@ -49,7 +49,7 @@ token は **親シェル env に出さず、npm 子プロセスにのみ**注入
 
 ### PATH shim（bash/zsh ＋ 非対話 subshell ＝ AI ツール）
 
-- `bin/_fnox_npm_shim` が dispatcher。`bin/fnox-shims/<tool>` の symlink 群（install.sh の
+- `bin/_fnox_shim` が dispatcher。`bin/fnox-shims/<tool>` の symlink 群（install.sh の
   `--deploy` で冪等生成、symlink は派生物として gitignore）から呼ばれる。
 - mise の `[env]._.path` で `bin/fnox-shims` を PATH 先頭に prepend。env 継承で
   非対話 `bash -c 'npm ...'`（AI ツール経由）にも伝播する。

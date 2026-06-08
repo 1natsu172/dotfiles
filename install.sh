@@ -22,9 +22,9 @@ if [[ -d "${DOT_DIRECTORY}/bin" ]]; then
   echo "$(tput setaf 3)Made bin scripts executable$(tput sgr0)"
 fi
 
-# Deploy fnox shim symlinks (npm/yarn/bun/... -> _fnox_npm_shim). Idempotent.
-if [[ -x "${DOT_DIRECTORY}/bin/_fnox_npm_shim" ]]; then
-  if "${DOT_DIRECTORY}/bin/_fnox_npm_shim" --deploy; then
+# Deploy fnox shim symlinks (npm/yarn/bun/... -> _fnox_shim). Idempotent.
+if [[ -x "${DOT_DIRECTORY}/bin/_fnox_shim" ]]; then
+  if "${DOT_DIRECTORY}/bin/_fnox_shim" --deploy; then
     echo "$(tput setaf 3)Deployed fnox shims$(tput sgr0)"
   else
     echo "$(tput setaf 1)Failed to deploy fnox shims$(tput sgr0)" >&2
