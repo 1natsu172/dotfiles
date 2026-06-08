@@ -63,7 +63,7 @@ read を解放し、write のみ防御する。
 
 - read 解放の理由: `~/.npmrc` は `min-release-age` 等のサプライチェーン防御や registry/proxy 設定を npm/pnpm subprocess に効かせるため（`denyRead` で塞ぐと機能しない）。`~/.gitconfig` は dotfiles で公開管理する設定で秘匿価値がない。
 - write が即時攻撃面: `~/.npmrc` は `registry=` で install 先すり替え・`ignore-scripts=false`・`cafile=` で TLS バイパス・`min-release-age` 削除で防御無効化。`~/.gitconfig` は alias 注入や `core.sshCommand` で通常 git 操作時に任意コード実行。
-- 規律: **read 解放したファイルに平文 secret を置かない**。`~/.npmrc` の認証トークンは環境変数参照（`_authToken=${NPM_TOKEN}`）で書き、`NPM_TOKEN` は op-cli / mise env で注入する。read 解放経路に技術的フォールバックは無く、平文 secret を置けば即漏洩しうる。
+- 規律: **read 解放したファイルに平文 secret を置かない**。認証トークンは平文でなく環境変数参照（例: `~/.npmrc` の `_authToken=${FLATT_NPM_TOKEN}`）で書き、実体は実行時に消費プロセスの env にのみ注入する（fnox 経由。[docs/fnox-token-management.md](./fnox-token-management.md)）。read 解放経路に技術的フォールバックは無く、平文 secret を置けば即漏洩しうる。
 
 ### 本丸完全遮断（`~/.config/mise/age.txt`）
 
@@ -101,6 +101,14 @@ gh は Go 製で **macOS Seatbelt 下で TLS 検証に失敗**する（`gcloud`/
 - **deny**: `gh auth token`（トークン実値出力）/ `gh secret *` / `gh repo delete *` / `gh gist create *`（外部送信経路）/ `gh ssh-key *` / `gh gpg-key *`。
 - `gh auth status` は完全一致 allow（トークンはマスク表示。ワイルドカードでないため `gh auth token` deny に波及しない）。
 - `excludedCommands` は引数含めマッチさせるため**ワイルドカード必須**。`"gh pr create"`（完全一致形）は実呼び出し `gh pr create --title ...` に当たらず不発（sandbox 内実行のまま TLS 失敗）。`"gh *"` で全サブコマンドをカバー。
+
+### fnox
+
+fnox（秘匿情報の live fetch。詳細は [docs/fnox-token-management.md](./fnox-token-management.md)）は内部で op CLI を spawn し、op は Go 製で gh と同じく **Seatbelt 下で TLS 検証に失敗**する。`sandbox.excludedCommands: ["fnox *"]` で sandbox 外実行させて解決する。
+
+- **`fnox *` を除外する（`op *` ではない）**: Claude が直接叩くのは `fnox`、op はその子プロセス。`excludedCommands` は **Claude の Bash tool が submit するコマンド文字列の先頭**にマッチするため、`op *` は `fnox exec ...` に当たらず不発。親 `fnox` を除外すれば子 op も sandbox 外に出る（実機検証で確定）。
+- **deny**: `fnox get *`（secret 値を stdout に出力）/ `fnox export *`（一括出力）。`gh auth token` deny と同じ思想で Claude が値を直接吐けないようにする。`fnox exec`（値を出力せず子プロセスに env 注入するだけ）は **allow 維持**＝これが PATH shim / fish alias の実行経路。
+- 余波: shim 経由の `npm install` 等は Claude が submit する文字列が `npm ...` で `fnox *` に当たらず、子 op は sandbox 内で TLS 失敗する。token が要る private registry 操作は Claude の sandbox 内では通らない（人間の通常シェルで行う）想定で、npm を sandbox 内に留めて postinstall のサプライチェーン防御を維持する判断。
 
 ### 破壊系コマンドの deny（床であって境界ではない）
 
