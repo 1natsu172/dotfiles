@@ -25,6 +25,8 @@
       "Bash(gh pr create *)",
       "Bash(gh pr edit *)",
       "Bash(gh pr comment *)",
+      "Bash(git push -u origin *)",
+      "Bash(git push --set-upstream origin *)",
       "WebFetch(domain:docs.anthropic.com)",
       "WebFetch(domain:code.claude.com)"
     ],
@@ -425,7 +427,9 @@
     "enableWeakerNetworkIsolation": false,
     "excludedCommands": [
       "gh *",
-      "fnox *"
+      "fnox *",
+      "git push -u origin *",
+      "git push --set-upstream origin *"
     ]
   },
   "effortLevel": "xhigh",

