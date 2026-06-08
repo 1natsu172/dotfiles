@@ -428,5 +428,6 @@
   "effortLevel": "xhigh",
   "teammateMode": "auto",
   "agentPushNotifEnabled": true,
-  "voiceEnabled": true
+  "voiceEnabled": true,
+  "remoteControlAtStartup": false
 }
