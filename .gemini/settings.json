@@ -15,5 +15,10 @@
   },
   "privacy": {
     "usageStatisticsEnabled": false
+  },
+  "mcpServers": {
+    "expo": {
+      "httpUrl": "https://mcp.expo.dev/mcp"
+    }
   }
 }

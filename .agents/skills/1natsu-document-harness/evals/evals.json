@@ -1,26 +1,39 @@
 {
   "skill_name": "1natsu-document-harness",
+  "note": "fixture は document-harness-workspace/fixtures/ 配下。実行時に各 fixture をコピーしたrepo上でタスクを行わせ、canonical fixture との diff を目視レビューする。アサーションは『仕様への蒸留』を報酬にする（機構名の転記や変数名の仕様化を減点）。",
   "evals": [
     {
       "id": 1,
-      "name": "harness-init-basic",
-      "prompt": "私は monorepo プロジェクト（ルート + packages/api, packages/web）で、API リクエストのレートリミット機能を packages/api 配下に実装しました。\n\n実装内容:\n- packages/api/src/middleware/rateLimit.ts を新規作成（IP ベースで 1分間 100req 制限、Redis を使用）\n- packages/api/src/server.ts でミドルウェアを app.use() に追加\n- 設定値（制限閾値、ウィンドウ）は環境変数で外出し（RATE_LIMIT_PER_MINUTE, RATE_LIMIT_WINDOW_SEC）\n\n動作確認も済みました。実装内容をプロジェクトのハーネスドキュメントに反映してください。リポジトリには既に CLAUDE.md と .claude/rules/ と docs/ があります。",
-      "expected_output": "harness が init モードで動作し、現セッションで触れた変更（packages/api のレートリミット）にスコープを絞ってドキュメント化する。3層モデルに従い、指示（rules/）／インデックス（CLAUDE.md @ 参照）／知識（docs/）に振り分ける。スコープ外（packages/web 等）には触れない。",
-      "files": []
+      "name": "harness-init-distill",
+      "fixture": "fixtures/fixture-a-init",
+      "prompt": "（この repo の作業者として）packages/api に API リクエストのレート制限を実装しました。クライアント(IP)単位で 1 分あたりの上限を超えたら 429 を返します。上限とウィンドウは環境変数 RATE_LIMIT_PER_MINUTE / RATE_LIMIT_WINDOW_SEC で調整可能で、カウンタはプロセス内に TTL 付きで保持しています（lru-cache を使用）。動作確認も済みました。実装内容をこのプロジェクトのハーネスドキュメントに反映してください。",
+      "expected_output": "init モードで動作し、packages/api のレート制限だけにスコープを絞る（packages/web には触れない）。仕様へ蒸留して配置する: ルール（指示層）は『クライアント単位でレート制限する』というポリシーで書き、機構名（lru-cache）を持ち込まない。docs には設計判断と理由（プロセス内保持を選んだ理由、複数インスタンス時の留意）を rationale として書く。env var 名は外部契約面なので名指ししてよい。コードのシグネチャ・内部変数名（hits 等）は転記しない。",
+      "files": [],
+      "assertions": [
+        "現セッションの変更（packages/api のレート制限）にスコープを絞り、packages/web 等の無関係領域を編集しない",
+        "ルール（rules/）はクライアント単位の上限というポリシーで書かれ、機構名（lru-cache / LRU / キャッシュライブラリ名）を指示として書いていない",
+        "環境変数名 RATE_LIMIT_PER_MINUTE / RATE_LIMIT_WINDOW_SEC は外部契約面として名指ししてよく、それらを記載している",
+        "レート制限の設計判断・理由（プロセス内保持の選択、複数インスタンス時の留意点など）を docs に rationale として記述する",
+        "コードのシグネチャ・内部変数名（hits, LRUCache の構成オプション等）や処理手順を仕様として転記していない",
+        "docs への参照を CLAUDE.md に追加する場合、@ インポートではなくプレーンポインタで書く"
+      ]
     },
     {
       "id": 2,
-      "name": "harness-sync-AB-switch",
-      "prompt": "（このセッションでは前のターンで harness を実行済みという想定です）\n\nさきほど packages/api のレートリミットを Redis ベースで実装し、harness で以下のドキュメントを生成しました:\n- .claude/rules/api-rate-limit.md（「Redis を使ってレートリミットする」という指示）\n- docs/api/rate-limit-design.md（Redis を選んだ理由、データ構造、TTL 戦略）\n- CLAUDE.md に @docs/api/rate-limit-design.md の参照を追加\n\nしかし動作確認時に Redis のレイテンシ問題が判明し、Redis ではなく インメモリ（Node プロセス内 LRU キャッシュ）でレートリミットする実装に乗り換えました。コード側の変更:\n- packages/api/src/middleware/rateLimit.ts を Redis 呼び出しから lru-cache を使う実装に書き直し\n- Redis 接続関連の依存と環境変数を削除\n\nドキュメントも追従させてください。",
-      "expected_output": "harness が sync モードで動作することを判定し、前回出力した3つのドキュメントを再読する。Redis ベースの記述（指示・設計理由・データ構造・TTL）を**削除し**、インメモリ LRU の記述に置き換える。古い Redis 前提の記述が残らない。最終報告で「削除した内容」も伝える。",
-      "files": []
-    },
-    {
-      "id": 3,
-      "name": "harness-sync-bugfix",
-      "prompt": "（このセッションでは前のターンで harness を実行済みという想定です）\n\nさきほどパスワードリセット機能を実装し、harness で以下のドキュメントを生成しました:\n- .claude/rules/auth.md に「リセットトークンの有効期限は60分」と追記\n- docs/auth-design.md にトークン発行・検証フローを記載\n\nその後、セキュリティチームのレビューで「60分は長すぎる、15分にすべき」と指摘があり、コードを修正しました（PASSWORD_RESET_TOKEN_TTL_MIN を 60 → 15 に変更）。あわせて、レビューで指摘された「トークンを再利用させない」要件も追加実装しました（使用済みトークンの blacklist テーブルを追加、検証時に blacklist チェックを追加）。\n\nドキュメントを追従させてください。",
-      "expected_output": "harness が sync モードで動作する。rules/auth.md の「60分」を「15分」に書き換え、変更理由（セキュリティチームの指摘）を簡潔に添える。docs/auth-design.md には blacklist テーブルと再利用防止ロジックの記述を追加する。古い「60分」前提の記述が残らない。スコープは認証関連のみで、無関係なドキュメントには触れない。",
-      "files": []
+      "name": "harness-sync-redistill",
+      "fixture": "fixtures/fixture-b-sync",
+      "prompt": "（このセッションでは前のターンで harness を実行済みという想定。既存の .claude/rules/api-rate-limit.md と docs/api/rate-limit-design.md は、その時に Redis ベースで生成したものです）\n\nその後、Redis のラウンドトリップによるレイテンシ問題が判明し、レート制限をプロセス内の TTL 付きキャッシュ（lru-cache）に乗り換えました。コードは既に書き換え済みです（packages/api/src/middleware/rateLimit.ts）。ドキュメントを実装に追従させてください。",
+      "expected_output": "sync モードと判定し、前回出力の rule と docs を再読する。単純な Redis→LRU の名前置換で済ませず再蒸留する: ルールから機構名（Redis）を取り除き『クライアント単位でレート制限する』というポリシー記述へ蒸留し直す。機構の乗り換え経緯（Redis→プロセス内キャッシュ、レイテンシが理由、複数インスタンス時は要再検討）は docs の rationale に寄せる。置換後の事実はコードで裏取りする。現行メカニズムとして Redis を指示・前提する記述（INCR/EXPIRE/REDIS_URL 等）が残らない。CLAUDE.md の docs 参照はプレーンポインタのまま。最終報告で削除・置換した内容を伝える。",
+      "files": [],
+      "assertions": [
+        "sync モードと判定し、前回出力の rule と docs を再読する",
+        "ルールから機構名（Redis / INCR / EXPIRE / REDIS_URL）を取り除き、機構非依存のポリシー記述に蒸留し直している（単なる Redis→LRU の名前置換で終わっていない）",
+        "機構の乗り換え経緯（レイテンシが理由、複数インスタンス時の留意）を docs の rationale として記述する",
+        "現行メカニズムとして Redis を指示・前提する記述が残らない（移行の経緯としての言及は可）",
+        "新実装の事実をコードで裏取りしている（推測で書いていない／lru-cache・プロセス内 TTL という実態と一致）",
+        "CLAUDE.md の docs 参照がプレーンポインタのまま（@ インポートに変えない）",
+        "最終報告で削除・置換した内容の概要を伝える"
+      ]
     }
   ]
 }

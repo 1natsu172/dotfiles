@@ -10,10 +10,11 @@
 │  └─ 特定ファイルパターン → ルート .claude/rules/（paths 付き）
 │
 ├─ パッケージ固有の指示か？
-│  └─ パッケージ内 .claude/rules/（paths 付き）
+│  ├─ パッケージ全体に適用 → パッケージ内 .claude/rules/（paths なし）
+│  └─ 特定ファイルパターン → パッケージ内 .claude/rules/（paths 付き）
 │
 ├─ パッケージの概要・前提が変わったか？
-│  └─ パッケージ直下 CLAUDE.md を更新（200行以下、@参照で詳細へ）
+│  └─ パッケージ直下 CLAUDE.md を更新（200行以下、詳細はポインタで）
 │
 ├─ 設計背景・アーキテクチャの知識か？
 │  ├─ 特定パッケージに閉じた知識 → packages/xxx/docs/
@@ -30,7 +31,7 @@
 | 全パッケージ共通のコードスタイル | `.claude/rules/code-style.md` | paths なし |
 | 特定ファイルパターンの規約 | `.claude/rules/xxx.md` | `paths: ["pattern"]` |
 | パッケージ固有の禁止事項 | `packages/xxx/.claude/rules/xxx.md` | `paths: ["src/**"]` |
-| パッケージの概要と重要な前提 | `packages/xxx/CLAUDE.md` | `@` 参照でインデックス |
+| パッケージの概要と重要な前提 | `packages/xxx/CLAUDE.md` | ポインタでインデックス |
 | パッケージ固有の設計背景 | `packages/xxx/docs/architecture.md` | 通常の markdown |
 | パッケージ固有の外部依存・バッチ処理 | `packages/xxx/docs/xxx.md` | 通常の markdown |
 | パッケージ固有の状態遷移 | `packages/xxx/docs/xxx-lifecycle.md` | 通常の markdown |
@@ -63,4 +64,32 @@
 ### CLAUDE.md に書くか別ファイルに分けるか迷う
 
 - 3行以内で伝わる → CLAUDE.md に直接書く
-- 4行以上の説明が必要 → 別ファイルにして `@` 参照
+- 4行以上の説明が必要 → 別ファイルに分ける。参照方法でロード挙動が変わる:
+  - **常時必要** → `@path` インポート（起動時フルロード。コンテキストは節約されず整理目的）。eager 意図のマーカーを添える
+  - **必要時だけでよい** → プレーンポインタ（「詳細は `docs/xxx.md`」と書くだけ。Claude が必要時に Read）。コンテキスト節約はこちら
+
+## ロードタイミング早見表（eager / lazy）
+
+| 手段 | 形式 | いつロードされるか | 既定 |
+|---|---|---|---|
+| CLAUDE.md 本体 | — | 起動時（cwd ＋祖先）。subtree は配下ファイル Read 時に on-demand | eager |
+| rule（paths なし） | `paths:` なし | 起動時（cwd ＋祖先）。subtree は配下ファイル Read 時に on-demand | eager |
+| rule（paths あり） | `paths: [...]` | パターンにマッチするファイルを触った時だけ | lazy |
+| `@path` インポート | `@` | 起動時にフルロード（節約不可・整理目的） | eager |
+| docs プレーンポインタ | `@` なし | Claude が必要時に Read | lazy |
+| skill | SKILL.md | 関連時に on-demand | lazy |
+
+既定は lazy に倒し、eager にする時はその場に意図マーカーを残す（→ SKILL.md「コンテキスト経済: eager / lazy と意図の明示」）。
+
+## ネスト rules と glob 解決（monorepo・実測準拠）
+
+ネストした `packages/xxx/.claude/rules/` は正式にロードされる（`paths` なしなら配下ファイルを Read した時に on-demand、`paths` ありならマッチ時）。
+
+`paths` の glob は **その rule ファイルのあるディレクトリ基準**で解決される（repo root 基準ではない）:
+
+- ルート `.claude/rules/api.md` の `paths: ["packages/api/src/**"]` → repo root 起点でマッチ
+- パッケージ `packages/api/.claude/rules/api.md` の `paths: ["src/**"]` → **パッケージ起点**で `packages/api/src/**` にマッチ
+
+→ パッケージ内 rule の `paths` はパッケージ相対で短く書く（`src/**`）のが正しい。
+
+> 注: プロジェクト `.claude/settings.json` は**起動ディレクトリのものだけ**読まれ、祖先からは継承されない（CLAUDE.md/rules の継承挙動とは別）。

@@ -1,11 +1,11 @@
 lockfile_version: '1'
-generated_at: '2026-05-06T11:36:20.861474+00:00'
-apm_version: 0.12.2
+generated_at: '2026-06-08T13:21:38.828062+00:00'
+apm_version: 0.18.0
 dependencies:
 - repo_url: 1natsu-vacation/agent-skills
   host: github.com
-  resolved_commit: c4316820939aa8180c6d22c4b5b92590b2ba8022
-  resolved_ref: v1.0.0
+  resolved_commit: 2e671641849dc6fafe0e5576cf3267ddbb8d188a
+  resolved_ref: v1.2.0
   package_type: skill_bundle
   deployed_files:
   - .agents/skills/1natsu-auto-resolve-conflicts
@@ -34,52 +34,58 @@ dependencies:
   - .claude/skills/1natsu-pair-debug
   - .claude/skills/1natsu-pair-resolve-conflicts
   - .claude/skills/1natsu-pr-review-handler
-  content_hash: sha256:1c9dffbefd4bf6560e7c16d242d4c725d024e5dae7c4a9b35a908342bdf6c412
+  content_hash: sha256:cc5eec3c2f082baa560a0e08ed939f7fc0dce06f9255e71858e032de8ee8b33a
 - repo_url: expo/skills
   host: github.com
-  resolved_commit: 786398d3574f33eb6714380f44ec09355819516e
+  resolved_commit: 145a923cce95c2cef20643302e8811363fa2e51d
   virtual_path: plugins/expo
   is_virtual: true
   package_type: marketplace_plugin
   deployed_files:
+  - .agents/skills/add-app-clip
   - .agents/skills/building-native-ui
   - .agents/skills/eas-update-insights
   - .agents/skills/expo-api-routes
+  - .agents/skills/expo-brownfield
   - .agents/skills/expo-cicd-workflows
   - .agents/skills/expo-deployment
   - .agents/skills/expo-dev-client
   - .agents/skills/expo-module
+  - .agents/skills/expo-observe
   - .agents/skills/expo-tailwind-setup
   - .agents/skills/expo-ui-jetpack-compose
   - .agents/skills/expo-ui-swift-ui
   - .agents/skills/native-data-fetching
   - .agents/skills/upgrading-expo
   - .agents/skills/use-dom
+  - .claude/skills/add-app-clip
   - .claude/skills/building-native-ui
   - .claude/skills/eas-update-insights
   - .claude/skills/expo-api-routes
+  - .claude/skills/expo-brownfield
   - .claude/skills/expo-cicd-workflows
   - .claude/skills/expo-deployment
   - .claude/skills/expo-dev-client
   - .claude/skills/expo-module
+  - .claude/skills/expo-observe
   - .claude/skills/expo-tailwind-setup
   - .claude/skills/expo-ui-jetpack-compose
   - .claude/skills/expo-ui-swift-ui
   - .claude/skills/native-data-fetching
   - .claude/skills/upgrading-expo
   - .claude/skills/use-dom
-  content_hash: sha256:c3d635480987c9cdcc8893a9cf55c3930f1135d4e50fc8e60c9ac10838881456
+  content_hash: sha256:929bdd0c0001fdfedb67b83a075e6477ff5614f77be473a832e356ccd8619563
 - repo_url: github/gh-stack
   host: github.com
-  resolved_commit: de00856fdeea80f8eaac9762d7f653a1d69bb852
+  resolved_commit: d2a390f2ffd69cc54401a0f4a9e9b42d84e31684
   package_type: skill_bundle
   deployed_files:
   - .agents/skills/gh-stack
   - .claude/skills/gh-stack
-  content_hash: sha256:a6c64062a859b13c7f8fa8fa7bcd272a789b0598afbba2902d52d256e4d20d61
+  content_hash: sha256:c3c94309ce1d1026542778548318065aae7a3cd98d8afa7cc882085e2fe158fa
 - repo_url: microsoft/apm
   host: github.com
-  resolved_commit: cb83c891c750a3a14ff8e5c9c8e2831e8a2b31a9
+  resolved_commit: fef942a2b0125c540b97d4b16fbe3d564fceef86
   virtual_path: packages/apm-guide
   is_virtual: true
   package_type: apm_package
@@ -93,10 +99,10 @@ dependencies:
     .claude/agents/apm-expert.md: sha256:e710ff88b7e4a96b55cb6a636bdc256b0b255492a87b3a5b008112d01ca441e5
     .codex/agents/apm-expert.toml: sha256:0b4bec64f7c6ab70df3841237928eaccfb927789d45300870ce56163230498c4
     .copilot/agents/apm-expert.agent.md: sha256:e710ff88b7e4a96b55cb6a636bdc256b0b255492a87b3a5b008112d01ca441e5
-  content_hash: sha256:a983d6d99449272227cd43746239599cf791f3cbfe0678c843b1df05c2369a4d
+  content_hash: sha256:84d3f298f8c2ebd4039cefa6a04089cc36fb2a21b0f270b1ee5399a9bffb1a39
 - repo_url: vercel-labs/agent-skills
   host: github.com
-  resolved_commit: b9c8ee0643d87d3c5a953d1e22382ff2ead39229
+  resolved_commit: 4ec6f84b61cd3c931046c3e6e398f3ae7de372f7
   package_type: skill_bundle
   deployed_files:
   - .agents/skills/composition-patterns
@@ -105,20 +111,32 @@ dependencies:
   - .agents/skills/react-native-skills
   - .agents/skills/react-view-transitions
   - .agents/skills/vercel-cli-with-tokens
+  - .agents/skills/vercel-optimize
   - .agents/skills/web-design-guidelines
+  - .agents/skills/writing-guidelines
   - .claude/skills/composition-patterns
   - .claude/skills/deploy-to-vercel
   - .claude/skills/react-best-practices
   - .claude/skills/react-native-skills
   - .claude/skills/react-view-transitions
   - .claude/skills/vercel-cli-with-tokens
+  - .claude/skills/vercel-optimize
   - .claude/skills/web-design-guidelines
-  content_hash: sha256:c45b02280e1329a964cc83f5d96f9628ce4c1bb836f15b75b0ef9b5246ea8889
+  - .claude/skills/writing-guidelines
+  content_hash: sha256:cd393ae28e44fde211307066d7f747cd007dadb3dfb06c11b8646e2c3326396a
 - repo_url: vercel-labs/skills
   host: github.com
-  resolved_commit: eec87fd44fca572d5275a472ea13c31aaceb65d0
+  resolved_commit: a561e790756b2785b9ddb82285c4eb0a08258ac9
   package_type: skill_bundle
   deployed_files:
   - .agents/skills/find-skills
   - .claude/skills/find-skills
-  content_hash: sha256:8e549f0b93a3012abe46998d57ff48d3e8bda23a6d0c1672ee1aefb778045076
+  content_hash: sha256:f262bbb29391c4ac5d99b4578cc115353788e76d73a4c36b0f306c83e6c2ceba
+mcp_servers:
+- expo
+mcp_configs:
+  expo:
+    name: expo
+    transport: http
+    registry: false
+    url: https://mcp.expo.dev/mcp
