@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # fnox exec で wrap して呼ぶ tool 群の dispatcher。
-# 起動時の $0 ファイル名から tool 名を判定し、mise x 経由で実体を呼ぶ。
+# 起動時の $0 ファイル名から tool 名を判定し、mise which で解決した実体を呼ぶ。
 # 親シェル env に secret を露出させず、tool 子プロセスにのみ注入する。
 #
 # 拡張: tool を増やす場合は FNOX_WRAPPED_TOOLS に追記して install.sh を再実行。
@@ -29,5 +29,13 @@ fi
 # - パスをハードコードもしない。`mise which` が現在の mise 設定(プロジェクト別
 #   バージョン含む)に基づき実体パスを返すので、インストール構造の変化に追従する。
 tool="${0##*/}"
-real="$(mise which "${tool}")"
+# mise which が失敗（untrusted な project 設定・mise 未管理ツール等）したら、生の
+# mise エラーで即死せず実行可能なメッセージを出して止める（fail-fast）。
+# あえて system PATH の実体へ fall back しない: mise 管理を前提に置いたツールが
+# 黙って別バージョンで動く事故を避け、設定ミスを表面化させるため。
+if ! real="$(mise which "${tool}" 2>/dev/null)" || [[ -z "${real}" ]]; then
+    echo "fnox-shim: '${tool}' を mise で解決できません。mise 管理対象か、また" \
+         "現在のディレクトリの mise 設定が trust 済みか確認してください（mise trust）。" >&2
+    exit 127
+fi
 exec fnox exec -- "${real}" "$@"
