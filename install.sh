@@ -24,8 +24,12 @@ fi
 
 # Deploy fnox shim symlinks (npm/yarn/bun/... -> _fnox_npm_shim). Idempotent.
 if [[ -x "${DOT_DIRECTORY}/bin/_fnox_npm_shim" ]]; then
-  "${DOT_DIRECTORY}/bin/_fnox_npm_shim" --deploy
-  echo "$(tput setaf 3)Deployed fnox shims$(tput sgr0)"
+  if "${DOT_DIRECTORY}/bin/_fnox_npm_shim" --deploy; then
+    echo "$(tput setaf 3)Deployed fnox shims$(tput sgr0)"
+  else
+    echo "$(tput setaf 1)Failed to deploy fnox shims$(tput sgr0)" >&2
+    exit 1
+  fi
 fi
 
 echo "$(tput setaf 2)Deploy dotfiles complete!. ✔︎$(tput sgr0)"
