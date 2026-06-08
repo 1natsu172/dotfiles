@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+# fnox exec で wrap して呼ぶ tool 群の dispatcher。
+# 起動時の $0 ファイル名から tool 名を判定し、mise which で解決した実体を呼ぶ。
+# 親シェル env に secret を露出させず、tool 子プロセスにのみ注入する。
+#
+# 拡張: tool を増やす場合は FNOX_WRAPPED_TOOLS に追記して install.sh を再実行。
+# 緊急回避: 環境変数 FNOX_SHIM_BYPASS を非空にすると fnox exec を飛ばして実体を直接
+# 起動する（token 非注入）。docs/fnox-token-management.md「無効化 / 緊急回避」参照。
+
+set -euo pipefail
+
+# 単一の真実: fnox exec で wrap したい tool 名の列挙
+FNOX_WRAPPED_TOOLS=(npm npx yarn bun bunx pnpm pnpx)
+
+# --- Deploy モード: install.sh から呼ばれる ---
+if [[ "${1:-}" == "--deploy" ]]; then
+    bin_dir="$(cd "$(dirname "$0")" && pwd)"
+    target_dir="${bin_dir}/fnox-shims"
+    mkdir -p "$target_dir"
+    self_name="$(basename "$0")"
+    for tool in "${FNOX_WRAPPED_TOOLS[@]}"; do
+        ln -snfv "../${self_name}" "${target_dir}/${tool}"
+    done
+    exit 0
+fi
+
+# --- 通常のディスパッチ ---
+# `mise which` で実体バイナリの絶対パスを解決してから fnox exec で起動する。
+# - `mise x -- <tool>` は PATH 検索が走り、PATH 先頭の本ディレクトリ
+#   (fnox-shims/<tool>) を再帰的に拾って無限ループするため使わない。
+# - パスをハードコードもしない。`mise which` が現在の mise 設定(プロジェクト別
+#   バージョン含む)に基づき実体パスを返すので、インストール構造の変化に追従する。
+tool="${0##*/}"
+# mise which が失敗（untrusted な project 設定・mise 未管理ツール等）したら、生の
+# mise エラーで即死せず実行可能なメッセージを出して止める（fail-fast）。
+# あえて system PATH の実体へ fall back しない: mise 管理を前提に置いたツールが
+# 黙って別バージョンで動く事故を避け、設定ミスを表面化させるため。
+if ! real="$(mise which "${tool}" 2>/dev/null)" || [[ -z "${real}" ]]; then
+    echo "fnox-shim: '${tool}' を mise で解決できません。mise 管理対象か、また" \
+         "現在のディレクトリの mise 設定が trust 済みか確認してください（mise trust）。" >&2
+    exit 127
+fi
+
+# 緊急回避: FNOX_SHIM_BYPASS が非空なら fnox exec を飛ばして実体を直接起動する。
+# fnox/op の障害や upstream 破壊で `fnox exec` が動かなくなった時の逃げ道（token は
+# 注入されないので認証が要る操作はその間失敗する）。実体解決は `mise which` に依存する
+# ため、それ自体が壊れている場合はこの経路も効かない → `bin/fnox-shims/` の symlink を
+# 撤去して PATH 層ごと無効化する（同上 doc 参照）。
+if [[ -n "${FNOX_SHIM_BYPASS:-}" ]]; then
+    exec "${real}" "$@"
+fi
+exec fnox exec -- "${real}" "$@"
