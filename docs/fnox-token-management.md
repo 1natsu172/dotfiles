@@ -143,6 +143,22 @@ symlink を参照せず `fnox exec` を直接呼ぶため、**上記 2 つの回
 エイリアスを撤去すれば解消する。撤去後は fish も PATH shim 経由になり、2 つの回避策が全シェルで
 一様に効く（バイパス機構を fish 用に作り込まないのはこのため）。
 
+## 平常時の意図的 bypass（秘匿不要・レイテンシ敏感）
+
+`FNOX_SHIM_BYPASS` は緊急回避だけでなく、**平常運用での恒久的な迂回**にも使う。shim は呼び出しごとに
+`fnox exec`（op live fetch）で **≈1.5s** のオーバーヘッドを足す。**token を必要としない**呼び出しを
+shim 経由にすると、この 1.5s は純粋な無駄になり、**タイムアウト制約のある呼び出し元では失敗の原因**になる。
+
+判断基準は「その呼び出しは token を要するか」。要さず、かつレイテンシ敏感なら `FNOX_SHIM_BYPASS=1` を
+**恒久付与**して fnox を迂回する（token 注入されないが、元々不要なので副作用なし。実体解決は `mise which`
+のままなのでバージョン追従も維持。機構詳細は [無効化 / 緊急回避](#無効化--緊急回避) の (a)）。
+
+> 〈具体例: ccstatusline の duration 表示〉ステータスラインの custom-command が
+> `bun run …/claude-code-duration.ts` を呼ぶ。このスクリプトは tmp の JSON を読むだけで秘匿不要。
+> ccstatusline の custom-command 既定 timeout は **1000ms** のため、shim 経由（≈1.5s）だと超過し
+> `[Timeout]` 表示になる。`commandPath` 先頭に `FNOX_SHIM_BYPASS=1` を付けて迂回（≈0.05s）。
+> timeout を伸ばす対処は無駄な秘匿注入とラグが毎レンダリング残るため非推奨。
+
 ## 既知の制約・別タスク
 
 - **npm 子・孫プロセス（postinstall 等）の env には token が乗る**。npm が `.npmrc` の `${VAR}` を

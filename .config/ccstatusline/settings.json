@@ -6,7 +6,7 @@
         "id": "bbb4de9a-0c33-4ac7-ac0a-53eb07309554",
         "type": "custom-command",
         "backgroundColor": "bgCyan",
-        "commandPath": "bun run ~/dotfiles/node-scripts/src/claude-code-duration.ts",
+        "commandPath": "FNOX_SHIM_BYPASS=1 bun run ~/dotfiles/node-scripts/src/claude-code-duration.ts",
         "preserveColors": false
       },
       {
