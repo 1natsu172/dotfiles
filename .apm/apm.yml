@@ -10,6 +10,9 @@ dependencies:
   - expo/skills/plugins/expo
   - microsoft/apm/packages/apm-guide
   - 1natsu-vacation/agent-skills#v1.2.0
+  - git: mattpocock/skills
+    skills:
+    - skills/productivity/grill-me
   mcp: []
 includes: auto
 scripts: {}

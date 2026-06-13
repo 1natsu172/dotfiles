@@ -83,6 +83,21 @@ dependencies:
   - .agents/skills/gh-stack
   - .claude/skills/gh-stack
   content_hash: sha256:c3c94309ce1d1026542778548318065aae7a3cd98d8afa7cc882085e2fe158fa
+- repo_url: mattpocock/skills
+  host: github.com
+  resolved_commit: 694fa30311e02c2639942308513555e61ee84a6f
+  package_type: marketplace_plugin
+  deployed_files:
+  - .agents/skills/grill-me
+  - .agents/skills/grill-me/SKILL.md
+  - .claude/skills/grill-me
+  - .claude/skills/grill-me/SKILL.md
+  deployed_file_hashes:
+    .agents/skills/grill-me/SKILL.md: sha256:74147eb6010a65957efef2b9e0f0b3ff935c1def7fc117697151b1d0f3610556
+    .claude/skills/grill-me/SKILL.md: sha256:74147eb6010a65957efef2b9e0f0b3ff935c1def7fc117697151b1d0f3610556
+  content_hash: sha256:72643a209aac7d4527ac6c18f286203518cc459327d052ef28cc6d8f9b5b0dc7
+  skill_subset:
+  - skills/productivity/grill-me
 - repo_url: microsoft/apm
   host: github.com
   resolved_commit: fef942a2b0125c540b97d4b16fbe3d564fceef86
