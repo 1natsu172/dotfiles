@@ -9,7 +9,7 @@ dependencies:
   - github/gh-stack
   - expo/skills/plugins/expo
   - microsoft/apm/packages/apm-guide
-  - 1natsu-vacation/agent-skills#v1.2.0
+  - 1natsu-vacation/agent-skills
   - git: mattpocock/skills
     skills:
     - skills/productivity/grill-me
