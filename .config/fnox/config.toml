@@ -14,3 +14,14 @@ OP_SA_PERSONAL_DEVELOP = { provider = "keychain", value = "OP_SA_PERSONAL_DEVELO
 
 # 実際に欲しい secret（op から live で fetch）
 FLATT_NPM_TOKEN = { provider = "op_personal_develop", value = "op://personal-develop/ut45f4nuxkaoquisyrolp2vqqe/credential" }
+
+# Claude Code の remote(HTTP) MCP 用 token。default に置くと npm 等の `fnox exec`(default) が
+# env へ注入してしまうため profile 分離する。headersHelper(bin/claude-utils/mcp-auth-header.sh)
+# だけが `--profile mcp --no-defaults` で接続時に live fetch し、認証ヘッダ（既定 Authorization: Bearer）を組む。
+[profiles.mcp.secrets]
+# op_personal_develop provider の認証に使う SA token。--no-defaults で default [secrets] が
+# 混ざらず provider が token を見つけられないため、profile 内にも参照を置く（値の実体は Keychain、
+# ここは参照のみ。jq の一時 env に載るだけで出力には出ない）。
+OP_SA_PERSONAL_DEVELOP = { provider = "keychain", value = "OP_SA_PERSONAL_DEVELOP" }
+# GitHub Copilot remote MCP サーバ群の PAT
+GITHUB_MCP_TOKEN = { provider = "op_personal_develop", value = "op://personal-develop/GitHub MCP server token/token" }

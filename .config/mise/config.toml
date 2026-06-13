@@ -23,10 +23,6 @@ experimental = true
 # fish/bash/zsh and mise shims all inherit it via mise activation. env-paths-based
 # tools (astro, eas-cli, …) ignore XDG and stay in ~/Library.
 XDG_CONFIG_HOME = "{{env.HOME}}/.config"
-SOPS_AGE_KEY_FILE = "{{config_root}}/.config/mise/age.txt"
-# !DO NOT COMMIT THIS FILE TO GIT!
-# Load my secret env from the file to this config file and redacts the values
-_.file = { path = "~/dotfiles/.env.enc.json", redact = true }
 # Prepend fnox shim dir so npm/yarn/bun/... resolve to the fnox-exec wrappers
 # (~/dotfiles/bin/fnox-shims). Inherited by fish/bash/zsh and non-interactive
 # subshells, so AI tools' `bash -c npm ...` also route through fnox.

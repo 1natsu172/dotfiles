@@ -290,55 +290,13 @@ export GIT_AUTHOR_EMAIL="mail@example.com"
 
 - [Mac の環境構築自動化 2016 年 10 月版](http://jnst.hateblo.jp/entry/2016/09/30/051636)
 
-## SOPS
-
-### 前提
-
-以下のファイルが存在することを前提にしている。
-
-- `~/.config/mise/age.txt`
-- `~/dotfiles/.env.enc.json`
- 
- > FIXME: 初期セットアップの自動化はopが干渉する＋別に何度もやるものではないため今はやらないがいつかやる
-
-### 既存encを安全かつ簡単にEditする
-
-基本これを使うだけでよい
-
-```bash
-SOPS_EDITOR="$EDITOR -rw" sops edit .env.enc.json && op document edit "e3hlrchvuntyhkkylmvidnhzdi" .env.enc.json
-```
-
-※ `SOPS_EDITOR="$EDITOR -rw"` はVSCode系でwaitが必要になる問題があるため添えている。VSCode系を使わないなら不要。ref: https://github.com/getsops/sops/issues/380
-※ opはsync目的
-
-### 暗号化
-
-**raw to encrypt**
-
-```bash
-sops encrypt --age=(op read "op://Personal/mise-.env-SOPS/public key") .env.dec.json > .env.enc.json
-```
-
-### 復号化
-
-**encrypt to raw**
-
-```bash
-sops decrypt .env.enc.json > .env.dec.json
-```
-
-※ `SOPS_AGE_KEY_FILE` がない場合は動かないので適切な秘密鍵を参照させる必要あり
-ref: https://mise.jdx.dev/environments/secrets.html & https://getsops.io/docs/#encrypting-using-age
-
 ## fnox（秘匿情報の live fetch 管理）
 
 `.npmrc` の registry token をはじめ、秘匿情報を [fnox](https://fnox.jdx.dev/) 経由で op vault から
 実行時に取得する（disk に平文を置かない）。解決チェーン（keychain→1Password SA→op）・PATH shim と
 fish corepack エイリアスの共存・新しい秘匿情報の足し方・設計判断は
-[docs/fnox-token-management.md](./docs/fnox-token-management.md) に集約している。
-
-SOPS（上記、`.env.enc.json` を暗号文でコミット）とは別方式として併存する。
+[docs/fnox-token-management.md](./docs/fnox-token-management.md) に集約している。remote(HTTP) MCP の
+Authorization ヘッダへの注入（Claude Code の headersHelper 経由）も同書を参照。
 
 ## AI tools
 
