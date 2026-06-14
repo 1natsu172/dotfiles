@@ -8,22 +8,22 @@ service = "fnox"
 type = "1password"
 token = { secret = "OP_SA_PERSONAL_DEVELOP" }
 
+# commit する暗号文 secret 用（基礎基盤・現状使用 secret 無し）。recipients=公開鍵 / identity=keychain。
+# 使い方・背景は docs/fnox-token-management.md「age provider」
+[providers.age]
+type = "age"
+recipients = ["age1y4mq7r60nh07uwz7xgurqxexzlkth8jx3jng4gmfaq0ne2vprass78qcm0"]
+identity = { provider = "keychain", value = "AGE_IDENTITY" }
+
 [secrets]
-# SA トークン本体（実体は macOS Keychain 内、ここは参照のみ）。
-# env = false: provider 認証の token 解決には使うが fnox exec で子プロセス env へは注入しない
-# （生 SA トークンが npm 等の子・postinstall に露出するのを防ぐ。fnox 1.26.0+ の SecretConfig.env）。
+# op 認証用 SA token（実体は Keychain）。env=false で fnox exec の子 env に注入しない（漏れ防止）
 OP_SA_PERSONAL_DEVELOP = { provider = "keychain", value = "OP_SA_PERSONAL_DEVELOP", env = false }
 
-# 実際に欲しい secret（op から live で fetch）
+# npm registry token（op から live fetch・env 注入）
 FLATT_NPM_TOKEN = { provider = "op_personal_develop", value = "op://personal-develop/ut45f4nuxkaoquisyrolp2vqqe/credential" }
 
-# Claude Code の remote(HTTP) MCP 用 token。mcp profile に置いて npm 等の default `fnox exec` の
-# 解決スコープから外す（env=false は「注入」を止めるだけで「解決(op fetch)」は走るため、default に
-# 置くと npm 実行毎に無駄な op fetch が発生する。profile 分離なら default exec の解決対象外）。
-# headersHelper(bin/claude-utils/mcp-auth-header.sh) が `fnox get --profile mcp` で接続時に fetch する。
-# provider 認証用の OP_SA は default [secrets] から継承する（helper は --no-defaults を付けないため、
-# 各 profile での OP_SA 再宣言は不要）。
+# remote MCP token は mcp profile に隔離（default だと npm の fnox exec が毎回 op fetch するため）。
+# helper(mcp-auth-header.sh)が fnox get --profile mcp で取得・OP_SA は default 継承。背景は docs
 [profiles.mcp.secrets]
-# GitHub Copilot remote MCP サーバ群の PAT。
-# get専用・execでは注入されない
+# GitHub Copilot remote MCP の PAT。get専用・exec では注入されない
 GITHUB_MCP_TOKEN = { provider = "op_personal_develop", value = "op://personal-develop/GitHub MCP server token/token", env = false }
