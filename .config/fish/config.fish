@@ -61,6 +61,12 @@ else
     mise activate fish --shims | source
 end
 
+# mise の `--shims` 起動（VSCode/非対話）は mise 自身の shims dir を PATH 先頭に置く
+# ため、[env]._.path で入れた fnox-shims を shadow する（npm/yarn/pnpm/bun が fnox を
+# bypass → token 未注入で 401）。fnox-shims を明示的に先頭へ移し、対話/非対話/VSCode の
+# 全経路で「PATH 先頭 = fnox-shims」を保証する（--move で重複なく移動）。
+fish_add_path --prepend --move $HOME/dotfiles/bin/fnox-shims
+
 # Workaround for simple-git-hooks :\ https://github.com/toplenboren/simple-git-hooks/blob/0433a0485ea8f2c83e37b7cf7f2ec11e26921887/README.md#i-am-getting-npx-command-not-found-error-in-a-gui-git-client
 set -gx SIMPLE_GIT_HOOKS_RC "$HOME/.config/fish/functions/__my_scripts/.simple-git-hook.rc"
 
@@ -124,17 +130,12 @@ if type -q eza
     alias lta=eta
 end
 
-## corepack
+## package managers
 #-----------------------------------------------------------------------------
-## Util aliases. This is to treat it as if it were a global installation while passing through corepack.
-### Managemant via corepack through the meta-command. - https://github.com/nodejs/corepack/tree/cae770694e62f15fed33dd8023649d77d96023c1#corepack-binary-nameversion--args
-## After node 25, need switch to global instralled corepack via mise. (https://mise.jdx.dev/dev-tools/backends/npm.html)
-alias yarn="fnox exec -- corepack yarn"
-alias yarnpkg="fnox exec -- corepack yarnpkg"
-alias pnpm="fnox exec -- corepack pnpm"
-alias pnpx="fnox exec -- corepack pnpx"
-alias npm="fnox exec -- corepack npm"
-alias npx="fnox exec -- corepack npx"
+## npm/yarn/pnpm/bun は PATH 先頭の fnox-shims 経由で解決する（dispatcher が
+## fnox exec で token 注入し、mise が package.json の packageManager を per-project
+## 解決）。corepack エイリアスは廃止（mise の packageManager 対応へ移行）。詳細は
+## docs/fnox-token-management.md「注入機構」。
 
 ## bun global
 #-----------------------------------------------------------------------------

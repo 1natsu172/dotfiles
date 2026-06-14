@@ -1,7 +1,9 @@
 [tools]
 node = "24"
-"npm:corepack" = "latest"
 bun = "latest"
+# Global default yarn for projects without a packageManager field. Projects that
+# pin a version via package.json `packageManager` (e.g. yarn@4) override this
+# per-project (see [settings] idiomatic_version_file_enable_tools below).
 yarn = "1"
 ruby = "3.2"
 go = "latest"
@@ -17,6 +19,11 @@ java = "zulu-17"
 
 [settings]
 experimental = true
+# Read the `packageManager` / `devEngines.packageManager` field in package.json as
+# an idiomatic version file for these tools, so mise resolves the project-pinned
+# pnpm/yarn/npm version per-project (the corepack replacement). Scoped to the
+# package managers only — node keeps using [tools]/.nvmrc, unaffected.
+idiomatic_version_file_enable_tools = ["pnpm", "yarn", "npm"]
 
 [env]
 # Make XDG-aware tools (e.g. pnpm 11+ -> ~/.config/pnpm/config.yaml) use ~/.config
@@ -27,4 +34,7 @@ XDG_CONFIG_HOME = "{{env.HOME}}/.config"
 # Prepend fnox shim dir so npm/yarn/bun/... resolve to the fnox-exec wrappers
 # (~/dotfiles/bin/fnox-shims). Inherited by fish/bash/zsh and non-interactive
 # subshells, so AI tools' `bash -c npm ...` also route through fnox.
+# Note: fish's `mise activate --shims` (VSCode/non-interactive) prepends mise's
+# own shims dir ahead of this, so config.fish re-pins fnox-shims to the front
+# (bash/zsh use non-shims activation and don't need it).
 _.path = ["~/dotfiles/bin/fnox-shims"]
