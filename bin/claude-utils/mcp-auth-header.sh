@@ -26,8 +26,11 @@ header="${2:-Authorization}"
 scheme="${3-Bearer }"   # 既定は 'Bearer '。明示的に '' を渡せば scheme 無し（生 token）
 
 # mcp profile から単一 secret を解決する。
-#   --no-defaults: npm 等の default [secrets] を混ぜない（provider 認証用 OP_SA は mcp profile に同梱済み）。
+#   --profile mcp: MCP 用 token は mcp profile に置き、npm 等の default `fnox exec` の解決スコープから隔離。
+#   --no-defaults は付けない: default [secrets] を継承して provider 認証用 SA token(OP_SA) を解決させる
+#     （各 profile での OP_SA 再宣言を不要にするため。fnox get は要求 secret ＋ その認証依存のみ解決し、
+#      FLATT 等 default の他 secret は巻き込まない）。
 #   set -e + 単一 get: 解決失敗時は即非0終了＝空ヘッダを吐いてサイレント 401 になるのを防ぐ（fail-fast）。
 # token はこの一時プロセス内に留まり、env にも出力 JSON 以外にも残さない。
-token="$(fnox get "$secret" --profile mcp --no-defaults)"
+token="$(fnox get "$secret" --profile mcp)"
 exec jq -nc --arg h "$header" --arg v "${scheme}${token}" '{($h): $v}'
