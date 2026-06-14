@@ -13,6 +13,7 @@ fnox = "latest"
 "gem:cocoapods" = "1.16.2"
 # https://github.com/perplexityai/bumblebee Check exposure to known software supply-chain compromises.
 "go:github.com/perplexityai/bumblebee/cmd/bumblebee" = "v0.1.1"
+java = "zulu-17"
 
 [settings]
 experimental = true
