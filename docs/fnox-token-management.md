@@ -197,6 +197,12 @@ Claude Code の sandbox 内では op（Go 製）が TLS 検証に失敗するた
 `excludedCommands` で sandbox 外実行させる。あわせて `fnox get`/`fnox export`（値出力経路）は
 deny する。詳細・根拠は [docs/claude-code-security.md](./claude-code-security.md) の「fnox」節。
 
+- token を要する PM 操作（FLATT への install/publish 等）は、AI も含め **`fnox exec -- <pm> …` の形で明示的に打つ**。
+  ラッパー経由の素の `npm install` は submit 文字列が `npm …` で `fnox *` に当たらず sandbox 内に残り、op の TLS
+  失敗で 401 になる（`fnox exec -- <pm> …` はその install だけ sandbox 外に出る点を許容）。AI 向け呼び出し規則は
+  `.claude/rules/fnox-sandbox-invocation.md`、egress/`SSL_CERT_FILE` を巡る切り分けの実機ログは
+  [docs/claude-code-security.md](./claude-code-security.md) の「fnox」節。
+
 ## 無効化 / 緊急回避
 
 ラッパー関数・fnox・op・mise の想定外バグや upstream の破壊的変更で npm/bun 等が打てなくなった時の

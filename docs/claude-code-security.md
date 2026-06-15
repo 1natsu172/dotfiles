@@ -102,7 +102,8 @@ fnox（秘匿情報の live fetch。詳細は [docs/fnox-token-management.md](./
 
 - **`fnox *` を除外する（`op *` ではない）**: Claude が直接叩くのは `fnox`、op はその子プロセス。`excludedCommands` は **Claude の Bash tool が submit するコマンド文字列の先頭**にマッチするため、`op *` は `fnox exec ...` に当たらず不発。親 `fnox` を除外すれば子 op も sandbox 外に出る（実機検証で確定）。
 - **deny**: `fnox get *`（secret 値を stdout に出力）/ `fnox export *`（一括出力）。`gh auth token` deny と同じ思想で Claude が値を直接吐けないようにする。`fnox exec`（値を出力せず子プロセスに env 注入するだけ）は **allow 維持**＝これがシェル関数ラッパー（全シェル一様。`npm` 等の関数が `fnox exec -- npm` に展開）の実行経路。
-- 余波: ラッパー関数経由の `npm install` 等は Claude が submit する文字列が `npm ...`（関数展開後に `fnox exec` を spawn）で `fnox *` に当たらず、子 op は sandbox 内で TLS 失敗する。token が要る private registry 操作は Claude の sandbox 内では通らない（人間の通常シェルで行う）想定で、npm を sandbox 内に留めて postinstall のサプライチェーン防御を維持する判断。
+- 余波と運用: ラッパー関数経由の素の `npm install` 等は Claude が submit する文字列が `npm ...`（関数展開後に `fnox exec` を spawn）で `fnox *` に当たらず sandbox 内に残り、子 op が TLS 失敗で token 未解決＝401。**token を要する private registry 操作は AI も含め `fnox exec -- <pm> …` の形で明示的に打つ**＝`fnox *` に当たり sandbox 外で解決される（その install のみ unsandbox。`npm */yarn *` の全除外より狭く、token 不要の install は sandbox 内に留めて postinstall のサプライチェーン防御を維持）。AI 向け呼び出し規則は `.claude/rules/fnox-sandbox-invocation.md`。
+- 切り分け（実機確認・誤対処の回避）: 原因は **Go/Seatbelt の TLS 検証**であって egress ではない。`my.1password.com` への egress 自体は sandbox 内でも到達する（curl で 405 が返り TLS も通過）ため、`allowedDomains` への追加は効かない。`SSL_CERT_FILE` も op には効かない（Go は `RootCAs=nil` で `trustd` 経由のプラットフォーム検証器を使い、Seatbelt がそれを遮断する。curl=LibreSSL のファイル CA とは経路が違う）。
 
 ### 破壊系コマンドの deny（床であって境界ではない）
 
