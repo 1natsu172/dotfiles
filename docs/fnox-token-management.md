@@ -244,8 +244,14 @@ token 不要かつレイテンシ敏感なら、呼び出しを `command <tool>`
 ## 既知の制約・別タスク
 
 - **FLATT registry token は npm 子・孫プロセス（postinstall 等）の env に乗る**。npm が `.npmrc` の
-  `${VAR}` を展開して使う以上、注入が必要な registry token なので原理的に避けられない。`ignore-scripts`
-  等の追加防御は別タスク。
+  `${VAR}` を展開して使う以上、注入が必要な registry token なので原理的に避けられない。**追加の
+  `ignore-scripts` 防御はグローバル導入しない判断（YAGNI）**: 既存の `min-release-age`(7日) が「汚染版を
+  掴む確率」を主に潰しており、注入される秘匿情報は `FLATT_NPM_TOKEN` 1件（rotatable な registry token・
+  OP_SA は `env=false`）で blast radius が小さい。一方 npm の `ignore-scripts` は allowlist 無しの全停止
+  （依存だけでなく自プロジェクトの prepare/postinstall や native module ビルドも止まる）で摩擦が大きく
+  サイレント失敗を招く。bun・pnpm 10+ は依存スクリプトを既定でブロックする safe-by-default なので穴は
+  npm/yarn-classic に限る。**運用**: 高リスクな単発 install は手動で `npm install --ignore-scripts`
+  →必要分だけ `npm rebuild`、未知パッケージは bun/pnpm を優先する。
 - **provider 認証の SA token（OP_SA）は `env = false` で注入しない**。以前は default `[secrets]` の通常
   エントリで、`fnox exec` が npm 子 env まで SA token を載せていた（postinstall から vault 全体を引ける
   露出）。`env = false` 化で解決済み（上述「env 注入の制御」）。
