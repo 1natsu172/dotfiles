@@ -101,8 +101,8 @@ gh は Go 製で **macOS Seatbelt 下で TLS 検証に失敗**する（`gcloud`/
 fnox（秘匿情報の live fetch。詳細は [docs/fnox-token-management.md](./fnox-token-management.md)）は内部で op CLI を spawn し、op は Go 製で gh と同じく **Seatbelt 下で TLS 検証に失敗**する。`sandbox.excludedCommands: ["fnox *"]` で sandbox 外実行させて解決する。
 
 - **`fnox *` を除外する（`op *` ではない）**: Claude が直接叩くのは `fnox`、op はその子プロセス。`excludedCommands` は **Claude の Bash tool が submit するコマンド文字列の先頭**にマッチするため、`op *` は `fnox exec ...` に当たらず不発。親 `fnox` を除外すれば子 op も sandbox 外に出る（実機検証で確定）。
-- **deny**: `fnox get *`（secret 値を stdout に出力）/ `fnox export *`（一括出力）。`gh auth token` deny と同じ思想で Claude が値を直接吐けないようにする。`fnox exec`（値を出力せず子プロセスに env 注入するだけ）は **allow 維持**＝これが PATH shim（全シェル一様）の実行経路。
-- 余波: shim 経由の `npm install` 等は Claude が submit する文字列が `npm ...` で `fnox *` に当たらず、子 op は sandbox 内で TLS 失敗する。token が要る private registry 操作は Claude の sandbox 内では通らない（人間の通常シェルで行う）想定で、npm を sandbox 内に留めて postinstall のサプライチェーン防御を維持する判断。
+- **deny**: `fnox get *`（secret 値を stdout に出力）/ `fnox export *`（一括出力）。`gh auth token` deny と同じ思想で Claude が値を直接吐けないようにする。`fnox exec`（値を出力せず子プロセスに env 注入するだけ）は **allow 維持**＝これがシェル関数ラッパー（全シェル一様。`npm` 等の関数が `fnox exec -- npm` に展開）の実行経路。
+- 余波: ラッパー関数経由の `npm install` 等は Claude が submit する文字列が `npm ...`（関数展開後に `fnox exec` を spawn）で `fnox *` に当たらず、子 op は sandbox 内で TLS 失敗する。token が要る private registry 操作は Claude の sandbox 内では通らない（人間の通常シェルで行う）想定で、npm を sandbox 内に留めて postinstall のサプライチェーン防御を維持する判断。
 
 ### 破壊系コマンドの deny（床であって境界ではない）
 

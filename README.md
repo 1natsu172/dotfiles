@@ -293,8 +293,8 @@ export GIT_AUTHOR_EMAIL="mail@example.com"
 ## fnox（秘匿情報の live fetch 管理）
 
 `.npmrc` の registry token をはじめ、秘匿情報を [fnox](https://fnox.jdx.dev/) 経由で op vault から
-実行時に取得する（disk に平文を置かない）。解決チェーン（keychain→1Password SA→op）・PATH shim と
-fish corepack エイリアスの共存・新しい秘匿情報の足し方・設計判断は
+実行時に取得する（disk に平文を置かない）。解決チェーン（keychain→1Password SA→op）・各シェル rc の
+ラッパー関数（`fnox exec`、`bin/install-fnox-shell-wrappers` が配布）・新しい秘匿情報の足し方・設計判断は
 [docs/fnox-token-management.md](./docs/fnox-token-management.md) に集約している。remote(HTTP) MCP の
 Authorization ヘッダへの注入（Claude Code の headersHelper 経由）も同書を参照。
 

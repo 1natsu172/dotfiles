@@ -6,3 +6,5 @@ export PATH="/usr/local/sbin:$PATH"
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 . "$HOME/.cargo/env"
 eval "$(mise activate bash)"
+
+[ -r "$HOME/dotfiles/bin/fnox-wrappers.sh" ] && . "$HOME/dotfiles/bin/fnox-wrappers.sh"

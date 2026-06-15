@@ -19,11 +19,15 @@ java = "zulu-17"
 
 [settings]
 experimental = true
-# Read the `packageManager` / `devEngines.packageManager` field in package.json as
-# an idiomatic version file for these tools, so mise resolves the project-pinned
-# pnpm/yarn/npm version per-project (the corepack replacement). Scoped to the
-# package managers only — node keeps using [tools]/.nvmrc, unaffected.
-idiomatic_version_file_enable_tools = ["pnpm", "yarn", "npm"]
+# Read package.json `packageManager` / `devEngines.packageManager` and node's
+# `.nvmrc` / `.node-version` as idiomatic version files, so mise resolves the
+# project-pinned version per-project (the corepack replacement; node also auto-
+# resolves idiomatically instead of being pinned only via [tools]).
+# npm's backend is `npm:npm` (mise installs npm by *running* npm via PATH). The fnox
+# token wrappers are shell functions (bin/install-fnox-shell-wrappers), NOT a PATH shim,
+# so mise's subprocesses don't inherit them: mise's bootstrap npm is the real one and
+# per-project npm pinning installs without recursion. See docs/fnox-token-management.md.
+idiomatic_version_file_enable_tools = ["node", "pnpm", "yarn", "npm"]
 
 [env]
 # Make XDG-aware tools (e.g. pnpm 11+ -> ~/.config/pnpm/config.yaml) use ~/.config
@@ -31,10 +35,3 @@ idiomatic_version_file_enable_tools = ["pnpm", "yarn", "npm"]
 # fish/bash/zsh and mise shims all inherit it via mise activation. env-paths-based
 # tools (astro, eas-cli, …) ignore XDG and stay in ~/Library.
 XDG_CONFIG_HOME = "{{env.HOME}}/.config"
-# Prepend fnox shim dir so npm/yarn/bun/... resolve to the fnox-exec wrappers
-# (~/dotfiles/bin/fnox-shims). Inherited by fish/bash/zsh and non-interactive
-# subshells, so AI tools' `bash -c npm ...` also route through fnox.
-# Note: fish's `mise activate --shims` (VSCode/non-interactive) prepends mise's
-# own shims dir ahead of this, so config.fish re-pins fnox-shims to the front
-# (bash/zsh use non-shims activation and don't need it).
-_.path = ["~/dotfiles/bin/fnox-shims"]
