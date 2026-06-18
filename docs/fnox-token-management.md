@@ -2,7 +2,7 @@
 
 [fnox](https://fnox.jdx.dev/) を統一インターフェースに、ローカル disk から平文の秘匿情報を排除する。
 **op vault を一次保管庫**にして実行時に live fetch し、消費プロセスの env にのみ注入する方式。
-（初出の適用先は npm private registry の認証トークンだが、本書は特定の値ではなく**仕組み**を述べる。
+（初出の適用先は npm registry の認証トークンだが、本書は特定の値ではなく**仕組み**を述べる。
 具体名は例として `〈例: ...〉` で示す。）
 
 ## 解決チェーン
@@ -135,9 +135,10 @@ zsh/bash が conf.d 相当を持たないので **fish=自動 conf.d / zsh・bas
   経由しない。npm は node 同梱で常に PATH 上に在るため、**未インストール pin の npm はサイレントに
   node 同梱版**で走る点に注意（mise の missing 警告で気付く運用前提）。
 - ★**pin npm の install は `fnox exec -- mise install`（`mise i`）で行う**。`.npmrc` の既定 registry が
-  認証必須の FLATT（`registry=https://npm.flatt.tech/`）なので、mise の `npm:npm` backend が版解決に走らす
-  `npm view npm versions …` も FLATT に当たり token が要る。素の `mise i` は mise の子 npm に token が無く
-  **401 で失敗**する。`fnox exec -- mise i` なら `FLATT_NPM_TOKEN` が mise→子 npm に継承され通る（実機確認）。
+  FLATT（`registry=https://npm.flatt.tech/`＝公開セキュリティプロキシ。docs/claude-code-security.md 参照）で、
+  **本リポジトリの `.npmrc` が個人 `tg_anon_` token を `${FLATT_NPM_TOKEN}` で参照する**ため、mise の `npm:npm`
+  backend が版解決に走らす `npm view npm versions …` も token を要する。素の `mise i` は子 npm に token が
+  注入されず（空 token）**401**。`fnox exec -- mise i` なら `FLATT_NPM_TOKEN` が mise→子 npm に継承され通る（実機確認）。
   pnpm/yarn は mise が aqua/github（非 FLATT）から入れるので素の `mise i` で OK。install 後はプロジェクト内の
   ラッパー `npm`（→`fnox exec -- npm`）が pin 版を token 付きで実行する。
 
@@ -146,7 +147,7 @@ zsh/bash が conf.d 相当を持たないので **fish=自動 conf.d / zsh・bas
 シェル関数は **非シェル・非 npm 子孫の生プロセスが直接叩く npm には継承されない**（`make`→`sh -c npm`、
 Node の `child_process`、git hook 等）→ その経路は token 非注入になる。ただし npm の **postinstall/lifecycle
 は親の fnox-wrapped npm の env（`FLATT_NPM_TOKEN`）を継承**するのでカバーされる。穴は「npm 以外の foreign
-ツールが private registry 向けに新規 npm install する」狭いケースのみ。PATH shim は全 subprocess を拾えた
+ツールが token 付き registry 向けに新規 npm install する」狭いケースのみ。PATH shim は全 subprocess を拾えた
 代わりに npm:npm 再帰を抱えていた（前節）ので、この穴を受け入れて再帰を消す判断（個人運用では実害が小さい）。
 
 ## remote(HTTP) MCP への token 注入（headersHelper）

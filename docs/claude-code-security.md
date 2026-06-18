@@ -102,7 +102,7 @@ fnox（秘匿情報の live fetch。詳細は [docs/fnox-token-management.md](./
 
 - **`fnox *` を除外する（`op *` ではない）**: Claude が直接叩くのは `fnox`、op はその子プロセス。`excludedCommands` は **Claude の Bash tool が submit するコマンド文字列の先頭**にマッチするため、`op *` は `fnox exec ...` に当たらず不発。親 `fnox` を除外すれば子 op も sandbox 外に出る（実機検証で確定）。
 - **deny**: `fnox get *`（secret 値を stdout に出力）/ `fnox export *`（一括出力）。`gh auth token` deny と同じ思想で Claude が値を直接吐けないようにする。`fnox exec`（値を出力せず子プロセスに env 注入するだけ）は **allow 維持**＝これがシェル関数ラッパー（全シェル一様。`npm` 等の関数が `fnox exec -- npm` に展開）の実行経路。
-- 余波と運用: ラッパー関数経由の素の `npm install` 等は Claude が submit する文字列が `npm ...`（関数展開後に `fnox exec` を spawn）で `fnox *` に当たらず sandbox 内に残り、子 op が TLS 失敗で token 未解決＝401。**token を要する private registry 操作は AI も含め `fnox exec -- <pm> …` の形で明示的に打つ**＝`fnox *` に当たり sandbox 外で解決される（その install のみ unsandbox。`npm */yarn *` の全除外より狭く、token 不要の install は sandbox 内に留めて postinstall のサプライチェーン防御を維持）。AI 向け呼び出し規則は `.claude/rules/fnox-sandbox-invocation.md`。
+- 余波と運用: ラッパー関数経由の素の `npm install` 等は Claude が submit する文字列が `npm ...`（関数展開後に `fnox exec` を spawn）で `fnox *` に当たらず sandbox 内に残り、子 op が TLS 失敗で token 未解決＝401。**token を要する registry 操作は AI も含め `fnox exec -- <pm> …` の形で明示的に打つ**＝`fnox *` に当たり sandbox 外で解決される（その install のみ unsandbox。`npm */yarn *` の全除外より狭く、token 不要の install は sandbox 内に留めて postinstall のサプライチェーン防御を維持）。AI 向け呼び出し規則は `.claude/rules/fnox-sandbox-invocation.md`。
 - 切り分け（実機確認・誤対処の回避）: 原因は **Go/Seatbelt の TLS 検証**であって egress ではない。`my.1password.com` への egress 自体は sandbox 内でも到達する（curl で 405 が返り TLS も通過）ため、`allowedDomains` への追加は効かない。`SSL_CERT_FILE` も op には効かない（Go は `RootCAs=nil` で `trustd` 経由のプラットフォーム検証器を使い、Seatbelt がそれを遮断する。curl=LibreSSL のファイル CA とは経路が違う）。
 
 ### 破壊系コマンドの deny（床であって境界ではない）
@@ -134,7 +134,7 @@ macOS Sandbox 内のシステム TLS 信頼サービス（`com.apple.trustd.agen
 
 sandbox は network を allowlist、write を cwd 中心の allowlist で絞るため、`npm install` には2点の明示許可が要る（実機で発覚）:
 
-- **registry への egress**: `sandbox.network.allowedDomains` に取得先を列挙する。public の `registry.npmjs.org` に加え、scoped パッケージを引く社内 registry（`npm.flatt.tech`）も必要。無いと registry に到達できず install が失敗する。`~/.npmrc` の registry 設定自体は read 解放で効くが、**ネットワーク到達は allowedDomains が別ゲート**なので両方そろえる。
+- **registry への egress**: `sandbox.network.allowedDomains` に取得先を列挙する。本リポジトリの既定 registry は **`npm.flatt.tech`** ＝ Takumi Guard（旧 Shisho Guard, by GMO）の**公開 read-only セキュリティプロキシ registry**で、npmjs を代理しブロックリスト該当の悪性 package を**コード到達前に 403 で拒否**する（shai-hulud 等サプライチェーン防御の一層）。token は任意だが **rate limit が変わる**（匿名＝2,000 req/min/IP・ブロックのみ／個人 `tg_anon_`＝10,000 req/min/token＋download 追跡・breach 通知／`tg_org_`＝10,000 req/10s/token・有料 org。超過は 429、〜2 req/package）。dotfiles は**マシングローバルに個人 `tg_anon_` token**を使い（rate 緩和＋追跡）ORG/`tg_org_` は不使用（出典 <https://shisho.dev/docs/ja/t/guard/>、rate: <https://shisho.dev/docs/ja/t/guard/limitation>）。pnpm/yarn は非 FLATT backend（aqua/github 等）で公開 `registry.npmjs.org` に直接当たるため、**両ドメインとも** allowedDomains に要る。無いと registry に到達できず install が失敗する。`~/.npmrc` の registry 設定自体は read 解放で効くが、**ネットワーク到達は allowedDomains が別ゲート**なので両方そろえる。
 - **キャッシュ書き込み**: `sandbox.filesystem.allowWrite` に `~/.npm/_cacache`（npm の content-addressable cache）を追加する。sandbox は cwd 外への write を塞ぐため、無いと install がキャッシュ書き込みで失敗する。`~/.npm/_logs` は Claude Code デフォルトで許可済みだが `_cacache` は別途必要。他の `~/.npm` 配下書き込みで失敗するなら `~/.npm` に広げる。
 - broad な `allowedDomains` は exfiltration 経路になりうる（公式 sandboxing の警告）。registry は必要最小限に絞る。
 
