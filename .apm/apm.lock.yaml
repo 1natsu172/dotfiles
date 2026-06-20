@@ -1,10 +1,10 @@
 lockfile_version: '1'
-generated_at: '2026-06-13T17:35:03.516190+00:00'
-apm_version: 0.20.0
+generated_at: '2026-06-20T11:47:44.704184+00:00'
+apm_version: 0.21.0
 dependencies:
 - repo_url: 1natsu-vacation/agent-skills
   host: github.com
-  resolved_commit: 2e671641849dc6fafe0e5576cf3267ddbb8d188a
+  resolved_commit: a202237bdb445c3a6e0ba5c5d80466c311d61239
   package_type: skill_bundle
   deployed_files:
   - .agents/skills/1natsu-auto-resolve-conflicts
@@ -16,10 +16,17 @@ dependencies:
   - .agents/skills/1natsu-auto-resolve-conflicts/evals/fixtures/04-mixed-bail-out.sh
   - .agents/skills/1natsu-auto-resolve-conflicts/evals/fixtures/05-rebase-continue-with-validation-failure.sh
   - .agents/skills/1natsu-auto-resolve-conflicts/evals/fixtures/06-lockfile-regenerate.sh
+  - .agents/skills/1natsu-auto-resolve-conflicts/evals/fixtures/07-feature-preservation.sh
+  - .agents/skills/1natsu-auto-resolve-conflicts/evals/fixtures/08-stale-pr-follow.sh
+  - .agents/skills/1natsu-auto-resolve-conflicts/evals/fixtures/09-silent-feature-drop-trap.sh
+  - .agents/skills/1natsu-auto-resolve-conflicts/evals/fixtures/10-rebase-1stage-success.sh
+  - .agents/skills/1natsu-auto-resolve-conflicts/evals/fixtures/11-semantic-port-integration.sh
   - .agents/skills/1natsu-auto-resolve-conflicts/references/bailout-rules.md
   - .agents/skills/1natsu-auto-resolve-conflicts/references/commit-message-template.md
   - .agents/skills/1natsu-auto-resolve-conflicts/references/handoff-to-pair-resolve.md
   - .agents/skills/1natsu-auto-resolve-conflicts/references/lockfile-regeneration.md
+  - .agents/skills/1natsu-auto-resolve-conflicts/references/stale-pr-follow.md
+  - .agents/skills/1natsu-auto-resolve-conflicts/references/two-stage-commit.md
   - .agents/skills/1natsu-auto-resolve-conflicts/references/verification-detection.md
   - .agents/skills/1natsu-commit
   - .agents/skills/1natsu-commit/SKILL.md
@@ -62,10 +69,17 @@ dependencies:
   - .claude/skills/1natsu-auto-resolve-conflicts/evals/fixtures/04-mixed-bail-out.sh
   - .claude/skills/1natsu-auto-resolve-conflicts/evals/fixtures/05-rebase-continue-with-validation-failure.sh
   - .claude/skills/1natsu-auto-resolve-conflicts/evals/fixtures/06-lockfile-regenerate.sh
+  - .claude/skills/1natsu-auto-resolve-conflicts/evals/fixtures/07-feature-preservation.sh
+  - .claude/skills/1natsu-auto-resolve-conflicts/evals/fixtures/08-stale-pr-follow.sh
+  - .claude/skills/1natsu-auto-resolve-conflicts/evals/fixtures/09-silent-feature-drop-trap.sh
+  - .claude/skills/1natsu-auto-resolve-conflicts/evals/fixtures/10-rebase-1stage-success.sh
+  - .claude/skills/1natsu-auto-resolve-conflicts/evals/fixtures/11-semantic-port-integration.sh
   - .claude/skills/1natsu-auto-resolve-conflicts/references/bailout-rules.md
   - .claude/skills/1natsu-auto-resolve-conflicts/references/commit-message-template.md
   - .claude/skills/1natsu-auto-resolve-conflicts/references/handoff-to-pair-resolve.md
   - .claude/skills/1natsu-auto-resolve-conflicts/references/lockfile-regeneration.md
+  - .claude/skills/1natsu-auto-resolve-conflicts/references/stale-pr-follow.md
+  - .claude/skills/1natsu-auto-resolve-conflicts/references/two-stage-commit.md
   - .claude/skills/1natsu-auto-resolve-conflicts/references/verification-detection.md
   - .claude/skills/1natsu-commit
   - .claude/skills/1natsu-commit/SKILL.md
@@ -108,10 +122,17 @@ dependencies:
   - .kiro/skills/1natsu-auto-resolve-conflicts/evals/fixtures/04-mixed-bail-out.sh
   - .kiro/skills/1natsu-auto-resolve-conflicts/evals/fixtures/05-rebase-continue-with-validation-failure.sh
   - .kiro/skills/1natsu-auto-resolve-conflicts/evals/fixtures/06-lockfile-regenerate.sh
+  - .kiro/skills/1natsu-auto-resolve-conflicts/evals/fixtures/07-feature-preservation.sh
+  - .kiro/skills/1natsu-auto-resolve-conflicts/evals/fixtures/08-stale-pr-follow.sh
+  - .kiro/skills/1natsu-auto-resolve-conflicts/evals/fixtures/09-silent-feature-drop-trap.sh
+  - .kiro/skills/1natsu-auto-resolve-conflicts/evals/fixtures/10-rebase-1stage-success.sh
+  - .kiro/skills/1natsu-auto-resolve-conflicts/evals/fixtures/11-semantic-port-integration.sh
   - .kiro/skills/1natsu-auto-resolve-conflicts/references/bailout-rules.md
   - .kiro/skills/1natsu-auto-resolve-conflicts/references/commit-message-template.md
   - .kiro/skills/1natsu-auto-resolve-conflicts/references/handoff-to-pair-resolve.md
   - .kiro/skills/1natsu-auto-resolve-conflicts/references/lockfile-regeneration.md
+  - .kiro/skills/1natsu-auto-resolve-conflicts/references/stale-pr-follow.md
+  - .kiro/skills/1natsu-auto-resolve-conflicts/references/two-stage-commit.md
   - .kiro/skills/1natsu-auto-resolve-conflicts/references/verification-detection.md
   - .kiro/skills/1natsu-commit
   - .kiro/skills/1natsu-commit/SKILL.md
@@ -146,18 +167,25 @@ dependencies:
   - .kiro/skills/1natsu-pr-review-handler
   - .kiro/skills/1natsu-pr-review-handler/SKILL.md
   deployed_file_hashes:
-    .agents/skills/1natsu-auto-resolve-conflicts/SKILL.md: sha256:8847a8499cb73e8a9f074a527ba8a9b293ec8427764f3dbc245c5d608b37d6ca
-    .agents/skills/1natsu-auto-resolve-conflicts/evals/evals.json: sha256:f52581dd24bdf41ff5388dc2b6589fa20bfe2fd809497ffa058f86d897576068
+    .agents/skills/1natsu-auto-resolve-conflicts/SKILL.md: sha256:1395ae5439264c126cb863665f874956d5dbf31dfffdaa5f5d60c276dc6ab0d8
+    .agents/skills/1natsu-auto-resolve-conflicts/evals/evals.json: sha256:9cbe7d6366270168c561d362c3916af29ffc75bc15096508810a8f776d581fcd
     .agents/skills/1natsu-auto-resolve-conflicts/evals/fixtures/01-simple-import-merge.sh: sha256:23320e4746f4496b1c3fbdb4952384414a4b1779be6643bf4bd2e135e5ec1529
     .agents/skills/1natsu-auto-resolve-conflicts/evals/fixtures/02-integrate-both-sides.sh: sha256:a2cf4ed4daada2abde7eee490e6ab54ff8bcb43133b51449f2a31708645c8a95
     .agents/skills/1natsu-auto-resolve-conflicts/evals/fixtures/03-api-signature-degrade.sh: sha256:b5902f1741dffb5ca7ee862c57c23ac75d359605ba5591a6ef935d0b2e20a09c
     .agents/skills/1natsu-auto-resolve-conflicts/evals/fixtures/04-mixed-bail-out.sh: sha256:6807cdc21e1edc21705d839665e746aef83765fafaf372e636c607dcc13237e7
     .agents/skills/1natsu-auto-resolve-conflicts/evals/fixtures/05-rebase-continue-with-validation-failure.sh: sha256:860e9a739bfeae9ad705c4fc4512ed6572701c267af45f4da2671871ed6138e1
     .agents/skills/1natsu-auto-resolve-conflicts/evals/fixtures/06-lockfile-regenerate.sh: sha256:718e915a278a57345aa15e76b774fb17ae0d4e78ae5efbbc1b8e37db3738d825
-    .agents/skills/1natsu-auto-resolve-conflicts/references/bailout-rules.md: sha256:aa5a6fe6b1e2abffaf0389474bddcf2953687056313711c6a11649d055fd9820
-    .agents/skills/1natsu-auto-resolve-conflicts/references/commit-message-template.md: sha256:c2d6b24f2791bb89934bb4d6d9256fdd5c6f4d5e801d9c8b9fad8c7b218af5bd
+    .agents/skills/1natsu-auto-resolve-conflicts/evals/fixtures/07-feature-preservation.sh: sha256:4db8268552d8352d76f2d65f125efc3e04d9b9627b9062ea8f7c92b03cf98c6c
+    .agents/skills/1natsu-auto-resolve-conflicts/evals/fixtures/08-stale-pr-follow.sh: sha256:7c5a0ae72d62c0eb71674052a9c2f0920c7dc5007f75b5c6216ba29a1d243732
+    .agents/skills/1natsu-auto-resolve-conflicts/evals/fixtures/09-silent-feature-drop-trap.sh: sha256:427de30a6c888a1743d736e6f419cd6cbe8bafbfa0f73d175e66727474982e4a
+    .agents/skills/1natsu-auto-resolve-conflicts/evals/fixtures/10-rebase-1stage-success.sh: sha256:e34e54c1c91a7980515f5f8d0cfc7f9c5debc2332150578bb3a6ad31a84a580d
+    .agents/skills/1natsu-auto-resolve-conflicts/evals/fixtures/11-semantic-port-integration.sh: sha256:e0188e2af582a7b93128d0764550b0e7cfc3053e6806a6ad1c17cc5c2fcb93cc
+    .agents/skills/1natsu-auto-resolve-conflicts/references/bailout-rules.md: sha256:b3365d6350872df9aff1aa7604c20b16652e153bcad56132058441a851c0b07c
+    .agents/skills/1natsu-auto-resolve-conflicts/references/commit-message-template.md: sha256:e9b1cf77334113b23cecf9618d9ead3f9b5b0162d4e5ec44cac25f715200b7cc
     .agents/skills/1natsu-auto-resolve-conflicts/references/handoff-to-pair-resolve.md: sha256:c53d2f72483bcbb7a33ce0ed9762674612abfebe475478548bc80318817d06f7
     .agents/skills/1natsu-auto-resolve-conflicts/references/lockfile-regeneration.md: sha256:96b628cf61fb9c903965e7ec54b3cba5d0f80032945bb29fef04fbd5a6a21be7
+    .agents/skills/1natsu-auto-resolve-conflicts/references/stale-pr-follow.md: sha256:78638baab54b919a1e41c430d3cfe6bd45d7d5d355b2a62e6b36aef680b2a57d
+    .agents/skills/1natsu-auto-resolve-conflicts/references/two-stage-commit.md: sha256:29831e3e9ca89dfaf08a5cf03840f89b984f718d6f044e7dd64a5c59252fdd8c
     .agents/skills/1natsu-auto-resolve-conflicts/references/verification-detection.md: sha256:192f743c6792067c5216180206905b0274a084a9ad6f473c3de3de92652909d8
     .agents/skills/1natsu-commit/SKILL.md: sha256:7d49208ed7b4d05edec1a21a919de7ca13dc7169ecc15418c35c8db2b4d179e5
     .agents/skills/1natsu-conventional-commits/SKILL.md: sha256:a781332509090d07543901b3ba2f332738b16fdbb0da292fd81b13b1cb2d5c45
@@ -177,20 +205,27 @@ dependencies:
     .agents/skills/1natsu-git-analysis/scripts/get_branch_diff.sh: sha256:1c8cf30fd5a17e95a605dbf9b0718cc4a43196cb19f444f446414a6697c9772f
     .agents/skills/1natsu-git-analysis/scripts/get_commit_history.sh: sha256:1763b516027572ac9211ab0e7b31a625aa31f15f5f11d6a95ed9b45c77861f2d
     .agents/skills/1natsu-pair-debug/SKILL.md: sha256:ed51c61dd21df652b1ab2dbe026681213a1c2d717736de5554d3f7f9d625fa24
-    .agents/skills/1natsu-pair-resolve-conflicts/SKILL.md: sha256:44f3f549cfac3b2ea7aa1e0d659f2af68b3c79289e1897b32eaae7b3dd887b27
+    .agents/skills/1natsu-pair-resolve-conflicts/SKILL.md: sha256:a03254c00cbd0280940604ecfd8e1019bd35779f6d5b313f1b5929c96b86a347
     .agents/skills/1natsu-pr-review-handler/SKILL.md: sha256:f451258786e1e378b219afeec521a8483778d075f1e3caf22c148860c9d9eb0f
-    .claude/skills/1natsu-auto-resolve-conflicts/SKILL.md: sha256:8847a8499cb73e8a9f074a527ba8a9b293ec8427764f3dbc245c5d608b37d6ca
-    .claude/skills/1natsu-auto-resolve-conflicts/evals/evals.json: sha256:f52581dd24bdf41ff5388dc2b6589fa20bfe2fd809497ffa058f86d897576068
+    .claude/skills/1natsu-auto-resolve-conflicts/SKILL.md: sha256:1395ae5439264c126cb863665f874956d5dbf31dfffdaa5f5d60c276dc6ab0d8
+    .claude/skills/1natsu-auto-resolve-conflicts/evals/evals.json: sha256:9cbe7d6366270168c561d362c3916af29ffc75bc15096508810a8f776d581fcd
     .claude/skills/1natsu-auto-resolve-conflicts/evals/fixtures/01-simple-import-merge.sh: sha256:23320e4746f4496b1c3fbdb4952384414a4b1779be6643bf4bd2e135e5ec1529
     .claude/skills/1natsu-auto-resolve-conflicts/evals/fixtures/02-integrate-both-sides.sh: sha256:a2cf4ed4daada2abde7eee490e6ab54ff8bcb43133b51449f2a31708645c8a95
     .claude/skills/1natsu-auto-resolve-conflicts/evals/fixtures/03-api-signature-degrade.sh: sha256:b5902f1741dffb5ca7ee862c57c23ac75d359605ba5591a6ef935d0b2e20a09c
     .claude/skills/1natsu-auto-resolve-conflicts/evals/fixtures/04-mixed-bail-out.sh: sha256:6807cdc21e1edc21705d839665e746aef83765fafaf372e636c607dcc13237e7
     .claude/skills/1natsu-auto-resolve-conflicts/evals/fixtures/05-rebase-continue-with-validation-failure.sh: sha256:860e9a739bfeae9ad705c4fc4512ed6572701c267af45f4da2671871ed6138e1
     .claude/skills/1natsu-auto-resolve-conflicts/evals/fixtures/06-lockfile-regenerate.sh: sha256:718e915a278a57345aa15e76b774fb17ae0d4e78ae5efbbc1b8e37db3738d825
-    .claude/skills/1natsu-auto-resolve-conflicts/references/bailout-rules.md: sha256:aa5a6fe6b1e2abffaf0389474bddcf2953687056313711c6a11649d055fd9820
-    .claude/skills/1natsu-auto-resolve-conflicts/references/commit-message-template.md: sha256:c2d6b24f2791bb89934bb4d6d9256fdd5c6f4d5e801d9c8b9fad8c7b218af5bd
+    .claude/skills/1natsu-auto-resolve-conflicts/evals/fixtures/07-feature-preservation.sh: sha256:4db8268552d8352d76f2d65f125efc3e04d9b9627b9062ea8f7c92b03cf98c6c
+    .claude/skills/1natsu-auto-resolve-conflicts/evals/fixtures/08-stale-pr-follow.sh: sha256:7c5a0ae72d62c0eb71674052a9c2f0920c7dc5007f75b5c6216ba29a1d243732
+    .claude/skills/1natsu-auto-resolve-conflicts/evals/fixtures/09-silent-feature-drop-trap.sh: sha256:427de30a6c888a1743d736e6f419cd6cbe8bafbfa0f73d175e66727474982e4a
+    .claude/skills/1natsu-auto-resolve-conflicts/evals/fixtures/10-rebase-1stage-success.sh: sha256:e34e54c1c91a7980515f5f8d0cfc7f9c5debc2332150578bb3a6ad31a84a580d
+    .claude/skills/1natsu-auto-resolve-conflicts/evals/fixtures/11-semantic-port-integration.sh: sha256:e0188e2af582a7b93128d0764550b0e7cfc3053e6806a6ad1c17cc5c2fcb93cc
+    .claude/skills/1natsu-auto-resolve-conflicts/references/bailout-rules.md: sha256:b3365d6350872df9aff1aa7604c20b16652e153bcad56132058441a851c0b07c
+    .claude/skills/1natsu-auto-resolve-conflicts/references/commit-message-template.md: sha256:e9b1cf77334113b23cecf9618d9ead3f9b5b0162d4e5ec44cac25f715200b7cc
     .claude/skills/1natsu-auto-resolve-conflicts/references/handoff-to-pair-resolve.md: sha256:c53d2f72483bcbb7a33ce0ed9762674612abfebe475478548bc80318817d06f7
     .claude/skills/1natsu-auto-resolve-conflicts/references/lockfile-regeneration.md: sha256:96b628cf61fb9c903965e7ec54b3cba5d0f80032945bb29fef04fbd5a6a21be7
+    .claude/skills/1natsu-auto-resolve-conflicts/references/stale-pr-follow.md: sha256:78638baab54b919a1e41c430d3cfe6bd45d7d5d355b2a62e6b36aef680b2a57d
+    .claude/skills/1natsu-auto-resolve-conflicts/references/two-stage-commit.md: sha256:29831e3e9ca89dfaf08a5cf03840f89b984f718d6f044e7dd64a5c59252fdd8c
     .claude/skills/1natsu-auto-resolve-conflicts/references/verification-detection.md: sha256:192f743c6792067c5216180206905b0274a084a9ad6f473c3de3de92652909d8
     .claude/skills/1natsu-commit/SKILL.md: sha256:7d49208ed7b4d05edec1a21a919de7ca13dc7169ecc15418c35c8db2b4d179e5
     .claude/skills/1natsu-conventional-commits/SKILL.md: sha256:a781332509090d07543901b3ba2f332738b16fdbb0da292fd81b13b1cb2d5c45
@@ -210,20 +245,27 @@ dependencies:
     .claude/skills/1natsu-git-analysis/scripts/get_branch_diff.sh: sha256:1c8cf30fd5a17e95a605dbf9b0718cc4a43196cb19f444f446414a6697c9772f
     .claude/skills/1natsu-git-analysis/scripts/get_commit_history.sh: sha256:1763b516027572ac9211ab0e7b31a625aa31f15f5f11d6a95ed9b45c77861f2d
     .claude/skills/1natsu-pair-debug/SKILL.md: sha256:ed51c61dd21df652b1ab2dbe026681213a1c2d717736de5554d3f7f9d625fa24
-    .claude/skills/1natsu-pair-resolve-conflicts/SKILL.md: sha256:44f3f549cfac3b2ea7aa1e0d659f2af68b3c79289e1897b32eaae7b3dd887b27
+    .claude/skills/1natsu-pair-resolve-conflicts/SKILL.md: sha256:a03254c00cbd0280940604ecfd8e1019bd35779f6d5b313f1b5929c96b86a347
     .claude/skills/1natsu-pr-review-handler/SKILL.md: sha256:f451258786e1e378b219afeec521a8483778d075f1e3caf22c148860c9d9eb0f
-    .kiro/skills/1natsu-auto-resolve-conflicts/SKILL.md: sha256:8847a8499cb73e8a9f074a527ba8a9b293ec8427764f3dbc245c5d608b37d6ca
-    .kiro/skills/1natsu-auto-resolve-conflicts/evals/evals.json: sha256:f52581dd24bdf41ff5388dc2b6589fa20bfe2fd809497ffa058f86d897576068
+    .kiro/skills/1natsu-auto-resolve-conflicts/SKILL.md: sha256:1395ae5439264c126cb863665f874956d5dbf31dfffdaa5f5d60c276dc6ab0d8
+    .kiro/skills/1natsu-auto-resolve-conflicts/evals/evals.json: sha256:9cbe7d6366270168c561d362c3916af29ffc75bc15096508810a8f776d581fcd
     .kiro/skills/1natsu-auto-resolve-conflicts/evals/fixtures/01-simple-import-merge.sh: sha256:23320e4746f4496b1c3fbdb4952384414a4b1779be6643bf4bd2e135e5ec1529
     .kiro/skills/1natsu-auto-resolve-conflicts/evals/fixtures/02-integrate-both-sides.sh: sha256:a2cf4ed4daada2abde7eee490e6ab54ff8bcb43133b51449f2a31708645c8a95
     .kiro/skills/1natsu-auto-resolve-conflicts/evals/fixtures/03-api-signature-degrade.sh: sha256:b5902f1741dffb5ca7ee862c57c23ac75d359605ba5591a6ef935d0b2e20a09c
     .kiro/skills/1natsu-auto-resolve-conflicts/evals/fixtures/04-mixed-bail-out.sh: sha256:6807cdc21e1edc21705d839665e746aef83765fafaf372e636c607dcc13237e7
     .kiro/skills/1natsu-auto-resolve-conflicts/evals/fixtures/05-rebase-continue-with-validation-failure.sh: sha256:860e9a739bfeae9ad705c4fc4512ed6572701c267af45f4da2671871ed6138e1
     .kiro/skills/1natsu-auto-resolve-conflicts/evals/fixtures/06-lockfile-regenerate.sh: sha256:718e915a278a57345aa15e76b774fb17ae0d4e78ae5efbbc1b8e37db3738d825
-    .kiro/skills/1natsu-auto-resolve-conflicts/references/bailout-rules.md: sha256:aa5a6fe6b1e2abffaf0389474bddcf2953687056313711c6a11649d055fd9820
-    .kiro/skills/1natsu-auto-resolve-conflicts/references/commit-message-template.md: sha256:c2d6b24f2791bb89934bb4d6d9256fdd5c6f4d5e801d9c8b9fad8c7b218af5bd
+    .kiro/skills/1natsu-auto-resolve-conflicts/evals/fixtures/07-feature-preservation.sh: sha256:4db8268552d8352d76f2d65f125efc3e04d9b9627b9062ea8f7c92b03cf98c6c
+    .kiro/skills/1natsu-auto-resolve-conflicts/evals/fixtures/08-stale-pr-follow.sh: sha256:7c5a0ae72d62c0eb71674052a9c2f0920c7dc5007f75b5c6216ba29a1d243732
+    .kiro/skills/1natsu-auto-resolve-conflicts/evals/fixtures/09-silent-feature-drop-trap.sh: sha256:427de30a6c888a1743d736e6f419cd6cbe8bafbfa0f73d175e66727474982e4a
+    .kiro/skills/1natsu-auto-resolve-conflicts/evals/fixtures/10-rebase-1stage-success.sh: sha256:e34e54c1c91a7980515f5f8d0cfc7f9c5debc2332150578bb3a6ad31a84a580d
+    .kiro/skills/1natsu-auto-resolve-conflicts/evals/fixtures/11-semantic-port-integration.sh: sha256:e0188e2af582a7b93128d0764550b0e7cfc3053e6806a6ad1c17cc5c2fcb93cc
+    .kiro/skills/1natsu-auto-resolve-conflicts/references/bailout-rules.md: sha256:b3365d6350872df9aff1aa7604c20b16652e153bcad56132058441a851c0b07c
+    .kiro/skills/1natsu-auto-resolve-conflicts/references/commit-message-template.md: sha256:e9b1cf77334113b23cecf9618d9ead3f9b5b0162d4e5ec44cac25f715200b7cc
     .kiro/skills/1natsu-auto-resolve-conflicts/references/handoff-to-pair-resolve.md: sha256:c53d2f72483bcbb7a33ce0ed9762674612abfebe475478548bc80318817d06f7
     .kiro/skills/1natsu-auto-resolve-conflicts/references/lockfile-regeneration.md: sha256:96b628cf61fb9c903965e7ec54b3cba5d0f80032945bb29fef04fbd5a6a21be7
+    .kiro/skills/1natsu-auto-resolve-conflicts/references/stale-pr-follow.md: sha256:78638baab54b919a1e41c430d3cfe6bd45d7d5d355b2a62e6b36aef680b2a57d
+    .kiro/skills/1natsu-auto-resolve-conflicts/references/two-stage-commit.md: sha256:29831e3e9ca89dfaf08a5cf03840f89b984f718d6f044e7dd64a5c59252fdd8c
     .kiro/skills/1natsu-auto-resolve-conflicts/references/verification-detection.md: sha256:192f743c6792067c5216180206905b0274a084a9ad6f473c3de3de92652909d8
     .kiro/skills/1natsu-commit/SKILL.md: sha256:7d49208ed7b4d05edec1a21a919de7ca13dc7169ecc15418c35c8db2b4d179e5
     .kiro/skills/1natsu-conventional-commits/SKILL.md: sha256:a781332509090d07543901b3ba2f332738b16fdbb0da292fd81b13b1cb2d5c45
@@ -243,12 +285,12 @@ dependencies:
     .kiro/skills/1natsu-git-analysis/scripts/get_branch_diff.sh: sha256:1c8cf30fd5a17e95a605dbf9b0718cc4a43196cb19f444f446414a6697c9772f
     .kiro/skills/1natsu-git-analysis/scripts/get_commit_history.sh: sha256:1763b516027572ac9211ab0e7b31a625aa31f15f5f11d6a95ed9b45c77861f2d
     .kiro/skills/1natsu-pair-debug/SKILL.md: sha256:ed51c61dd21df652b1ab2dbe026681213a1c2d717736de5554d3f7f9d625fa24
-    .kiro/skills/1natsu-pair-resolve-conflicts/SKILL.md: sha256:44f3f549cfac3b2ea7aa1e0d659f2af68b3c79289e1897b32eaae7b3dd887b27
+    .kiro/skills/1natsu-pair-resolve-conflicts/SKILL.md: sha256:a03254c00cbd0280940604ecfd8e1019bd35779f6d5b313f1b5929c96b86a347
     .kiro/skills/1natsu-pr-review-handler/SKILL.md: sha256:f451258786e1e378b219afeec521a8483778d075f1e3caf22c148860c9d9eb0f
-  content_hash: sha256:cc5eec3c2f082baa560a0e08ed939f7fc0dce06f9255e71858e032de8ee8b33a
+  content_hash: sha256:c83e849698431111345b27d612018291838f459fc5ff17e83c32194b55bde787
 - repo_url: expo/skills
   host: github.com
-  resolved_commit: 39d50f0caeacec8a17588534bb32aa962c677a3d
+  resolved_commit: b553ae4e1755bec11eac21517fe63040c7e07f2c
   virtual_path: plugins/expo
   is_virtual: true
   package_type: marketplace_plugin
@@ -306,6 +348,9 @@ dependencies:
   - .agents/skills/expo-dev-client
   - .agents/skills/expo-dev-client/SKILL.md
   - .agents/skills/expo-dev-client/agents/openai.yaml
+  - .agents/skills/expo-examples
+  - .agents/skills/expo-examples/SKILL.md
+  - .agents/skills/expo-examples/references/catalog.md
   - .agents/skills/expo-module
   - .agents/skills/expo-module/SKILL.md
   - .agents/skills/expo-module/agents/openai.yaml
@@ -400,6 +445,9 @@ dependencies:
   - .claude/skills/expo-dev-client
   - .claude/skills/expo-dev-client/SKILL.md
   - .claude/skills/expo-dev-client/agents/openai.yaml
+  - .claude/skills/expo-examples
+  - .claude/skills/expo-examples/SKILL.md
+  - .claude/skills/expo-examples/references/catalog.md
   - .claude/skills/expo-module
   - .claude/skills/expo-module/SKILL.md
   - .claude/skills/expo-module/agents/openai.yaml
@@ -494,6 +542,9 @@ dependencies:
   - .kiro/skills/expo-dev-client
   - .kiro/skills/expo-dev-client/SKILL.md
   - .kiro/skills/expo-dev-client/agents/openai.yaml
+  - .kiro/skills/expo-examples
+  - .kiro/skills/expo-examples/SKILL.md
+  - .kiro/skills/expo-examples/references/catalog.md
   - .kiro/skills/expo-module
   - .kiro/skills/expo-module/SKILL.md
   - .kiro/skills/expo-module/agents/openai.yaml
@@ -581,6 +632,8 @@ dependencies:
     .agents/skills/expo-deployment/references/workflows.md: sha256:01b66f8fd1754cf2d51c90a4f65505aae32deeea0c6bed169cf8db151f8f415e
     .agents/skills/expo-dev-client/SKILL.md: sha256:aa79e42e9cd96ea92d4e691fb8222145055dec1b868b7defce224a41d8878a5f
     .agents/skills/expo-dev-client/agents/openai.yaml: sha256:5264dcf91147638731286e38421b65de4bd60858bba93707ab6b4f1f1ad854aa
+    .agents/skills/expo-examples/SKILL.md: sha256:3758d0db0053021711a159fbae5f332c57a7b4e0c77dae311c299d3fd048ce71
+    .agents/skills/expo-examples/references/catalog.md: sha256:d0209653f295f177b50c62b726a95b4058c7bfc8293adf13d53f2e031ac870c4
     .agents/skills/expo-module/SKILL.md: sha256:febde8bf8ec31cf0c3e56a14ee53d0fd42e904cea4fe9ddfa63abd1449453774
     .agents/skills/expo-module/agents/openai.yaml: sha256:cb7a56ee8e8a36e5ed35c49dba249e70056a17c195163ba2cb9cf369e4be6d84
     .agents/skills/expo-module/references/config-plugin.md: sha256:f1e0d7e421e41037368afbc3ddd31a466843398600579364239b63c574445246
@@ -660,6 +713,8 @@ dependencies:
     .claude/skills/expo-deployment/references/workflows.md: sha256:01b66f8fd1754cf2d51c90a4f65505aae32deeea0c6bed169cf8db151f8f415e
     .claude/skills/expo-dev-client/SKILL.md: sha256:aa79e42e9cd96ea92d4e691fb8222145055dec1b868b7defce224a41d8878a5f
     .claude/skills/expo-dev-client/agents/openai.yaml: sha256:5264dcf91147638731286e38421b65de4bd60858bba93707ab6b4f1f1ad854aa
+    .claude/skills/expo-examples/SKILL.md: sha256:3758d0db0053021711a159fbae5f332c57a7b4e0c77dae311c299d3fd048ce71
+    .claude/skills/expo-examples/references/catalog.md: sha256:d0209653f295f177b50c62b726a95b4058c7bfc8293adf13d53f2e031ac870c4
     .claude/skills/expo-module/SKILL.md: sha256:febde8bf8ec31cf0c3e56a14ee53d0fd42e904cea4fe9ddfa63abd1449453774
     .claude/skills/expo-module/agents/openai.yaml: sha256:cb7a56ee8e8a36e5ed35c49dba249e70056a17c195163ba2cb9cf369e4be6d84
     .claude/skills/expo-module/references/config-plugin.md: sha256:f1e0d7e421e41037368afbc3ddd31a466843398600579364239b63c574445246
@@ -739,6 +794,8 @@ dependencies:
     .kiro/skills/expo-deployment/references/workflows.md: sha256:01b66f8fd1754cf2d51c90a4f65505aae32deeea0c6bed169cf8db151f8f415e
     .kiro/skills/expo-dev-client/SKILL.md: sha256:aa79e42e9cd96ea92d4e691fb8222145055dec1b868b7defce224a41d8878a5f
     .kiro/skills/expo-dev-client/agents/openai.yaml: sha256:5264dcf91147638731286e38421b65de4bd60858bba93707ab6b4f1f1ad854aa
+    .kiro/skills/expo-examples/SKILL.md: sha256:3758d0db0053021711a159fbae5f332c57a7b4e0c77dae311c299d3fd048ce71
+    .kiro/skills/expo-examples/references/catalog.md: sha256:d0209653f295f177b50c62b726a95b4058c7bfc8293adf13d53f2e031ac870c4
     .kiro/skills/expo-module/SKILL.md: sha256:febde8bf8ec31cf0c3e56a14ee53d0fd42e904cea4fe9ddfa63abd1449453774
     .kiro/skills/expo-module/agents/openai.yaml: sha256:cb7a56ee8e8a36e5ed35c49dba249e70056a17c195163ba2cb9cf369e4be6d84
     .kiro/skills/expo-module/references/config-plugin.md: sha256:f1e0d7e421e41037368afbc3ddd31a466843398600579364239b63c574445246
@@ -773,10 +830,10 @@ dependencies:
     .kiro/skills/upgrading-expo/references/react-navigation-to-expo-router.md: sha256:083fb891adb87a1ab02aff92b1f322014ecb2427014e20194ff9e05f5d321ca9
     .kiro/skills/use-dom/SKILL.md: sha256:7041bb26db02e24c45eb6c4c4879138a0f52786dd928eefd66c90a35b0e3197d
     .kiro/skills/use-dom/agents/openai.yaml: sha256:bd4ef942149c5483bf319bb7660e138e1cb2d52f48d160f3dd9fff7197141772
-  content_hash: sha256:f9e48bfc104caed7c19283ac8d737da1731f32c43804215c99d83b7988195463
+  content_hash: sha256:8f27cab08bb5d4c8a3c31f16c19a45ebd569f09c9c14c26c0713f68e6a0061eb
 - repo_url: github/gh-stack
   host: github.com
-  resolved_commit: d2a390f2ffd69cc54401a0f4a9e9b42d84e31684
+  resolved_commit: 67d118fbf47d462d660597e2df34d6ccc542c9f3
   package_type: skill_bundle
   deployed_files:
   - .agents/skills/gh-stack
@@ -786,31 +843,73 @@ dependencies:
   - .kiro/skills/gh-stack
   - .kiro/skills/gh-stack/SKILL.md
   deployed_file_hashes:
-    .agents/skills/gh-stack/SKILL.md: sha256:e41c5d78fbb0db5977b4dce56976378704f25fb1a8368ee56e221f283529c20a
-    .claude/skills/gh-stack/SKILL.md: sha256:e41c5d78fbb0db5977b4dce56976378704f25fb1a8368ee56e221f283529c20a
-    .kiro/skills/gh-stack/SKILL.md: sha256:e41c5d78fbb0db5977b4dce56976378704f25fb1a8368ee56e221f283529c20a
-  content_hash: sha256:c3c94309ce1d1026542778548318065aae7a3cd98d8afa7cc882085e2fe158fa
+    .agents/skills/gh-stack/SKILL.md: sha256:b933788e51ad65144ce8218996063dc0a872a99fb75d59b70212e79007469ffa
+    .claude/skills/gh-stack/SKILL.md: sha256:b933788e51ad65144ce8218996063dc0a872a99fb75d59b70212e79007469ffa
+    .kiro/skills/gh-stack/SKILL.md: sha256:b933788e51ad65144ce8218996063dc0a872a99fb75d59b70212e79007469ffa
+  content_hash: sha256:8b5c24618647d7718bfb68cdb555aeafe5ddda3425e062dcfa97ba4ce4cf2604
 - repo_url: mattpocock/skills
   host: github.com
-  resolved_commit: 694fa30311e02c2639942308513555e61ee84a6f
+  resolved_commit: 6eeb81b5fcfeeb5bd531dd47ab2f9f2bbea27461
   package_type: marketplace_plugin
   deployed_files:
+  - .agents/skills/domain-modeling
+  - .agents/skills/domain-modeling/ADR-FORMAT.md
+  - .agents/skills/domain-modeling/CONTEXT-FORMAT.md
+  - .agents/skills/domain-modeling/SKILL.md
   - .agents/skills/grill-me
   - .agents/skills/grill-me/SKILL.md
+  - .agents/skills/grill-with-docs
+  - .agents/skills/grill-with-docs/SKILL.md
+  - .agents/skills/grilling
+  - .agents/skills/grilling/SKILL.md
+  - .claude/skills/domain-modeling
+  - .claude/skills/domain-modeling/ADR-FORMAT.md
+  - .claude/skills/domain-modeling/CONTEXT-FORMAT.md
+  - .claude/skills/domain-modeling/SKILL.md
   - .claude/skills/grill-me
   - .claude/skills/grill-me/SKILL.md
+  - .claude/skills/grill-with-docs
+  - .claude/skills/grill-with-docs/SKILL.md
+  - .claude/skills/grilling
+  - .claude/skills/grilling/SKILL.md
+  - .kiro/skills/domain-modeling
+  - .kiro/skills/domain-modeling/ADR-FORMAT.md
+  - .kiro/skills/domain-modeling/CONTEXT-FORMAT.md
+  - .kiro/skills/domain-modeling/SKILL.md
   - .kiro/skills/grill-me
   - .kiro/skills/grill-me/SKILL.md
+  - .kiro/skills/grill-with-docs
+  - .kiro/skills/grill-with-docs/SKILL.md
+  - .kiro/skills/grilling
+  - .kiro/skills/grilling/SKILL.md
   deployed_file_hashes:
-    .agents/skills/grill-me/SKILL.md: sha256:74147eb6010a65957efef2b9e0f0b3ff935c1def7fc117697151b1d0f3610556
-    .claude/skills/grill-me/SKILL.md: sha256:74147eb6010a65957efef2b9e0f0b3ff935c1def7fc117697151b1d0f3610556
-    .kiro/skills/grill-me/SKILL.md: sha256:74147eb6010a65957efef2b9e0f0b3ff935c1def7fc117697151b1d0f3610556
-  content_hash: sha256:72643a209aac7d4527ac6c18f286203518cc459327d052ef28cc6d8f9b5b0dc7
+    .agents/skills/domain-modeling/ADR-FORMAT.md: sha256:f1f36cd3f8d3b6474ddd5855da4e233bfc4ae1a1c5024909ccf11871819a41b2
+    .agents/skills/domain-modeling/CONTEXT-FORMAT.md: sha256:b8cc318f2a4285b530e908b6bc43901c3c5cd11100362636bbc4216639bef597
+    .agents/skills/domain-modeling/SKILL.md: sha256:152e2c97239affb12a60c5f4a7e74ab546a49ae169688c81f4e2ccc42dafa579
+    .agents/skills/grill-me/SKILL.md: sha256:6189dfceb7304a6e5558f75d87e68fa3bc7fcf7ba120e44f21f8a61fe01eba54
+    .agents/skills/grill-with-docs/SKILL.md: sha256:610d091047bcfb9db0f75c057d15538481a721111579fc5ec7f83ad9131a2165
+    .agents/skills/grilling/SKILL.md: sha256:fe00af3e1815f97c0a7644605479328a726b5cd95ba6ef56a4be2a92fae6c20f
+    .claude/skills/domain-modeling/ADR-FORMAT.md: sha256:f1f36cd3f8d3b6474ddd5855da4e233bfc4ae1a1c5024909ccf11871819a41b2
+    .claude/skills/domain-modeling/CONTEXT-FORMAT.md: sha256:b8cc318f2a4285b530e908b6bc43901c3c5cd11100362636bbc4216639bef597
+    .claude/skills/domain-modeling/SKILL.md: sha256:152e2c97239affb12a60c5f4a7e74ab546a49ae169688c81f4e2ccc42dafa579
+    .claude/skills/grill-me/SKILL.md: sha256:6189dfceb7304a6e5558f75d87e68fa3bc7fcf7ba120e44f21f8a61fe01eba54
+    .claude/skills/grill-with-docs/SKILL.md: sha256:610d091047bcfb9db0f75c057d15538481a721111579fc5ec7f83ad9131a2165
+    .claude/skills/grilling/SKILL.md: sha256:fe00af3e1815f97c0a7644605479328a726b5cd95ba6ef56a4be2a92fae6c20f
+    .kiro/skills/domain-modeling/ADR-FORMAT.md: sha256:f1f36cd3f8d3b6474ddd5855da4e233bfc4ae1a1c5024909ccf11871819a41b2
+    .kiro/skills/domain-modeling/CONTEXT-FORMAT.md: sha256:b8cc318f2a4285b530e908b6bc43901c3c5cd11100362636bbc4216639bef597
+    .kiro/skills/domain-modeling/SKILL.md: sha256:152e2c97239affb12a60c5f4a7e74ab546a49ae169688c81f4e2ccc42dafa579
+    .kiro/skills/grill-me/SKILL.md: sha256:6189dfceb7304a6e5558f75d87e68fa3bc7fcf7ba120e44f21f8a61fe01eba54
+    .kiro/skills/grill-with-docs/SKILL.md: sha256:610d091047bcfb9db0f75c057d15538481a721111579fc5ec7f83ad9131a2165
+    .kiro/skills/grilling/SKILL.md: sha256:fe00af3e1815f97c0a7644605479328a726b5cd95ba6ef56a4be2a92fae6c20f
+  content_hash: sha256:0f141b68d72e78d13a9000f99542aaecd53ed7eea15f4611dbc2961ab79efcee
   skill_subset:
+  - skills/engineering/domain-modeling
+  - skills/engineering/grill-with-docs
   - skills/productivity/grill-me
+  - skills/productivity/grilling
 - repo_url: microsoft/apm
   host: github.com
-  resolved_commit: 43a00c21e413342d5dd56c358a63aa64e12af131
+  resolved_commit: 975f8f00055806bbee4486c2ab6f1ebb2cfce746
   virtual_path: packages/apm-guide
   is_virtual: true
   package_type: apm_package
@@ -851,35 +950,36 @@ dependencies:
   deployed_file_hashes:
     .agents/skills/apm-usage/SKILL.md: sha256:e020dd84d578054403884e7d71aaf6b87fdac7835da9661923d9de8853cbf140
     .agents/skills/apm-usage/authentication.md: sha256:da001e4b25e6ca8d10b3773dc0d998cbc4afaffda3e09ea18255c44b1c28b0b7
-    .agents/skills/apm-usage/commands.md: sha256:629909e1162d90f3a27d6b2a2c4f8f6459d0b40eb90416e485b8889d29f7f78c
-    .agents/skills/apm-usage/dependencies.md: sha256:f1cd3e23b8b6eabf30c8cc536ce90baafff22ed243554c779f4085836044d4a2
-    .agents/skills/apm-usage/governance.md: sha256:8f5f6e43668bb9199206fb18c41cb94e11dd193e756ae5945f37037adca9ac18
+    .agents/skills/apm-usage/commands.md: sha256:e6a48639c7f0838ba83009263d6e063ed0efb3dc2e8eb53bad55000e88a66c23
+    .agents/skills/apm-usage/dependencies.md: sha256:a6cae7d02d5f0bd4eddedf5282e543009237c1a728e98093f603a5c2f930c315
+    .agents/skills/apm-usage/governance.md: sha256:b6f81f3163616e73509a2fc29cf9bf0932c9f84c010dcb3d7c057547eebc2c29
     .agents/skills/apm-usage/installation.md: sha256:68bc959ac2d11f5ebf3edafcc7ac993395697dc5c99469ca7c10a09325a0c25e
-    .agents/skills/apm-usage/package-authoring.md: sha256:6c80963f60d54a095d0ec64001a9938cd82ef681cc8f830ec546bd862eb736cc
+    .agents/skills/apm-usage/package-authoring.md: sha256:59bca6335b2507a885475c8cd0f7a4a5c56e7a98e0cf2ae2f3f4d45d13f3acd7
     .agents/skills/apm-usage/troubleshooting.md: sha256:c0c2a9a6699b8512580e35a6b19c3cc105aa20e8ac65dbf8b8161dfd8ae7054b
-    .agents/skills/apm-usage/workflow.md: sha256:f021b4ffb6d99fc8e871b020b7b36fc1de146b69dbce0242577d80c96c50fe33
+    .agents/skills/apm-usage/workflow.md: sha256:805207ce68f51ee84d967f95ae9a3c316dfb7da011ebc8f5cc18a1817333a64f
     .claude/agents/apm-expert.md: sha256:e710ff88b7e4a96b55cb6a636bdc256b0b255492a87b3a5b008112d01ca441e5
     .claude/skills/apm-usage/SKILL.md: sha256:e020dd84d578054403884e7d71aaf6b87fdac7835da9661923d9de8853cbf140
     .claude/skills/apm-usage/authentication.md: sha256:da001e4b25e6ca8d10b3773dc0d998cbc4afaffda3e09ea18255c44b1c28b0b7
-    .claude/skills/apm-usage/commands.md: sha256:629909e1162d90f3a27d6b2a2c4f8f6459d0b40eb90416e485b8889d29f7f78c
-    .claude/skills/apm-usage/dependencies.md: sha256:f1cd3e23b8b6eabf30c8cc536ce90baafff22ed243554c779f4085836044d4a2
-    .claude/skills/apm-usage/governance.md: sha256:8f5f6e43668bb9199206fb18c41cb94e11dd193e756ae5945f37037adca9ac18
+    .claude/skills/apm-usage/commands.md: sha256:e6a48639c7f0838ba83009263d6e063ed0efb3dc2e8eb53bad55000e88a66c23
+    .claude/skills/apm-usage/dependencies.md: sha256:a6cae7d02d5f0bd4eddedf5282e543009237c1a728e98093f603a5c2f930c315
+    .claude/skills/apm-usage/governance.md: sha256:b6f81f3163616e73509a2fc29cf9bf0932c9f84c010dcb3d7c057547eebc2c29
     .claude/skills/apm-usage/installation.md: sha256:68bc959ac2d11f5ebf3edafcc7ac993395697dc5c99469ca7c10a09325a0c25e
-    .claude/skills/apm-usage/package-authoring.md: sha256:6c80963f60d54a095d0ec64001a9938cd82ef681cc8f830ec546bd862eb736cc
+    .claude/skills/apm-usage/package-authoring.md: sha256:59bca6335b2507a885475c8cd0f7a4a5c56e7a98e0cf2ae2f3f4d45d13f3acd7
     .claude/skills/apm-usage/troubleshooting.md: sha256:c0c2a9a6699b8512580e35a6b19c3cc105aa20e8ac65dbf8b8161dfd8ae7054b
-    .claude/skills/apm-usage/workflow.md: sha256:f021b4ffb6d99fc8e871b020b7b36fc1de146b69dbce0242577d80c96c50fe33
+    .claude/skills/apm-usage/workflow.md: sha256:805207ce68f51ee84d967f95ae9a3c316dfb7da011ebc8f5cc18a1817333a64f
     .codex/agents/apm-expert.toml: sha256:0b4bec64f7c6ab70df3841237928eaccfb927789d45300870ce56163230498c4
     .copilot/agents/apm-expert.agent.md: sha256:e710ff88b7e4a96b55cb6a636bdc256b0b255492a87b3a5b008112d01ca441e5
     .kiro/skills/apm-usage/SKILL.md: sha256:e020dd84d578054403884e7d71aaf6b87fdac7835da9661923d9de8853cbf140
     .kiro/skills/apm-usage/authentication.md: sha256:da001e4b25e6ca8d10b3773dc0d998cbc4afaffda3e09ea18255c44b1c28b0b7
-    .kiro/skills/apm-usage/commands.md: sha256:629909e1162d90f3a27d6b2a2c4f8f6459d0b40eb90416e485b8889d29f7f78c
-    .kiro/skills/apm-usage/dependencies.md: sha256:f1cd3e23b8b6eabf30c8cc536ce90baafff22ed243554c779f4085836044d4a2
-    .kiro/skills/apm-usage/governance.md: sha256:8f5f6e43668bb9199206fb18c41cb94e11dd193e756ae5945f37037adca9ac18
+    .kiro/skills/apm-usage/commands.md: sha256:e6a48639c7f0838ba83009263d6e063ed0efb3dc2e8eb53bad55000e88a66c23
+    .kiro/skills/apm-usage/dependencies.md: sha256:a6cae7d02d5f0bd4eddedf5282e543009237c1a728e98093f603a5c2f930c315
+    .kiro/skills/apm-usage/governance.md: sha256:b6f81f3163616e73509a2fc29cf9bf0932c9f84c010dcb3d7c057547eebc2c29
     .kiro/skills/apm-usage/installation.md: sha256:68bc959ac2d11f5ebf3edafcc7ac993395697dc5c99469ca7c10a09325a0c25e
-    .kiro/skills/apm-usage/package-authoring.md: sha256:6c80963f60d54a095d0ec64001a9938cd82ef681cc8f830ec546bd862eb736cc
+    .kiro/skills/apm-usage/package-authoring.md: sha256:59bca6335b2507a885475c8cd0f7a4a5c56e7a98e0cf2ae2f3f4d45d13f3acd7
     .kiro/skills/apm-usage/troubleshooting.md: sha256:c0c2a9a6699b8512580e35a6b19c3cc105aa20e8ac65dbf8b8161dfd8ae7054b
-    .kiro/skills/apm-usage/workflow.md: sha256:f021b4ffb6d99fc8e871b020b7b36fc1de146b69dbce0242577d80c96c50fe33
-  content_hash: sha256:591ad3e822caaee7f8baa54d2c42b6948b237daca27c44ea31e3ebd05f0ee0b5
+    .kiro/skills/apm-usage/workflow.md: sha256:805207ce68f51ee84d967f95ae9a3c316dfb7da011ebc8f5cc18a1817333a64f
+  content_hash: sha256:4dfe7362a629323f30d46aa2f909e6f58eb6baf2dd97f19ede7b7619da1d078c
+  declared_license: MIT
 - repo_url: vercel-labs/agent-skills
   host: github.com
   resolved_commit: f8a72b9603728bb92a217a879b7e62e43ad76c81
@@ -2734,7 +2834,7 @@ dependencies:
   content_hash: sha256:18653366c6acc38365e61c70f29199d323b0a9ebbbc8f11f074aa600c7b0efad
 - repo_url: vercel-labs/skills
   host: github.com
-  resolved_commit: be0dd25b4a8665894a56f45ef582cc02ca802c39
+  resolved_commit: e5c075e3a84b37c5eb398ab74e581558d3fceb0e
   package_type: skill_bundle
   deployed_files:
   - .agents/skills/find-skills
@@ -2747,7 +2847,7 @@ dependencies:
     .agents/skills/find-skills/SKILL.md: sha256:1e85f6f9686e145aca4a124e3b704b9bbea9aa87e08515c1e352eee70f6e6e7a
     .claude/skills/find-skills/SKILL.md: sha256:1e85f6f9686e145aca4a124e3b704b9bbea9aa87e08515c1e352eee70f6e6e7a
     .kiro/skills/find-skills/SKILL.md: sha256:1e85f6f9686e145aca4a124e3b704b9bbea9aa87e08515c1e352eee70f6e6e7a
-  content_hash: sha256:42df04a146f00940b10810c7bf9fcf2bf0e8737f71b7cd1a8173c0dcd81a9b40
+  content_hash: sha256:8ca44e1b8252b4785eeeef15bc0b64c0a45624abd570dbb1a2b31d3af91c7863
 mcp_servers:
 - expo
 mcp_configs:

@@ -1,10 +1,10 @@
 ---
 name: 1natsu-auto-resolve-conflicts
-description: Gitのコンフリクト解消をAI単独で完全自動化する自走スキル。merge / rebase / cherry-pick / stash pop で衝突した時、コミット履歴と変更意図を読み取って解消し、検証コマンドを自動検出して実行し、コミット/--continue まで一気に完了させる。ユーザーが「自動でコンフリクト解消」「コンフリクト解消お任せ」「auto resolve conflicts」「コミット/--continue まで自動」等、AI 主導の自動化・自走を示唆する発話で使用する。AIがコンフリクト検知時にユーザーが自動化を示唆した場合も本スキルへ移行する。デグレ防止が最優先のため、安全に解消できないと判断したら途中で `1natsu-pair-resolve-conflicts` へ引き継ぐ。**人間と一緒に1ファイルずつ承認しながら解消したい場合は本スキルではなく `1natsu-pair-resolve-conflicts` を使うこと。**
+description: Gitのコンフリクト解消をAI単独で完全自動化する自走スキル。merge / rebase / cherry-pick / stash pop で衝突した時、履歴と変更意図を読み、両側の機能を壊さず統合し、検証を自動実行して --continue まで完了する。すでに衝突している場合に加え、stale な PR（mergeable:false）で未コンフリクトの状態からでも base 追従で衝突を発生させて解消する。merge は解消履歴を追えるよう2段コミットで残す。「自動でコンフリクト解消」「コンフリクト解消お任せ」「auto resolve conflicts」「stale な PR を base 追従して解消」「mergeable false を直して」等、AI主導の自動化・自走を示唆した時に使う。デグレ防止が最優先で、安全に解消できなければ `1natsu-pair-resolve-conflicts` へ引き継ぐ。**1ファイルずつ承認しながら解消したい場合は本スキルでなく `1natsu-pair-resolve-conflicts` を使う。**
 license: MIT
 metadata:
   author: 1natsu
-  version: "1.1.3"
+  version: "1.2.0"
 ---
 
 # Auto Resolve Conflicts（自動コンフリクト解消）
@@ -12,6 +12,17 @@ metadata:
 コミット履歴・diff・検証結果という観測事実だけを根拠に、コンフリクトを **解消 → 検証 → ステージング → コミット/--continue** までAI単独で完了させる自走モード。
 
 姉妹スキル `1natsu-pair-resolve-conflicts`（人間と1ハンクずつ承認を取りながら解消する協調モード）と対をなす。本スキルは「AIが責任を持って一気にやり切る」が役割で、安全に判断できない場面では潔く pair モードへ引き渡す。
+
+## このスキルが言う「解消」の定義
+
+コンフリクトマーカー（`<<<<<<<` / `=======` / `>>>>>>>`）を消すことはゴールではない。**マーカーの除去 + 両側の機能を壊さない整合したコードの統合** が揃って初めて「解消」と呼ぶ。ours と theirs が**それぞれ別の機能を実装している**のに、片側を丸ごと捨ててマーカーだけ消すのは「解消」ではなく**デグレ**である。コミット履歴から「両側が何を実現したかったか」を読み取り、その意図が解消後コードに**両方とも生き残っている**ことを担保する（Point: [相互機能保持]）。
+
+## 起点の2パターン
+
+本スキルは2つの起点から開始できる：
+
+1. **すでにコンフリクト状態** — `git status` に unmerged paths がある（merge/rebase/cherry-pick/stash pop 進行中）。→ Phase 0 から始める。
+2. **未コンフリクト状態だが追従が必要** — stale な PR（`mergeable:false`）等で、ローカルはまだ衝突していないが base ブランチに追従するとコンフリクトが起きる。→ **Phase A** で base 追従してコンフリクトを発生させてから Phase 0 に合流する。
 
 ## 役割分担
 
@@ -30,6 +41,8 @@ metadata:
 
 - 「自動でコンフリクト解消して」「コンフリクト解消お任せ」「auto resolve」
 - 「黙って解消して」「コミットまで自動でやって」「--continue まで一気に」「自走で解消」
+- 「stale な PR を base 追従して解消して」「mergeable false を直して」「base に追従してコンフリクト直して」（→ 未コンフリクト状態なら Phase A から）
+- 「この PR を base にマージできる状態にして」「最新の base に追従して」（目標だけの依頼。未コンフリクトでも base より遅れていれば Phase A から）
 
 ### AIからの提案
 
@@ -44,8 +57,33 @@ metadata:
 モードに入ったら、必ず以下を1メッセージで宣言する：
 
 - 自動モードで進めること
+- 起点（すでにコンフリクト状態か / Phase A で base 追従して発生させるか）
 - 解消・検証・コミット/--continue まで自走すること
 - デグレ懸念がある場面では `1natsu-pair-resolve-conflicts` に切り替えること
+
+## Phase A: 追従の起点作り（未コンフリクト状態からの起動時のみ）
+
+`git status` に unmerged paths が**なく**、かつユーザーの意図が **「現在のブランチ/PR を base に統合できる状態にする」** である場合に実行する。すでにコンフリクト状態なら本フェーズは飛ばして Phase 0 へ進む。
+
+**意図の汲み取り（重要）**: ユーザーは必ずしも「base を merge してコンフリクトを発生させて」と機構を指示してこない。次のような **目標・症状** も Phase A のトリガーになる:
+
+- 症状の提示 — 「PR が stale」「GitHub で mergeable=false」「base とコンフリクトしてマージできない」
+- 目標の提示 — 「この PR を base にマージできる状態にして」「最新の base に追従して」「base に取り込めるようにして」
+
+「コンフリクトを直して」と言われてローカルに衝突が無い時は、**即「解消対象なし」と結論づけず**、まず「base に対して遅れていて、取り込むと衝突する状態ではないか」を疑う。これが本スキルの期待挙動。ただし、base 統合の意図がまったく読み取れない（単に clean なブランチで作業中など）場合は、勝手に base を merge せず状況を報告するか1回確認する（不用意な merge はしない）。
+
+目的は **base ブランチへの追従でコンフリクトを意図的に発生させ、その後 Phase 0 以降の通常フローに合流する** こと。追従戦略は **base を現在ブランチにマージ**（`git merge origin/<base>`）を既定とする。force-push 不要で PR のレビュー履歴・コメントが剥がれず、Phase 4 の2段コミットとも相性が良い。
+
+### 手順
+
+1. **前提確認** — `git status` で「merge/rebase 等が進行中でない」「ワーキングツリーが clean（未コミット変更がない）」を確認する。汚染があれば Phase 0 の早期 bail-out と同じ理由（責任分離困難）で着手前に bail-out する。
+2. **base ブランチ決定** — `gh pr view --json baseRefName,mergeable,mergeStateStatus`（gh があり PR が紐づく場合）→ 上流追跡 `@{upstream}` / リポジトリ default（`git symbolic-ref refs/remotes/origin/HEAD`）→ いずれも不明ならユーザーに1回だけ確認、の順で決める。
+3. **乖離の観測（追従が必要かの裏取り）** — base を取得（`git fetch origin <base>`。remote が無ければ省略）した上で、`git log --oneline <base>..HEAD` と `git log --oneline HEAD..<base>` で乖離を見る。**HEAD が base に対して遅れている（base 側に未取り込みのコミットがある）**なら追従が必要と確定する。既に base を含んでいて遅れていないなら「追従不要・統合済み」と報告して終了する（観測事実で判断し、思い込みで merge しない）。
+4. **追従の適用** — `git merge origin/<base>`（remote が無ければローカル base を直接 `git merge <base>`）。
+   - **コンフリクトなしで完了** — base が綺麗に取り込めた。追従が完了した旨（作成された merge コミット）を報告して終了する。解消対象のコンフリクトは無い。
+   - **コンフリクト発生** — 期待どおり。これで起点ができたので **Phase 0 に合流** し、以降は通常の merge コンフリクトとして解消・検証・2段コミットまで進める。
+
+詳細な base 検出ロジック（gh の有無、PR 非紐づけ時のフォールバック、remote が無い場合、rebase 慣習が明確な場合の例外）は `references/stale-pr-follow.md` を参照する。
 
 ## Phase 0: 状況把握と早期 bail-out チェック
 
@@ -122,16 +160,23 @@ Auto-No が 1 件でもある場合は **全体 bail-out** が原則。ただし
 
 **処理順序の推奨**: 同じ Phase 2 ループ内では、**Auto-OK の manifest を先に解消 → Auto-Regenerate を実行 → 残りの Auto-OK を解消** の順で進めると、lockfile の再生成が最新の manifest を反映でき、整合性が高まる。
 
+### ループ全体の鉄則: `git add` しない（2段コミットと bail-out の生命線）
+
+Phase 2 全体を通して **`git add` は一切しない**。これにより index には unmerged stages（git が記録した両側＋ベースの3版）がそのまま残る。merge の2段コミットでは、解消後に **`git checkout --merge -- <file>` で index から「マーカー入りの衝突原文」を git に再生成させて**スナップショットコミットを作る（手順は `references/two-stage-commit.md`）。マーカー原文を自前のファイルに退避しておく必要はなく、git の index が真実の源になる。bail-out 時に再衝突状態へ戻せる退路も同じ仕組みで保たれる。
+
+> 衝突原文を一時ファイルに退避する設計は採らない（固定パスは並列実行で衝突し、状態が壊れやすい）。原文は常に `git checkout --merge` で index から復元する。
+
 ### Auto-OK ファイルごとの処理ステップ
 
 各ファイルに対して以下のサイクルを回す：
 
 1. **履歴調査** — `git log -p HEAD -- <file>` と `git log -p MERGE_HEAD -- <file>`（操作種別に応じてリビジョン名を変える）で両側の変更履歴を読み、コミットメッセージと周辺コードから変更意図を抽出する
 2. **意図推定** — 各ハンクについて「ours は何をしたかったか」「theirs は何をしたかったか」を1行ずつ言語化する。意図が読み取れないハンクは **Auto-No に再分類** して bail-out
-3. **解消方針決定** — 「ours採用 / theirs採用 / 統合 / 一方を基準に他方の意図を移植」のいずれかを選ぶ。判断根拠は意図推定の結果のみ
+3. **解消方針決定（片側採用妥当性チェックを通す）** — 「ours採用 / theirs採用 / 統合 / 一方を基準に他方の意図を移植」のいずれかを選ぶ。ただし **`ours採用` / `theirs採用`（＝片側を丸ごと捨てる）を選んでよいのは、捨てる側に固有の機能・意味的変更が無いと観測事実で言える場合に限る**。具体的には捨てる側が「純粋なリネーム / フォーマット / 空白・コメントのみ / 採用する側の完全な部分集合（採用側が上位互換）」のいずれか。**両側がそれぞれ別の機能・分岐・ロジックを足している場合、片側採用は機能欠落＝デグレなので選んではならない。統合か移植を選ぶ。** 安全に統合できないなら **Auto-No に再分類して bail-out**（推測で混ぜない）
 4. **解消適用** — コンフリクトマーカーを除去して解消後のコードを書き込む。**この時点では `git add` しない**
-5. **局所検証** — 解消したファイルの構文を軽く確認する（言語に応じて `tsc --noEmit <file>`、`python -m py_compile <file>`、`go vet <pkg>`、`cargo check -p <pkg>` 等）。失敗したら **即 bail-out**
-6. **進捗ログ** — `<file>: ours採用 / 統合 / theirs採用 — <一行根拠>` の形式で1行サマリを出力
+5. **機能保持チェック（相互機能保持ゲート）** — 解消後コードに対し、両側 diff から抽出した「追加された関数・メソッド・エクスポート・条件分岐・設定キー・テストケース」を1件ずつ照合し、**両側の固有機能が解消後コードに残っている**（または採用側に上位互換として吸収されている）ことを確認する。片側の固有機能が理由なく消えていたら、それはデグレ。当該ファイルを **Auto-No に再分類して bail-out** する。判断は「たぶん残っている」ではなく、シンボル名・分岐条件を実際に grep して確認する
+6. **局所検証** — 解消したファイルの構文を軽く確認する（言語に応じて `tsc --noEmit <file>`、`python -m py_compile <file>`、`go vet <pkg>`、`cargo check -p <pkg>` 等）。失敗したら **即 bail-out**
+7. **進捗ログ** — `<file>: ours採用 / 統合 / theirs採用 — <一行根拠（片側採用なら「捨てた側に固有機能なし」の根拠を含める）>` の形式で1行サマリを出力
 
 ### Auto-Regenerate ファイルの処理ステップ
 
@@ -148,9 +193,10 @@ lockfile 等は手動マージしない。詳細手順と対応表は `reference
 
 - 局所検証が失敗
 - 履歴を読んでも意図が判明しない
+- **機能保持チェックで、片側の固有機能が解消後コードから失われていた**（相互機能保持の破れ＝デグレ）
 - 当初 Auto-OK と判定したが、適用過程で Auto-No 相当の問題（呼び出し側の不整合等）が発覚
 
-これらが起きたら **そのファイルを未解消のまま** 残し、混合 bail-out に切り替える。それまでに適用した他ファイルはそのまま残す。
+これらが起きたら **そのファイルを未解消のまま** 残し（解消を書き込み済みなら `git checkout --merge -- <file>` で再衝突状態に戻す）、混合 bail-out に切り替える。それまでに適用した他ファイルはそのまま残す。
 
 ## Phase 3: 検証コマンドの自動検出と実行
 
@@ -181,24 +227,34 @@ lockfile 等は手動マージしない。詳細手順と対応表は `reference
 
 それ以外の場面ではユーザー確認を取らない。
 
-## Phase 4: ステージング・コミット / --continue
+## Phase 4: コミット / --continue（履歴優先の2段構成）
 
-### ステージング
+ここまでで全ファイルが解消済み・検証通過済み・**ステージング前**（index は unmerged stages のまま）になっている。完了処理は操作種別で分岐する。
 
-解消済みファイルのみを `git add` する：
+**なぜ2段か** — AI が「マーカーを消したコミット」を1つ積むだけだと、git ログには解消後の姿しか残らず、**どのマーカーをどう解消したのか（解消の diff）が履歴から追えない**。問題が起きた時にレビュワーが「どの解消でミスが入ったか」を辿れない。そこで merge/stash では **①コンフリクト発生状態（マーカー入り）をコミット → ②マーカー解消をコミット** の2段にし、①→②の diff として解消内容を履歴に残す。
 
-```bash
-git add <resolved-file-1> <resolved-file-2> ...
-```
+### merge — 2段コミット
 
-未解消のファイル（混合 bail-out 時）はステージングしない。
+`references/two-stage-commit.md` の手順に従う。要点（状態は git index に持ち、自前の固定パス退避はしない）：
 
-### 操作種別ごとの完了処理
+1. **解消内容を一意ディレクトリへ退避** — 検証済みのワーキングツリー（解消後）を `mktemp -d` で作った**一意の**ディレクトリにコピー（並列実行で衝突しないよう固定パスは使わない）。
+2. **①スナップショットコミット** — `git checkout --merge -- <conflicted-files>` で index の unmerged stages から **マーカー入りの衝突原文を git に再生成**させ、`git add <conflicted-files>` → `git commit --no-verify`。これが **2親を持つマージコミット**で、中身はマーカー入り。フットプリントは `conflict-snapshot by 1natsu-auto-resolve-conflicts`（hook がマーカーを弾くため `--no-verify`）。
+3. **②解消コミット** — 退避した解消内容を書き戻し、`git add <files>` → `git commit`。これは①を親に持つ通常コミットで、マーカーは除去済み。メッセージは解消サマリ＋フットプリント `auto-resolved by 1natsu-auto-resolve-conflicts`（`references/commit-message-template.md` 参照）。
 
-- **merge** — `git commit`。コミットメッセージは Git の自動生成テンプレートに、解消の要約と本スキルのフットプリントを追加（`references/commit-message-template.md` 参照）
-- **rebase** — `git rebase --continue`。Git が次のコンフリクトで止まった場合、Phase 0 から再帰的に処理する
-- **cherry-pick** — `git cherry-pick --continue`
-- **stash pop** — ステージングのみ実施。stash の性質上 commit はしない
+結果、`git log` は「マージコミット（マーカー入り）→ 解消コミット」となり、`git diff <マージコミット>..<解消コミット>` が解消内容そのものになる。混合 bail-out（一部のみ解消）の場合は2段にせず、解消済みファイルを残したまま commit せず handoff する（従来どおり）。
+
+### stash pop
+
+stash pop は性質上コミットを作らない。解消済みファイルを `git add` するに留め、2段コミットは適用しない（コミットが無いので①②が成立しない）。スナップショット退避も結果として使わない。
+
+### rebase / cherry-pick — 1段（解消サマリで監査）
+
+2段にすると replay 中のコミットにマーカーが焼き込まれ、元コミットの意味破壊・bisect 破壊・履歴増殖・force-push 増幅を招くため、**従来どおり1コミットに解消を畳む**。
+
+1. **ステージング** — `git add <resolved-file-1> <resolved-file-2> ...`（未解消ファイルは add しない）
+2. **継続** — `git rebase --continue` / `git cherry-pick --continue`。元コミットメッセージは `--continue` が保持する。**`--continue` の前に `git commit --amend` を実行してはならない**（その時点の HEAD は replay 対象ではなく一つ前の既存コミットで、上書きすると履歴を破壊する）。フットプリント `auto-resolved by 1natsu-auto-resolve-conflicts` は既定では**完了報告に記す**（コミットへ無理に注入しない）。コミットにも残したい場合は cherry-pick なら `--continue` 後に `git commit --amend`、rebase は replay コミットが HEAD である時に限り amend する。詳細・禁止事項は `references/commit-message-template.md` 参照。
+3. rebase で Git が次のコンフリクトで止まった場合、**Phase 0 から再帰的に処理**する。
+4. 監査性は解消サマリ＋（必要時）`git range-diff` / reflog で代替する。
 
 ### 完了報告
 
@@ -206,7 +262,7 @@ git add <resolved-file-1> <resolved-file-2> ...
 
 1. **解消サマリ** — 各ファイルでどう解消したかの一行リスト
 2. **検証結果** — 実行した検証コマンドと結果（pass/fail/skip）
-3. **完了アクション** — 何のコマンドで完了したか（commit hash や rebase 状態）
+3. **完了アクション** — 何のコマンドで完了したか（2段の場合は snapshot コミットと解消コミットの両 hash、rebase なら状態）
 
 ## bail-out プロトコル
 
@@ -220,9 +276,9 @@ bail-out が発動したら：
 
 引き継ぎプロンプトのテンプレートは `references/handoff-to-pair-resolve.md` にある。操作種別 × bail-out 理由のマトリクスで定義しているので、当てはまるテンプレートを使う。
 
-### Phase 4 後の bail-out
+### Phase 3 検証失敗後の bail-out
 
-検証コマンドが落ちて Phase 3 で bail-out する場合、Phase 2 までの解消は **適用済みでステージング前**。ロールバックは強制せず、ユーザーが `git reset` するか pair で続行するかを選択できるよう、ハンドオフプロンプトに状態説明を含める。
+検証コマンドが落ちて Phase 3 で bail-out する場合、Phase 2 までの解消は **適用済みでステージング前**（2段コミットの①スナップショットはまだ取っていない＝merge コミットは未作成）。ロールバックは強制せず、ユーザーが `git reset` / `git checkout --merge` するか pair で続行するかを選択できるよう、ハンドオフプロンプトに状態説明を含める。
 
 ### bail-out は失敗ではない
 
@@ -231,8 +287,10 @@ bail-out が発動したら：
 ## 核心ルール
 
 - **デグレ防止が最優先** — 速度や完了率より、安全に解消できる確信が持てるかを優先する。迷ったら bail-out
+- **相互機能保持** — マーカーを消すことはゴールではない。ours と theirs が別々の機能を実装しているなら、片側採用は機能欠落＝デグレ。両側の機能が解消後コードに保持されることを担保する（片側採用は「捨てる側に固有機能なし」と観測できる時だけ）。安全に統合できなければ bail-out
 - **観測根拠主義** — コミット履歴・diff・テスト結果という事実のみを判断根拠にする。「たぶん」「おそらく」は bail-out のサイン
 - **不確実性の正直な報告** — 確信が持てない判断を「自動解消した」と報告しない。曖昧さは bail-out 理由として明示する
+- **履歴優先の解消記録** — merge/stash では「マーカー入りコミット → 解消コミット」の2段で残し、解消の diff を履歴から辿れるようにする。rebase/cherry-pick は履歴・bisect を壊さないため1段＋解消サマリで監査する
 - **自動コミットの責任** — 本スキルが作ったコミットは AI が責任を負う。コミットメッセージにはフットプリント（`references/commit-message-template.md`）を必ず残し、後から監査できるようにする
 - **bail-out しても恥じない** — pair モードへの引き渡しは安全運用の一部であり、後退ではない
 - **検証なしのコミットはしない** — 唯一の例外は Phase 3 の検証コマンド未検出時のユーザー確認のみ。それ以外で検証をスキップしない
@@ -242,6 +300,8 @@ bail-out が発動したら：
 ## 参考ドキュメント
 
 - `references/bailout-rules.md` — Auto-No/Risky/Regenerate/OK の詳細条件と検出方法
+- `references/stale-pr-follow.md` — Phase A の base ブランチ検出と追従（未コンフリクト状態からの起点作り）
+- `references/two-stage-commit.md` — Phase 4 の履歴優先2段コミットの手順（merge/stash）
 - `references/lockfile-regeneration.md` — lockfile 等の自動再生成フローとパッケージマネージャ別コマンド表
 - `references/verification-detection.md` — 言語・パッケージマネージャ別の検証コマンド表
 - `references/handoff-to-pair-resolve.md` — bail-out 時の引き継ぎプロンプトテンプレート

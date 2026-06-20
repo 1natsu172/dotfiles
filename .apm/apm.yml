@@ -12,7 +12,10 @@ dependencies:
   - 1natsu-vacation/agent-skills
   - git: mattpocock/skills
     skills:
+    - skills/engineering/domain-modeling
+    - skills/engineering/grill-with-docs
     - skills/productivity/grill-me
+    - skills/productivity/grilling
   mcp: []
 includes: auto
 scripts: {}

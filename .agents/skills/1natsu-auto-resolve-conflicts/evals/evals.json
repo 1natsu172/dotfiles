@@ -4,34 +4,36 @@
     "各テストは <skill_path>/evals/fixtures/<id>-<name>.sh を実行して使い捨てリポジトリを作成し、",
     "そのリポジトリ内で本スキルに従ってコンフリクト解消を実行する。",
     "スクリプトは標準出力にリポジトリパスを1行で返す。",
-    "expectations は観測可能な事実（git status, コミット内容, 出力テキスト）で記述する。"
+    "expectations は観測可能な事実（git status, コミット内容, 出力テキスト）で記述する。",
+    "v1.2.0 改善: eval 1 は履歴優先の2段コミット（merge）を前提に更新。",
+    "eval 7 は相互機能保持（片側採用で機能を捨てない）、eval 8 は stale PR の base 追従（Phase A）を検証する。"
   ],
   "evals": [
     {
       "id": 1,
-      "prompt": "以下を実行してテスト用リポジトリを作成し、その中で `1natsu-auto-resolve-conflicts` スキルに従ってコンフリクトを自動解消してください。\n\n```bash\nREPO_PATH=$(<skill_path>/evals/fixtures/01-simple-import-merge.sh)\ncd \"$REPO_PATH\"\ngit status\n```\n\nその後、merge コミットの作成まで一気に完了させてください。",
-      "expected_output": "src/app.ts に featureA と featureB 両方の import 文が含まれた状態で merge コミットが作成され、コミットメッセージに 'auto-resolved by 1natsu-auto-resolve-conflicts' フットプリントが含まれる。typecheck（tsc --noEmit）が成功する。",
+      "prompt": "以下を実行してテスト用リポジトリを作成し、その中で `1natsu-auto-resolve-conflicts` スキルに従ってコンフリクトを自動解消してください。\n\n```bash\nREPO_PATH=$(<skill_path>/evals/fixtures/01-simple-import-merge.sh)\ncd \"$REPO_PATH\"\ngit status\n```\n\nその後、merge の完了まで一気にやり切ってください（履歴優先の2段コミット）。",
+      "expected_output": "src/app.ts に featureA と featureB 両方の import が統合された状態で解消され、merge は2段コミット（①マーカー入りのマージコミット → ②解消コミット）で残る。①にはマーカーとフットプリント 'conflict-snapshot by 1natsu-auto-resolve-conflicts'、②にはマーカー無しとフットプリント 'auto-resolved by 1natsu-auto-resolve-conflicts' が付く。typecheck（tsc --noEmit）が成功する。",
       "expectations": [
-        "src/app.ts にコンフリクトマーカー（<<<<<<<）が残っていない",
-        "src/app.ts に `import { featureA }` と `import { featureB }` の両方が含まれる",
-        "src/app.ts の関数本体で featureA() と featureB() の両方が呼び出されている",
-        "新しい merge コミットが作成されている（git log の最新コミットが2つの parent を持つ）",
-        "最新コミットのメッセージ末尾に 'auto-resolved by 1natsu-auto-resolve-conflicts' が含まれる",
-        "Phase 3 の typecheck（tsc --noEmit または pnpm/bun の typecheck スクリプト）が実行され、成功している",
+        "最終的なワーキングツリーの src/app.ts にコンフリクトマーカー（<<<<<<<）が残っていない",
+        "src/app.ts に `import { featureA }` と `import { featureB }` の両方が含まれ、関数本体で featureA() と featureB() の両方が呼ばれている",
+        "履歴が2段構成: 最新コミット（解消コミット）は parent が1つ、その親（スナップショット）は parent が2つ（マージコミット）",
+        "スナップショットコミット（2 parent のマージコミット）の内容にはコンフリクトマーカーが含まれ、メッセージ末尾に 'conflict-snapshot by 1natsu-auto-resolve-conflicts' がある",
+        "解消コミット（最新）の内容にはマーカーが無く、メッセージ末尾に 'auto-resolved by 1natsu-auto-resolve-conflicts' がある",
+        "git diff <スナップショット>..<解消コミット> が、マーカー除去＝解消内容を示す",
+        "Phase 3 の typecheck（tsc --noEmit または typecheck スクリプト）が実行され、成功している",
         "出力テキストに 'bail-out' や 'pair-resolve に切り替え' といった撤退提案が含まれない"
       ],
       "files": []
     },
     {
       "id": 2,
-      "prompt": "以下を実行してテスト用リポジトリを作成し、その中で `1natsu-auto-resolve-conflicts` スキルに従ってコンフリクトを自動解消してください。\n\n```bash\nREPO_PATH=$(<skill_path>/evals/fixtures/02-integrate-both-sides.sh)\ncd \"$REPO_PATH\"\ngit status\n```\n\nREADME.md のコンフリクトを両側の追記を統合する形で解消し、merge コミットを作成してください。",
-      "expected_output": "README.md に Section A と Section B 両方のセクションが順序統合された形で含まれ、merge コミットが作成される。検証コマンドが見つからない場合は Phase 3 の指示に従いユーザーに 3 択を提示するか、スキップを選択して進む。",
+      "prompt": "以下を実行してテスト用リポジトリを作成し、その中で `1natsu-auto-resolve-conflicts` スキルに従ってコンフリクトを自動解消してください。\n\n```bash\nREPO_PATH=$(<skill_path>/evals/fixtures/02-integrate-both-sides.sh)\ncd \"$REPO_PATH\"\ngit status\n```\n\nREADME.md のコンフリクトを両側の追記を統合する形で解消し、merge を完了してください。",
+      "expected_output": "README.md に Section A と Section B 両方のセクションが順序統合された形で含まれる。検証コマンドが見つからない場合は Phase 3 の指示に従いユーザーに 3 択を提示するか、スキップを選択して進む。コミットまで進む場合は merge の2段コミット（マーカー入り→解消）で残す。",
       "expectations": [
-        "README.md にコンフリクトマーカー（<<<<<<<）が残っていない",
+        "最終的な README.md にコンフリクトマーカー（<<<<<<<）が残っていない",
         "README.md に '## Section A' と '## Section B' の両方の見出しが含まれる",
-        "新しい merge コミットが作成されている",
-        "最新コミットのメッセージ末尾に 'auto-resolved by 1natsu-auto-resolve-conflicts' が含まれる",
-        "出力テキストに、検証コマンドが見つからない場合の取り扱い（3択提示またはスキップの根拠）が言及されている"
+        "出力テキストに、検証コマンドが見つからない場合の取り扱い（3択提示またはスキップの根拠）が言及されている",
+        "コミットまで進んだ場合: merge が2段コミット（2 parent のスナップショット → 1 parent の解消コミット）で残り、解消コミット末尾に 'auto-resolved by 1natsu-auto-resolve-conflicts' がある"
       ],
       "files": []
     },
@@ -59,7 +61,7 @@
         "config.json にコンフリクトマーカーが残っていない",
         "src/auth/policy.ts にコンフリクトマーカーが残っている（未解消）",
         "db/migrations/2024_01_01_init.sql にコンフリクトマーカーが残っている（未解消）",
-        "新しい merge コミットが作成されていない",
+        "新しい merge コミットが作成されていない（混合 bail-out では2段コミットも行わない）",
         "出力テキストに `1natsu-pair-resolve-conflicts` への引き継ぎが明記されている",
         "出力テキストに src/auth/policy.ts と db/migrations の bail-out 理由（auth または DB マイグレーション）が個別に言及されている",
         "handoff-to-pair-resolve.md のテンプレート 2（混合 bail-out）相当の構造で、適用済み 3 ファイルと未解消 2 ファイルが分離して列挙されている"
@@ -69,7 +71,7 @@
     {
       "id": 5,
       "prompt": "以下を実行してテスト用リポジトリを作成し、その中で `1natsu-auto-resolve-conflicts` スキルに従ってコンフリクトの自動解消を試みてください。\n\n```bash\nREPO_PATH=$(<skill_path>/evals/fixtures/05-rebase-continue-with-validation-failure.sh)\ncd \"$REPO_PATH\"\ngit status\n```\n\nrebase 中のコンフリクトを解消し、検証が通る場合のみ `git rebase --continue` を実行してください。",
-      "expected_output": "src/value.ts のコンフリクトは機械的に解消できるが、解消後の typecheck で型不整合（VALUE が string になる一方で src/math.ts が VALUE * 3 を期待）が検出される。Phase 3 の検証失敗を理由に bail-out し、`git rebase --continue` を実行しない。",
+      "expected_output": "src/value.ts のコンフリクトは機械的に解消できるが、解消後の typecheck で型不整合（VALUE が string になる一方で src/math.ts が VALUE * 3 を期待）が検出される。Phase 3 の検証失敗を理由に bail-out し、`git rebase --continue` を実行しない。rebase は1段（2段コミットは適用しない）。",
       "expectations": [
         "src/value.ts のコンフリクトマーカーは除去されている（解消は適用済み）",
         "rebase が継続中である（.git/rebase-merge または .git/rebase-apply ディレクトリが存在する、または `git status` で 'You are currently rebasing' 等のメッセージ）",
@@ -89,8 +91,82 @@
         "package.json の dependencies に lodash・ramda・date-fns の3つすべてが含まれる",
         "package-lock.json が手動マージされていない（コンフリクトマーカーが除去され、かつ新規 `npm install` 実行の痕跡がある、または bail-out した場合は package-lock.json に直接編集していない）",
         "lockfile を直接 sed/Edit などで編集した形跡がない（report.md または validation-output.txt に `npm install` の実行記録があるか、または bail-out 理由として手動編集を避けた旨の言及がある）",
-        "成功した場合: 新しい merge コミットが作成され、フットプリントが含まれる。コミットメッセージに `regenerated` または `npm install` への言及がある",
+        "成功した場合: これは merge なので v1.2.0 の2段コミットになっている（2 parent のスナップショット → 1 parent の解消コミット）。解消コミット末尾に 'auto-resolved by 1natsu-auto-resolve-conflicts' があり、解消コミットのメッセージまたは解消サマリに `regenerated` または `npm install` への言及がある",
+        "成功した場合: 再生成済み package-lock.json が②解消コミットに正しく含まれている（①スナップショットの生の衝突状態でサイレントに上書きされて失われていない。git show <解消コミット>:package-lock.json が再生成版で、コンフリクトマーカーを含まない）",
         "bail-out した場合: テンプレート 7（Auto-Regenerate 失敗）相当の構造で、再生成失敗の理由（ネットワーク・キャッシュ等）が明記されている"
+      ],
+      "files": []
+    },
+    {
+      "id": 7,
+      "prompt": "以下を実行してテスト用リポジトリを作成し、その中で `1natsu-auto-resolve-conflicts` スキルに従ってコンフリクトを自動解消してください。\n\n```bash\nREPO_PATH=$(<skill_path>/evals/fixtures/07-feature-preservation.sh)\ncd \"$REPO_PATH\"\ngit status\n```\n\nmerge の完了まで一気にやり切ってください。",
+      "expected_output": "src/cart.ts で ours(subtotal) と theirs(maxItem) がそれぞれ別の機能を追加している。片側採用は他方の機能を捨てるデグレなので、両関数を残し summary() が両方を参照する形に統合して解消し、merge の2段コミットで完了する。安全に統合できないと判断した場合は bail-out も許容するが、片側採用で一方の関数を黙って捨てるのは誤り。",
+      "expectations": [
+        "src/cart.ts（解消後 or 未解消いずれでも、最終的なファイル）に subtotal 関数と maxItem 関数の両方の定義が残っている（どちらも消えていない）",
+        "片側採用によって一方の関数が丸ごと消えていない（ours だけ/theirs だけを採用してもう一方を捨てた痕跡がない）",
+        "解消した場合: コンフリクトマーカーが除去され、summary() が subtotal(cart) と maxItem(cart) の両方を参照している",
+        "解消した場合: typecheck（tsc --noEmit）が成功している",
+        "解消した場合: merge が2段コミット（2 parent のスナップショット → 1 parent の解消コミット）で残り、解消コミット末尾に 'auto-resolved by 1natsu-auto-resolve-conflicts' がある",
+        "bail-out した場合: マーカーが残置され新規コミットは無く、出力に相互機能保持（両側が機能追加で片側採用はデグレ）を理由とした言及がある"
+      ],
+      "files": []
+    },
+    {
+      "id": 8,
+      "prompt": "以下を実行してテスト用リポジトリを作成してください。\n\n```bash\nREPO_PATH=$(<skill_path>/evals/fixtures/08-stale-pr-follow.sh)\ncd \"$REPO_PATH\"\ngit status\n```\n\nこのリポジトリは PR ブランチ `feature/x` をチェックアウトした状態です。この `feature/x` の PR を base ブランチ `main` にマージできる状態にしてください。`1natsu-auto-resolve-conflicts` スキルに従って対応してください。（このリポジトリに remote はありません。base は同名のローカル `main` です。）",
+      "expected_output": "プロンプトは『stale』『コンフリクト』『merge しろ』と一切言っていない。スキルは状況把握でローカルが clean・未コンフリクトだと気づき、『マージできる状態にして』という目標から、feature/x が main より遅れている（behind）ことを観測（git log main..HEAD / HEAD..main）し、自律的に Phase A を選んで base=main を取り込む。コンフリクトが顕在化したら featureX と featureMain を統合解消し、merge の2段コミットまで完了する。",
+      "expectations": [
+        "出力に『ローカルは未コンフリクト（clean）』という状況把握があり、いきなり『解消対象なし』と早合点していない",
+        "feature/x が main より遅れている（behind）ことを観測した記述がある（git log での乖離確認、または『main を取り込む必要がある』旨）",
+        "スキルが自律的に Phase A（base 追従）を選択している。プロンプトは merge/conflict/stale を一切言っていないのに、目標と乖離観測からその必要を導いている",
+        "base ブランチ main を取り込むマージが実行された（git log に main を親に含むマージコミット、または出力に追従実行の記録）。remote が無い環境にも適応している",
+        "最終的な src/app.ts にコンフリクトマーカーが残っていない",
+        "src/app.ts に `import { featureX }` と `import { featureMain }` の両方が含まれ、featureX() と featureMain() の両方が呼ばれている（片側を捨てていない）",
+        "featureX.ts と featureMain.ts の両ファイルが存在する",
+        "merge が2段コミット（2 parent のスナップショット → 1 parent の解消コミット）で残り、解消コミット末尾に 'auto-resolved by 1natsu-auto-resolve-conflicts' がある",
+        "typecheck（tsc --noEmit）が成功している"
+      ],
+      "files": []
+    },
+    {
+      "id": 9,
+      "prompt": "以下を実行してテスト用リポジトリを作成し、その中で `1natsu-auto-resolve-conflicts` スキルに従ってコンフリクトを自動解消してください。\n\n```bash\nREPO_PATH=$(<skill_path>/evals/fixtures/09-silent-feature-drop-trap.sh)\ncd \"$REPO_PATH\"\ngit status\n```\n\nmerge の完了まで一気にやり切ってください。",
+      "expected_output": "src/config.ts の buildConfig() で、ours(cache: true) と theirs(retry: 3) がそれぞれ別のオプションを return オブジェクトに追加している。一見どちらかを採れば済むように見えるが、片側採用は他方のオプションをサイレントに落とすデグレ（消費側 app.ts は timeout しか使わないので typecheck では検出できない）。両キー（retry と cache）を保持して統合解消し、merge の2段コミットで完了するのが正しい。安全に統合できないなら bail-out も許容するが、片側採用で一方のキーを黙って捨てるのは誤り。",
+      "expectations": [
+        "最終的な src/config.ts に `retry: 3` と `cache: true` の両方が含まれている（片側採用でどちらかが消えていない）",
+        "解消した場合: コンフリクトマーカーが除去され、return オブジェクトに timeout・retry・cache の3キーが揃っている",
+        "解消した場合: typecheck（tsc --noEmit）が成功している",
+        "解消した場合: merge が2段コミット（2 parent のスナップショット → 1 parent の解消コミット）で残り、解消コミット末尾に 'auto-resolved by 1natsu-auto-resolve-conflicts' がある",
+        "片側採用で一方のオプション（retry または cache）を捨てた痕跡がない。捨てた場合は明確な失敗",
+        "bail-out した場合: マーカー残置・新規コミット無しで、相互機能保持（両側が機能追加のため片側採用はデグレ）を理由とした言及がある"
+      ],
+      "files": []
+    },
+    {
+      "id": 10,
+      "prompt": "以下を実行してテスト用リポジトリを作成し、その中で `1natsu-auto-resolve-conflicts` スキルに従ってコンフリクトを自動解消してください。\n\n```bash\nREPO_PATH=$(<skill_path>/evals/fixtures/10-rebase-1stage-success.sh)\ncd \"$REPO_PATH\"\ngit status\n```\n\nrebase 中のコンフリクトを解消し、検証が通ったら `git rebase --continue` で rebase を完了してください。",
+      "expected_output": "rebase 中の src/features.ts のコンフリクトは、main 側の 'main' と feature 側の 'feat' をどちらも残す統合で解消でき、typecheck も通る。rebase は1段（単親の rebased コミット）として `git rebase --continue` で畳む。merge のような2段コミット（マーカー入りスナップショット）にはしないのが正しい。",
+      "expectations": [
+        "最終的な src/features.ts にコンフリクトマーカーが残っていない",
+        "src/features.ts の features 配列に 'main' と 'feat' の両方が含まれている（片側を捨てていない）",
+        "rebase が完了している（.git/rebase-merge / rebase-apply が無く、feature が main の上に乗っている）",
+        "typecheck（tsc --noEmit）が成功している",
+        "rebase は1段で畳まれている: rebased コミットは単親（マージコミットでない）で、履歴に '[conflict snapshot]' コミットや 'conflict-snapshot by 1natsu-auto-resolve-conflicts' フットプリントが存在しない",
+        "解消の事実が記録されている: 解消サマリと 'auto-resolved by 1natsu-auto-resolve-conflicts' が、完了報告のテキスト（既定）か、安全に追記できた場合は rebased コミットのメッセージに残されている。`--continue` の前に `git commit --amend` を実行して既存コミットを破壊していないこと"
+      ],
+      "files": []
+    },
+    {
+      "id": 11,
+      "prompt": "以下を実行してテスト用リポジトリを作成し、その中で `1natsu-auto-resolve-conflicts` スキルに従ってコンフリクトを自動解消してください。\n\n```bash\nREPO_PATH=$(<skill_path>/evals/fixtures/11-semantic-port-integration.sh)\ncd \"$REPO_PATH\"\ngit status\n```\n\nmerge の完了まで一気にやり切ってください。",
+      "expected_output": "src/counter.ts は『クロージャ依存の機能追加（A: history 記録 + handleReset）』と『ハンドラ抽出・state オブジェクト化のリファクタ（B: makeHandlers(state)）』が競合している。テキストマージでは統合できず、消費側 app.ts（A由来・自動採用）は handleReset/history を要求する。正解は『B のリファクタ後に A を書いていたら』の目線で、A の history/reset を B の makeHandlers(state) 構造へ移植すること。片側採用（A丸採用=Bのリファクタをサイレント消失 / B丸採用=typecheck失敗）やテキスト混在（クロージャ参照崩れで失敗）は誤り。安全に移植できないと判断したら、その理由を添えて bail-out するのも正しい振る舞い（推測で壊すよりよい）。",
+      "expectations": [
+        "解消した場合: 最終的な src/counter.ts にコンフリクトマーカーが残っておらず、typecheck（tsc --noEmit）が成功する",
+        "解消した場合: B のリファクタ構造が保持されている（makeHandlers と state オブジェクト/State 型が存在し、A を丸ごと採用してインラインクロージャに戻していない）",
+        "解消した場合: A の機能が保持されている（handleClick が history に記録し、handleReset と history() アクセサが存在する）",
+        "解消した場合: セマンティックな移植になっている（history の更新が、インラインのクロージャではなく B の抽出ハンドラ makeHandlers の中で行われ、state.history を介している）",
+        "解消した場合: merge が2段コミット（2 parent のスナップショット → 1 parent の解消コミット）で残り、解消コミット末尾に 'auto-resolved by 1natsu-auto-resolve-conflicts' がある",
+        "片側採用（A丸採用でBのリファクタ消失 / B丸採用）やテキスト混在による破綻が起きていない。bail-out した場合は、単純マージでは統合できず意図を汲んだ移植が必要という理由が明示され、マーカー残置・新規コミット無しになっている"
       ],
       "files": []
     }
