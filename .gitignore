@@ -36,9 +36,6 @@ Brewfile.lock.json
 !.claude/commands
 !.claude/agents
 !.claude/rules
-!.claude/plugins
-.claude/plugins/*
-!.claude/plugins/known_marketplaces.json
 !.claude/skills
 .claude/skills/*
 !.claude/skills/.gitkeep
