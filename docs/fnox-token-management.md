@@ -117,6 +117,10 @@ zsh/bash が conf.d 相当を持たないので **fish=自動 conf.d / zsh・bas
 シェル関数は **PATH に載らず、mise が spawn する subprocess に継承されない**ので、mise の bootstrap npm は
 素の実体 npm に解決される → 再帰せず **per-project の npm 版 pin が普通に動く**。これが関数方式の決め手。
 
+> 注: その後 npm は mise 既定で `aqua:npm/cli` に移行し（jdx/mise#9762・2026-05〜）、`npm view`/install を
+> PATH の `npm` 名で走らせなくなったため、npm:npm 再帰は現在は発生しない（本節は歴史的経緯）。ただし
+> 「関数を PATH に載せない」という選択自体は他の language backend にも効くので維持している。
+
 ### 版解決（corepack → mise packageManager）
 
 版解決は **mise が肩代わり**する（corepack 廃止）:
@@ -134,13 +138,15 @@ zsh/bash が conf.d 相当を持たないので **fish=自動 conf.d / zsh・bas
   `fnox exec` は内部 execvp なので mise の command-not-found ハンドラ（`not_found_auto_install`）は
   経由しない。npm は node 同梱で常に PATH 上に在るため、**未インストール pin の npm はサイレントに
   node 同梱版**で走る点に注意（mise の missing 警告で気付く運用前提）。
-- ★**pin npm の install は `fnox exec -- mise install`（`mise i`）で行う**。`.npmrc` の既定 registry が
-  FLATT（`registry=https://npm.flatt.tech/`＝公開セキュリティプロキシ。docs/claude-code-security.md 参照）で、
-  **本リポジトリの `.npmrc` が個人 `tg_anon_` token を `${FLATT_NPM_TOKEN}` で参照する**ため、mise の `npm:npm`
-  backend が版解決に走らす `npm view npm versions …` も token を要する。素の `mise i` は子 npm に token が
-  注入されず（空 token）**401**。`fnox exec -- mise i` なら `FLATT_NPM_TOKEN` が mise→子 npm に継承され通る（実機確認）。
-  pnpm/yarn は mise が aqua/github（非 FLATT）から入れるので素の `mise i` で OK。install 後はプロジェクト内の
-  ラッパー `npm`（→`fnox exec -- npm`）が pin 版を token 付きで実行する。
+- **pin npm の install は素の `mise install`（`mise i`）でよい**。npm は mise 既定で `aqua:npm/cli` に解決され
+  （jdx/mise#9762・2026-05〜）、版は npm/cli の GitHub tags、実体は npmjs.org の tarball から入る＝**FLATT を
+  経由せず token 不要**（pnpm/yarn が aqua/github で入るのと同じ）。
+  - 旧 `npm:npm` backend は版解決に `npm view npm versions …` を FLATT 向けに走らせ token を要し、素の `mise i`
+    は空 token で **401** だった（`fnox exec -- mise i` で回避）。aqua 移行でこの token 依存は解消した。なお
+    aqua は npm CLI 本体を npmjs.org から直に取る＝**FLATT/Takumi Guard プロキシをバイパス**するが、対象は公式
+    npm CLI かつ版固定なのでリスクは限定的（プロジェクト依存の `npm install` は従来どおり FLATT 経由）。
+  - install 後、プロジェクト内のランタイム `npm install`（依存取得）は従来どおりラッパー `npm`
+    （→`fnox exec -- npm`）が FLATT に token 付きで実行する。
 
 ### トレードオフ（生 subprocess の穴）
 
@@ -264,8 +270,9 @@ token 不要かつレイテンシ敏感なら、呼び出しを `command <tool>`
   露出）。`env = false` 化で解決済み（上述「env 注入の制御」）。
 - **corepack は廃止済み**（mise の `packageManager` 対応へ移行・PR #8059 / mise 2026.2.8+）。
   per-project 版解決は mise（node/pnpm/yarn/npm）が肩代わりする（上述「版解決」）。**注入は PATH shim を
-  廃して各シェル rc のラッパー関数（`fnox exec`）へ移行**した（上述「注入機構」）。これにより npm の
-  `npm:npm` backend がシェル関数を継承しない subprocess で bootstrap される＝再帰せず npm 版 pin も動く。
+  廃して各シェル rc のラッパー関数（`fnox exec`）へ移行**した（上述「注入機構」）。npm はその後 mise 既定で
+  `aqua:npm/cli` に移行（npmjs.org tarball・FLATT 非経由・token 不要）したため npm:npm の bootstrap 再帰自体が
+  無くなり、関数が PATH 非搭載で mise subprocess に継承されない利点は他の language backend 向けに残る。
 - **age provider は再導入済み**（基礎基盤のみ・使用 secret は無し。上述「age provider」）。OP_SA を age 化
   する 3 段移行（`keychain → age → op`）は任意で未実施（現状 keychain 直結で必要十分）。
 

@@ -23,10 +23,11 @@ experimental = true
 # `.nvmrc` / `.node-version` as idiomatic version files, so mise resolves the
 # project-pinned version per-project (the corepack replacement; node also auto-
 # resolves idiomatically instead of being pinned only via [tools]).
-# npm's backend is `npm:npm` (mise installs npm by *running* npm via PATH). The fnox
-# token wrappers are shell functions (bin/install-fnox-shell-wrappers), NOT a PATH shim,
-# so mise's subprocesses don't inherit them: mise's bootstrap npm is the real one and
-# per-project npm pinning installs without recursion. See docs/fnox-token-management.md.
+# npm resolves via mise's registry to `aqua:npm/cli` (mise default since 2026-05,
+# jdx/mise#9762): versions from npm/cli's GitHub tags, artifact from the npmjs.org tarball
+# — so managing npm itself bypasses the FLATT registry/token (node still runs npm's JS).
+# Pin `npm:npm` explicitly only if a project needs the old npm-installs-npm backend.
+# See docs/fnox-token-management.md.
 idiomatic_version_file_enable_tools = ["node", "pnpm", "yarn", "npm"]
 
 [env]
