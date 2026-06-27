@@ -364,9 +364,10 @@
     ]
   },
   "effortLevel": "xhigh",
+  "skipWorkflowUsageWarning": true,
   "teammateMode": "auto",
   "remoteControlAtStartup": false,
   "agentPushNotifEnabled": true,
   "voiceEnabled": true,
-  "skipWorkflowUsageWarning": false
+  "tui": "fullscreen"
 }
