@@ -36,3 +36,9 @@ idiomatic_version_file_enable_tools = ["node", "pnpm", "yarn", "npm"]
 # fish/bash/zsh and mise shims all inherit it via mise activation. env-paths-based
 # tools (astro, eas-cli, …) ignore XDG and stay in ~/Library.
 XDG_CONFIG_HOME = "{{env.HOME}}/.config"
+# `brew bundle dump` dumps go/cargo/uv/npm/… extension types by default (no type
+# flag = all). The npm dumper runs `npm list -g`, which picks up corepack bundled
+# with the mise-managed Node and writes a stray `npm "corepack"` to the Brewfile.
+# Node tooling is mise-managed, so exclude only the npm type from dumps (go etc.
+# are still wanted). Set here so it's inherited the same way as XDG_CONFIG_HOME.
+HOMEBREW_BUNDLE_DUMP_NO_NPM = "1"
