@@ -1,10 +1,12 @@
 lockfile_version: '1'
-generated_at: '2026-06-20T11:47:44.704184+00:00'
-apm_version: 0.21.0
+generated_at: '2026-07-02T11:53:20.154568+00:00'
+apm_version: 0.23.1
 dependencies:
 - repo_url: 1natsu-vacation/agent-skills
+  name: agent-skills
   host: github.com
   resolved_commit: a202237bdb445c3a6e0ba5c5d80466c311d61239
+  version: unknown
   package_type: skill_bundle
   deployed_files:
   - .agents/skills/1natsu-auto-resolve-conflicts
@@ -289,8 +291,10 @@ dependencies:
     .kiro/skills/1natsu-pr-review-handler/SKILL.md: sha256:f451258786e1e378b219afeec521a8483778d075f1e3caf22c148860c9d9eb0f
   content_hash: sha256:c83e849698431111345b27d612018291838f459fc5ff17e83c32194b55bde787
 - repo_url: expo/skills
+  name: expo
   host: github.com
-  resolved_commit: b553ae4e1755bec11eac21517fe63040c7e07f2c
+  resolved_commit: 1f9951197dc6acff61c4f0f19521fa0e62c33e51
+  version: 1.5.0
   virtual_path: plugins/expo
   is_virtual: true
   package_type: marketplace_plugin
@@ -316,6 +320,11 @@ dependencies:
   - .agents/skills/building-native-ui/references/visual-effects.md
   - .agents/skills/building-native-ui/references/webgpu-three.md
   - .agents/skills/building-native-ui/references/zoom-transitions.md
+  - .agents/skills/eas-simulator
+  - .agents/skills/eas-simulator/SKILL.md
+  - .agents/skills/eas-simulator/references/controllers.md
+  - .agents/skills/eas-simulator/references/run-your-app.md
+  - .agents/skills/eas-simulator/references/troubleshooting.md
   - .agents/skills/eas-update-insights
   - .agents/skills/eas-update-insights/SKILL.md
   - .agents/skills/eas-update-insights/agents/openai.yaml
@@ -375,6 +384,7 @@ dependencies:
   - .agents/skills/expo-ui/references/jetpack-compose.md
   - .agents/skills/expo-ui/references/swift-ui.md
   - .agents/skills/expo-ui/references/universal.md
+  - .agents/skills/expo-ui/scripts/list-components.js
   - .agents/skills/native-data-fetching
   - .agents/skills/native-data-fetching/SKILL.md
   - .agents/skills/native-data-fetching/agents/openai.yaml
@@ -392,6 +402,12 @@ dependencies:
   - .agents/skills/use-dom
   - .agents/skills/use-dom/SKILL.md
   - .agents/skills/use-dom/agents/openai.yaml
+  - .agents/skills/web-to-native
+  - .agents/skills/web-to-native/SKILL.md
+  - .agents/skills/web-to-native/references/false-friends.md
+  - .agents/skills/web-to-native/references/native-patterns.md
+  - .agents/skills/web-to-native/references/run-as-goal.md
+  - .agents/skills/web-to-native/references/verify-on-device.md
   - .claude/skills/add-app-clip
   - .claude/skills/add-app-clip/SKILL.md
   - .claude/skills/add-app-clip/agents/openai.yaml
@@ -413,6 +429,11 @@ dependencies:
   - .claude/skills/building-native-ui/references/visual-effects.md
   - .claude/skills/building-native-ui/references/webgpu-three.md
   - .claude/skills/building-native-ui/references/zoom-transitions.md
+  - .claude/skills/eas-simulator
+  - .claude/skills/eas-simulator/SKILL.md
+  - .claude/skills/eas-simulator/references/controllers.md
+  - .claude/skills/eas-simulator/references/run-your-app.md
+  - .claude/skills/eas-simulator/references/troubleshooting.md
   - .claude/skills/eas-update-insights
   - .claude/skills/eas-update-insights/SKILL.md
   - .claude/skills/eas-update-insights/agents/openai.yaml
@@ -472,6 +493,7 @@ dependencies:
   - .claude/skills/expo-ui/references/jetpack-compose.md
   - .claude/skills/expo-ui/references/swift-ui.md
   - .claude/skills/expo-ui/references/universal.md
+  - .claude/skills/expo-ui/scripts/list-components.js
   - .claude/skills/native-data-fetching
   - .claude/skills/native-data-fetching/SKILL.md
   - .claude/skills/native-data-fetching/agents/openai.yaml
@@ -489,6 +511,12 @@ dependencies:
   - .claude/skills/use-dom
   - .claude/skills/use-dom/SKILL.md
   - .claude/skills/use-dom/agents/openai.yaml
+  - .claude/skills/web-to-native
+  - .claude/skills/web-to-native/SKILL.md
+  - .claude/skills/web-to-native/references/false-friends.md
+  - .claude/skills/web-to-native/references/native-patterns.md
+  - .claude/skills/web-to-native/references/run-as-goal.md
+  - .claude/skills/web-to-native/references/verify-on-device.md
   - .kiro/skills/add-app-clip
   - .kiro/skills/add-app-clip/SKILL.md
   - .kiro/skills/add-app-clip/agents/openai.yaml
@@ -510,6 +538,11 @@ dependencies:
   - .kiro/skills/building-native-ui/references/visual-effects.md
   - .kiro/skills/building-native-ui/references/webgpu-three.md
   - .kiro/skills/building-native-ui/references/zoom-transitions.md
+  - .kiro/skills/eas-simulator
+  - .kiro/skills/eas-simulator/SKILL.md
+  - .kiro/skills/eas-simulator/references/controllers.md
+  - .kiro/skills/eas-simulator/references/run-your-app.md
+  - .kiro/skills/eas-simulator/references/troubleshooting.md
   - .kiro/skills/eas-update-insights
   - .kiro/skills/eas-update-insights/SKILL.md
   - .kiro/skills/eas-update-insights/agents/openai.yaml
@@ -569,6 +602,7 @@ dependencies:
   - .kiro/skills/expo-ui/references/jetpack-compose.md
   - .kiro/skills/expo-ui/references/swift-ui.md
   - .kiro/skills/expo-ui/references/universal.md
+  - .kiro/skills/expo-ui/scripts/list-components.js
   - .kiro/skills/native-data-fetching
   - .kiro/skills/native-data-fetching/SKILL.md
   - .kiro/skills/native-data-fetching/agents/openai.yaml
@@ -586,26 +620,36 @@ dependencies:
   - .kiro/skills/use-dom
   - .kiro/skills/use-dom/SKILL.md
   - .kiro/skills/use-dom/agents/openai.yaml
+  - .kiro/skills/web-to-native
+  - .kiro/skills/web-to-native/SKILL.md
+  - .kiro/skills/web-to-native/references/false-friends.md
+  - .kiro/skills/web-to-native/references/native-patterns.md
+  - .kiro/skills/web-to-native/references/run-as-goal.md
+  - .kiro/skills/web-to-native/references/verify-on-device.md
   deployed_file_hashes:
     .agents/skills/add-app-clip/SKILL.md: sha256:ae921363ec897ebdb8acd9e39d5ebf9c51364d9f1e3e2f3454a429d6bee64513
     .agents/skills/add-app-clip/agents/openai.yaml: sha256:872d3d2bea4cff5c5cc37c189bdc97e2bc0d5f7aa0454fb52df288d44533645c
     .agents/skills/add-app-clip/references/native-module.md: sha256:d7c9514529016e63bba6c860d3035fcdaa16a47ec16ef94bf16ba0c691bb8f98
-    .agents/skills/building-native-ui/SKILL.md: sha256:6c0ae7dbd727a0d8092990508b65539ae52785e9e20f3a0ce1c3f0edf8178c6b
+    .agents/skills/building-native-ui/SKILL.md: sha256:39f7c31fa2b1a8f73f6becad2c9b89f50b8b29d768762c20383e5634505128a4
     .agents/skills/building-native-ui/agents/openai.yaml: sha256:37fa8a5ece35fa4b5e25f34810e07618e57fac94fab478d15b18417652bdbc11
-    .agents/skills/building-native-ui/references/animations.md: sha256:3e855090009f0fde1652694344b2bfb7d9ed9c645789e243933c3e58f28c3670
+    .agents/skills/building-native-ui/references/animations.md: sha256:4faacd3e2a4f58437d9eeb715336590b2d7ca0e130e59f7db885e2689a9d38b0
     .agents/skills/building-native-ui/references/controls.md: sha256:e63a7e92cac8a5d0ceb9ed5f05e19ea9cd4d865a8bea6ff8f8a82c74c77fa180
     .agents/skills/building-native-ui/references/form-sheet.md: sha256:947de9cf35a15aacf3f02e96e45942b5e4826e536e529570886e5ddbb7ec8591
     .agents/skills/building-native-ui/references/gradients.md: sha256:63ced0392f67c41bf90e726613d139a389db609799bfcb91124e6e69b9a66e70
-    .agents/skills/building-native-ui/references/icons.md: sha256:0436582534ae1cc468805ac5ab9a3cb0fb25faeaededb1d5f415ea246814c596
-    .agents/skills/building-native-ui/references/media.md: sha256:b05966f4b2ab48b57ea82da172359000295726585f7ffe18a2e5a1be93f2c14f
+    .agents/skills/building-native-ui/references/icons.md: sha256:b6e6c1226e83f6e7345e185294872dc9f2b7c8fe21b2315524c69c16e2a8d360
+    .agents/skills/building-native-ui/references/media.md: sha256:06f92362a4a28c2ad0f8826b9b113c4747b199585e8afd205b94e787fb15c564
     .agents/skills/building-native-ui/references/route-structure.md: sha256:4c3d70edeb7e36d965c4d96fa150f23ee57e01be5f6c57dd3e34c6309aab7e87
-    .agents/skills/building-native-ui/references/search.md: sha256:6eefcc0345167031b3661d17090100b101cbedc1053de2e679090405658dfa92
+    .agents/skills/building-native-ui/references/search.md: sha256:bb4785df4757d84f1aff09d34cdb84043e7099684b9731a24a1d79cc3c0df172
     .agents/skills/building-native-ui/references/storage.md: sha256:265e8bc21adcd698062f18fa442e0e07e99e67868576f18aac2112e5381ffbf1
     .agents/skills/building-native-ui/references/tabs.md: sha256:2793a7ac0a45cf65564bcf2f6f9282539d201a4b8bea620dc0b53de092454de4
     .agents/skills/building-native-ui/references/toolbar-and-headers.md: sha256:14d9a71dd949bd2b28a5bd531f6b9c1b4f3fa847a86db8c5218fee67b5295769
-    .agents/skills/building-native-ui/references/visual-effects.md: sha256:2c1dfd5438f27e4c15bc09ececc57810a58a13e633dc782caac93f8f52cadadf
+    .agents/skills/building-native-ui/references/visual-effects.md: sha256:3b7cfcff2a3eb9e63cef42a0dbbaa31f659fc2e4b527e0da5f7906a50191279d
     .agents/skills/building-native-ui/references/webgpu-three.md: sha256:3a247a7740e4bab4aea5dec8b81c7782a5918bb221838a05f6a94c669f145679
     .agents/skills/building-native-ui/references/zoom-transitions.md: sha256:cacc1665e9f3044762765d2cd55fd1ead9627f06478f12dfa2280c6f9ae88ede
+    .agents/skills/eas-simulator/SKILL.md: sha256:2ef147a7e14b96b40d263fa29870236fed40f8c8151bc1cb4deab652a4b03b7f
+    .agents/skills/eas-simulator/references/controllers.md: sha256:6c0fe83bcbf5585a502b4f5b454bf96024732c8bff425c9cbf6afad7a5b26766
+    .agents/skills/eas-simulator/references/run-your-app.md: sha256:a27a6903cced8bcd7de6a5f397c92ca03c8c8f957af75d3005a2c49a8f6b864c
+    .agents/skills/eas-simulator/references/troubleshooting.md: sha256:eaeb43555be6a24e4e97519e1b849fb5d0053e934e4e8411d7b61aad999a605f
     .agents/skills/eas-update-insights/SKILL.md: sha256:bb2796387c2781576d1ed75065559eb06bbd836ad2ca61269f862d9d29f8302c
     .agents/skills/eas-update-insights/agents/openai.yaml: sha256:73b6a35552b7d2f829fddb3fb3186464977df37f897fa8260ac7221aabc245b4
     .agents/skills/eas-update-insights/references/channel-insights-schema.md: sha256:4e11651a81f616017f04d99e1efbe014cde01db43d40c31a550665516f3442f0
@@ -623,14 +667,14 @@ dependencies:
     .agents/skills/expo-cicd-workflows/scripts/fetch.js: sha256:6e00c6fa7277c429c18ae211d1b6515caf2fdf500136cf297921c05d27447483
     .agents/skills/expo-cicd-workflows/scripts/package.json: sha256:c405e32c72836c09697b19e326ac56786b6d06d830fce577d0785c9382a69daf
     .agents/skills/expo-cicd-workflows/scripts/validate.js: sha256:6cae9885ca926a450dc8ad08775d80334f551ed5192c7d1acadf89d34201bd4c
-    .agents/skills/expo-deployment/SKILL.md: sha256:81b700b0cfe12ac175d4f64d052464db5f7ddc40e8a29cba52c642d87acee0dd
+    .agents/skills/expo-deployment/SKILL.md: sha256:44271232a7372d62abf4f7d7001c63c3de043763be1c787e874050e29f1b6943
     .agents/skills/expo-deployment/agents/openai.yaml: sha256:824534f57daa620a560653f922878fad0a2e8d619d37da8f00582aa02f2d45e1
-    .agents/skills/expo-deployment/references/app-store-metadata.md: sha256:47fbf9077985548a1f58daf584f5fadea24f8b7edc9107230b5d93765708d81f
-    .agents/skills/expo-deployment/references/ios-app-store.md: sha256:714ecc7855d899892dda359be4a2f8f55f636a4c12c95d96b623046fb4ca0b9b
+    .agents/skills/expo-deployment/references/app-store-metadata.md: sha256:6fddf7b8b78bfd90fdcaed5ae0b16db7788a884aee46d1f42e01e4b7b8ad7bfa
+    .agents/skills/expo-deployment/references/ios-app-store.md: sha256:a32a51e5e534bbb40e61de855deb184788296eb48f250616dc673b866ccfd518
     .agents/skills/expo-deployment/references/play-store.md: sha256:54b7bf0729e8706bcb24c66c16b2c4fea81a4689709a37b6ed5776bc2974f074
     .agents/skills/expo-deployment/references/testflight.md: sha256:2f6d2451c676f1360f46defcad6feebb1ad341926a49ed015c5d2aa100c9525d
-    .agents/skills/expo-deployment/references/workflows.md: sha256:01b66f8fd1754cf2d51c90a4f65505aae32deeea0c6bed169cf8db151f8f415e
-    .agents/skills/expo-dev-client/SKILL.md: sha256:aa79e42e9cd96ea92d4e691fb8222145055dec1b868b7defce224a41d8878a5f
+    .agents/skills/expo-deployment/references/workflows.md: sha256:b37e13e0c0488957b0ca8234627e446509496c43daaa574fbb86244adca4ee25
+    .agents/skills/expo-dev-client/SKILL.md: sha256:0f17483c10b672144e6e41aa92ced36c7e4c67190b9d6bbb3f64cb04bc829df6
     .agents/skills/expo-dev-client/agents/openai.yaml: sha256:5264dcf91147638731286e38421b65de4bd60858bba93707ab6b4f1f1ad854aa
     .agents/skills/expo-examples/SKILL.md: sha256:3758d0db0053021711a159fbae5f332c57a7b4e0c77dae311c299d3fd048ce71
     .agents/skills/expo-examples/references/catalog.md: sha256:d0209653f295f177b50c62b726a95b4058c7bfc8293adf13d53f2e031ac870c4
@@ -648,13 +692,14 @@ dependencies:
     .agents/skills/expo-observe/references/setup.md: sha256:b482975a937746fdc81eea37a97c645ec3c8279d0f3fad4ffc0e11c290442199
     .agents/skills/expo-tailwind-setup/SKILL.md: sha256:6abfc223a376571e0ee84014b3b474a3f2828ac2ebcde59c5c2b6b4bc802e233
     .agents/skills/expo-tailwind-setup/agents/openai.yaml: sha256:31dcb98d27e7f55c97cb019772f526323ee1445625edc156b42c6a57d1bb83c4
-    .agents/skills/expo-ui/SKILL.md: sha256:9bdbd51eaeda3ae12d959e06f7c3a1e9d5965dbca6204c0e40c358501983d87b
+    .agents/skills/expo-ui/SKILL.md: sha256:174ecca8065d46df5228e74a1d2f85cd8bf5e716bcc3105a81f8df47d081f396
     .agents/skills/expo-ui/agents/openai.yaml: sha256:abe551630c5975e13cd06a55a698a880b0663b63436966abdd50053fcccafe5a
     .agents/skills/expo-ui/references/drop-in-replacements.md: sha256:0929fb52954dd0a359a2925a23c392f650d0976f25d93bca190e5b9ff200373f
-    .agents/skills/expo-ui/references/jetpack-compose.md: sha256:f9aad86a7d01b9fb9889c4c2eed50c8a1ac01c8a3bea585660e07066a649c73b
-    .agents/skills/expo-ui/references/swift-ui.md: sha256:9358b7a30af323aee3769b642c4f938acd5388936e907707dd58b93fe37e805d
+    .agents/skills/expo-ui/references/jetpack-compose.md: sha256:7322bb663fa260b3521c092f425e5d27589bd87e6a6a653e8864bd6f5f9ad749
+    .agents/skills/expo-ui/references/swift-ui.md: sha256:9b2727190bd49dd5ddd495ce702745f9490bd7ed9a42d9bd9c7cb75219084f8e
     .agents/skills/expo-ui/references/universal.md: sha256:b86bc899fca5af6bd8cd1c34ec617a13b4f6e769a9dda6dae1ccab2d079d71b4
-    .agents/skills/native-data-fetching/SKILL.md: sha256:ab855acdad6f593eb597b2891671808bf57fc4618fb0eaa26a84ea30576a5d5e
+    .agents/skills/expo-ui/scripts/list-components.js: sha256:cbc16cdbb2b924a3d73898e1baa3f9c5c634f513383d1a531b2d9ff6f2171f4c
+    .agents/skills/native-data-fetching/SKILL.md: sha256:3d618d82a596c0ecf9edb05db869fcfcb414e11f3f307a43c5c2bbd3ca6ce3ba
     .agents/skills/native-data-fetching/agents/openai.yaml: sha256:fac4963b9e8a548760d2712f15b65e7e60be6e38a6b49bcbfdd7a7ef67f1edda
     .agents/skills/native-data-fetching/references/expo-router-loaders.md: sha256:f842c86483a15380c44a4b49db27bf3d41e17b48b1f44b9a2bbacc563a9dcbe6
     .agents/skills/upgrading-expo/SKILL.md: sha256:54cec12d84cbf11c275e999444ba5a08936346062b12e701f44b78bd4454bb15
@@ -668,25 +713,34 @@ dependencies:
     .agents/skills/upgrading-expo/references/react-navigation-to-expo-router.md: sha256:083fb891adb87a1ab02aff92b1f322014ecb2427014e20194ff9e05f5d321ca9
     .agents/skills/use-dom/SKILL.md: sha256:7041bb26db02e24c45eb6c4c4879138a0f52786dd928eefd66c90a35b0e3197d
     .agents/skills/use-dom/agents/openai.yaml: sha256:bd4ef942149c5483bf319bb7660e138e1cb2d52f48d160f3dd9fff7197141772
+    .agents/skills/web-to-native/SKILL.md: sha256:1da25df193a0b97455841b770e7863cb762550e9916d51f054f82fc253c802cf
+    .agents/skills/web-to-native/references/false-friends.md: sha256:6a0b5a5c098aca6b9f2cbc51b20a3562c9f4447211f8ed0dc07fdebaaa9a088c
+    .agents/skills/web-to-native/references/native-patterns.md: sha256:710aa8223ddcfe4f1cb146d1c31611fc2794c40a2170a748bbd764b64fb49159
+    .agents/skills/web-to-native/references/run-as-goal.md: sha256:12915e6b1a466d1f43e358e5ba8f0df13490abfa1accdf50207614fe40691e34
+    .agents/skills/web-to-native/references/verify-on-device.md: sha256:b9695542ae44ec973bf22588686a43f29fd1426d3447b09b709b271469e016cd
     .claude/skills/add-app-clip/SKILL.md: sha256:ae921363ec897ebdb8acd9e39d5ebf9c51364d9f1e3e2f3454a429d6bee64513
     .claude/skills/add-app-clip/agents/openai.yaml: sha256:872d3d2bea4cff5c5cc37c189bdc97e2bc0d5f7aa0454fb52df288d44533645c
     .claude/skills/add-app-clip/references/native-module.md: sha256:d7c9514529016e63bba6c860d3035fcdaa16a47ec16ef94bf16ba0c691bb8f98
-    .claude/skills/building-native-ui/SKILL.md: sha256:6c0ae7dbd727a0d8092990508b65539ae52785e9e20f3a0ce1c3f0edf8178c6b
+    .claude/skills/building-native-ui/SKILL.md: sha256:39f7c31fa2b1a8f73f6becad2c9b89f50b8b29d768762c20383e5634505128a4
     .claude/skills/building-native-ui/agents/openai.yaml: sha256:37fa8a5ece35fa4b5e25f34810e07618e57fac94fab478d15b18417652bdbc11
-    .claude/skills/building-native-ui/references/animations.md: sha256:3e855090009f0fde1652694344b2bfb7d9ed9c645789e243933c3e58f28c3670
+    .claude/skills/building-native-ui/references/animations.md: sha256:4faacd3e2a4f58437d9eeb715336590b2d7ca0e130e59f7db885e2689a9d38b0
     .claude/skills/building-native-ui/references/controls.md: sha256:e63a7e92cac8a5d0ceb9ed5f05e19ea9cd4d865a8bea6ff8f8a82c74c77fa180
     .claude/skills/building-native-ui/references/form-sheet.md: sha256:947de9cf35a15aacf3f02e96e45942b5e4826e536e529570886e5ddbb7ec8591
     .claude/skills/building-native-ui/references/gradients.md: sha256:63ced0392f67c41bf90e726613d139a389db609799bfcb91124e6e69b9a66e70
-    .claude/skills/building-native-ui/references/icons.md: sha256:0436582534ae1cc468805ac5ab9a3cb0fb25faeaededb1d5f415ea246814c596
-    .claude/skills/building-native-ui/references/media.md: sha256:b05966f4b2ab48b57ea82da172359000295726585f7ffe18a2e5a1be93f2c14f
+    .claude/skills/building-native-ui/references/icons.md: sha256:b6e6c1226e83f6e7345e185294872dc9f2b7c8fe21b2315524c69c16e2a8d360
+    .claude/skills/building-native-ui/references/media.md: sha256:06f92362a4a28c2ad0f8826b9b113c4747b199585e8afd205b94e787fb15c564
     .claude/skills/building-native-ui/references/route-structure.md: sha256:4c3d70edeb7e36d965c4d96fa150f23ee57e01be5f6c57dd3e34c6309aab7e87
-    .claude/skills/building-native-ui/references/search.md: sha256:6eefcc0345167031b3661d17090100b101cbedc1053de2e679090405658dfa92
+    .claude/skills/building-native-ui/references/search.md: sha256:bb4785df4757d84f1aff09d34cdb84043e7099684b9731a24a1d79cc3c0df172
     .claude/skills/building-native-ui/references/storage.md: sha256:265e8bc21adcd698062f18fa442e0e07e99e67868576f18aac2112e5381ffbf1
     .claude/skills/building-native-ui/references/tabs.md: sha256:2793a7ac0a45cf65564bcf2f6f9282539d201a4b8bea620dc0b53de092454de4
     .claude/skills/building-native-ui/references/toolbar-and-headers.md: sha256:14d9a71dd949bd2b28a5bd531f6b9c1b4f3fa847a86db8c5218fee67b5295769
-    .claude/skills/building-native-ui/references/visual-effects.md: sha256:2c1dfd5438f27e4c15bc09ececc57810a58a13e633dc782caac93f8f52cadadf
+    .claude/skills/building-native-ui/references/visual-effects.md: sha256:3b7cfcff2a3eb9e63cef42a0dbbaa31f659fc2e4b527e0da5f7906a50191279d
     .claude/skills/building-native-ui/references/webgpu-three.md: sha256:3a247a7740e4bab4aea5dec8b81c7782a5918bb221838a05f6a94c669f145679
     .claude/skills/building-native-ui/references/zoom-transitions.md: sha256:cacc1665e9f3044762765d2cd55fd1ead9627f06478f12dfa2280c6f9ae88ede
+    .claude/skills/eas-simulator/SKILL.md: sha256:2ef147a7e14b96b40d263fa29870236fed40f8c8151bc1cb4deab652a4b03b7f
+    .claude/skills/eas-simulator/references/controllers.md: sha256:6c0fe83bcbf5585a502b4f5b454bf96024732c8bff425c9cbf6afad7a5b26766
+    .claude/skills/eas-simulator/references/run-your-app.md: sha256:a27a6903cced8bcd7de6a5f397c92ca03c8c8f957af75d3005a2c49a8f6b864c
+    .claude/skills/eas-simulator/references/troubleshooting.md: sha256:eaeb43555be6a24e4e97519e1b849fb5d0053e934e4e8411d7b61aad999a605f
     .claude/skills/eas-update-insights/SKILL.md: sha256:bb2796387c2781576d1ed75065559eb06bbd836ad2ca61269f862d9d29f8302c
     .claude/skills/eas-update-insights/agents/openai.yaml: sha256:73b6a35552b7d2f829fddb3fb3186464977df37f897fa8260ac7221aabc245b4
     .claude/skills/eas-update-insights/references/channel-insights-schema.md: sha256:4e11651a81f616017f04d99e1efbe014cde01db43d40c31a550665516f3442f0
@@ -704,14 +758,14 @@ dependencies:
     .claude/skills/expo-cicd-workflows/scripts/fetch.js: sha256:6e00c6fa7277c429c18ae211d1b6515caf2fdf500136cf297921c05d27447483
     .claude/skills/expo-cicd-workflows/scripts/package.json: sha256:c405e32c72836c09697b19e326ac56786b6d06d830fce577d0785c9382a69daf
     .claude/skills/expo-cicd-workflows/scripts/validate.js: sha256:6cae9885ca926a450dc8ad08775d80334f551ed5192c7d1acadf89d34201bd4c
-    .claude/skills/expo-deployment/SKILL.md: sha256:81b700b0cfe12ac175d4f64d052464db5f7ddc40e8a29cba52c642d87acee0dd
+    .claude/skills/expo-deployment/SKILL.md: sha256:44271232a7372d62abf4f7d7001c63c3de043763be1c787e874050e29f1b6943
     .claude/skills/expo-deployment/agents/openai.yaml: sha256:824534f57daa620a560653f922878fad0a2e8d619d37da8f00582aa02f2d45e1
-    .claude/skills/expo-deployment/references/app-store-metadata.md: sha256:47fbf9077985548a1f58daf584f5fadea24f8b7edc9107230b5d93765708d81f
-    .claude/skills/expo-deployment/references/ios-app-store.md: sha256:714ecc7855d899892dda359be4a2f8f55f636a4c12c95d96b623046fb4ca0b9b
+    .claude/skills/expo-deployment/references/app-store-metadata.md: sha256:6fddf7b8b78bfd90fdcaed5ae0b16db7788a884aee46d1f42e01e4b7b8ad7bfa
+    .claude/skills/expo-deployment/references/ios-app-store.md: sha256:a32a51e5e534bbb40e61de855deb184788296eb48f250616dc673b866ccfd518
     .claude/skills/expo-deployment/references/play-store.md: sha256:54b7bf0729e8706bcb24c66c16b2c4fea81a4689709a37b6ed5776bc2974f074
     .claude/skills/expo-deployment/references/testflight.md: sha256:2f6d2451c676f1360f46defcad6feebb1ad341926a49ed015c5d2aa100c9525d
-    .claude/skills/expo-deployment/references/workflows.md: sha256:01b66f8fd1754cf2d51c90a4f65505aae32deeea0c6bed169cf8db151f8f415e
-    .claude/skills/expo-dev-client/SKILL.md: sha256:aa79e42e9cd96ea92d4e691fb8222145055dec1b868b7defce224a41d8878a5f
+    .claude/skills/expo-deployment/references/workflows.md: sha256:b37e13e0c0488957b0ca8234627e446509496c43daaa574fbb86244adca4ee25
+    .claude/skills/expo-dev-client/SKILL.md: sha256:0f17483c10b672144e6e41aa92ced36c7e4c67190b9d6bbb3f64cb04bc829df6
     .claude/skills/expo-dev-client/agents/openai.yaml: sha256:5264dcf91147638731286e38421b65de4bd60858bba93707ab6b4f1f1ad854aa
     .claude/skills/expo-examples/SKILL.md: sha256:3758d0db0053021711a159fbae5f332c57a7b4e0c77dae311c299d3fd048ce71
     .claude/skills/expo-examples/references/catalog.md: sha256:d0209653f295f177b50c62b726a95b4058c7bfc8293adf13d53f2e031ac870c4
@@ -729,13 +783,14 @@ dependencies:
     .claude/skills/expo-observe/references/setup.md: sha256:b482975a937746fdc81eea37a97c645ec3c8279d0f3fad4ffc0e11c290442199
     .claude/skills/expo-tailwind-setup/SKILL.md: sha256:6abfc223a376571e0ee84014b3b474a3f2828ac2ebcde59c5c2b6b4bc802e233
     .claude/skills/expo-tailwind-setup/agents/openai.yaml: sha256:31dcb98d27e7f55c97cb019772f526323ee1445625edc156b42c6a57d1bb83c4
-    .claude/skills/expo-ui/SKILL.md: sha256:9bdbd51eaeda3ae12d959e06f7c3a1e9d5965dbca6204c0e40c358501983d87b
+    .claude/skills/expo-ui/SKILL.md: sha256:174ecca8065d46df5228e74a1d2f85cd8bf5e716bcc3105a81f8df47d081f396
     .claude/skills/expo-ui/agents/openai.yaml: sha256:abe551630c5975e13cd06a55a698a880b0663b63436966abdd50053fcccafe5a
     .claude/skills/expo-ui/references/drop-in-replacements.md: sha256:0929fb52954dd0a359a2925a23c392f650d0976f25d93bca190e5b9ff200373f
-    .claude/skills/expo-ui/references/jetpack-compose.md: sha256:f9aad86a7d01b9fb9889c4c2eed50c8a1ac01c8a3bea585660e07066a649c73b
-    .claude/skills/expo-ui/references/swift-ui.md: sha256:9358b7a30af323aee3769b642c4f938acd5388936e907707dd58b93fe37e805d
+    .claude/skills/expo-ui/references/jetpack-compose.md: sha256:7322bb663fa260b3521c092f425e5d27589bd87e6a6a653e8864bd6f5f9ad749
+    .claude/skills/expo-ui/references/swift-ui.md: sha256:9b2727190bd49dd5ddd495ce702745f9490bd7ed9a42d9bd9c7cb75219084f8e
     .claude/skills/expo-ui/references/universal.md: sha256:b86bc899fca5af6bd8cd1c34ec617a13b4f6e769a9dda6dae1ccab2d079d71b4
-    .claude/skills/native-data-fetching/SKILL.md: sha256:ab855acdad6f593eb597b2891671808bf57fc4618fb0eaa26a84ea30576a5d5e
+    .claude/skills/expo-ui/scripts/list-components.js: sha256:cbc16cdbb2b924a3d73898e1baa3f9c5c634f513383d1a531b2d9ff6f2171f4c
+    .claude/skills/native-data-fetching/SKILL.md: sha256:3d618d82a596c0ecf9edb05db869fcfcb414e11f3f307a43c5c2bbd3ca6ce3ba
     .claude/skills/native-data-fetching/agents/openai.yaml: sha256:fac4963b9e8a548760d2712f15b65e7e60be6e38a6b49bcbfdd7a7ef67f1edda
     .claude/skills/native-data-fetching/references/expo-router-loaders.md: sha256:f842c86483a15380c44a4b49db27bf3d41e17b48b1f44b9a2bbacc563a9dcbe6
     .claude/skills/upgrading-expo/SKILL.md: sha256:54cec12d84cbf11c275e999444ba5a08936346062b12e701f44b78bd4454bb15
@@ -749,25 +804,34 @@ dependencies:
     .claude/skills/upgrading-expo/references/react-navigation-to-expo-router.md: sha256:083fb891adb87a1ab02aff92b1f322014ecb2427014e20194ff9e05f5d321ca9
     .claude/skills/use-dom/SKILL.md: sha256:7041bb26db02e24c45eb6c4c4879138a0f52786dd928eefd66c90a35b0e3197d
     .claude/skills/use-dom/agents/openai.yaml: sha256:bd4ef942149c5483bf319bb7660e138e1cb2d52f48d160f3dd9fff7197141772
+    .claude/skills/web-to-native/SKILL.md: sha256:1da25df193a0b97455841b770e7863cb762550e9916d51f054f82fc253c802cf
+    .claude/skills/web-to-native/references/false-friends.md: sha256:6a0b5a5c098aca6b9f2cbc51b20a3562c9f4447211f8ed0dc07fdebaaa9a088c
+    .claude/skills/web-to-native/references/native-patterns.md: sha256:710aa8223ddcfe4f1cb146d1c31611fc2794c40a2170a748bbd764b64fb49159
+    .claude/skills/web-to-native/references/run-as-goal.md: sha256:12915e6b1a466d1f43e358e5ba8f0df13490abfa1accdf50207614fe40691e34
+    .claude/skills/web-to-native/references/verify-on-device.md: sha256:b9695542ae44ec973bf22588686a43f29fd1426d3447b09b709b271469e016cd
     .kiro/skills/add-app-clip/SKILL.md: sha256:ae921363ec897ebdb8acd9e39d5ebf9c51364d9f1e3e2f3454a429d6bee64513
     .kiro/skills/add-app-clip/agents/openai.yaml: sha256:872d3d2bea4cff5c5cc37c189bdc97e2bc0d5f7aa0454fb52df288d44533645c
     .kiro/skills/add-app-clip/references/native-module.md: sha256:d7c9514529016e63bba6c860d3035fcdaa16a47ec16ef94bf16ba0c691bb8f98
-    .kiro/skills/building-native-ui/SKILL.md: sha256:6c0ae7dbd727a0d8092990508b65539ae52785e9e20f3a0ce1c3f0edf8178c6b
+    .kiro/skills/building-native-ui/SKILL.md: sha256:39f7c31fa2b1a8f73f6becad2c9b89f50b8b29d768762c20383e5634505128a4
     .kiro/skills/building-native-ui/agents/openai.yaml: sha256:37fa8a5ece35fa4b5e25f34810e07618e57fac94fab478d15b18417652bdbc11
-    .kiro/skills/building-native-ui/references/animations.md: sha256:3e855090009f0fde1652694344b2bfb7d9ed9c645789e243933c3e58f28c3670
+    .kiro/skills/building-native-ui/references/animations.md: sha256:4faacd3e2a4f58437d9eeb715336590b2d7ca0e130e59f7db885e2689a9d38b0
     .kiro/skills/building-native-ui/references/controls.md: sha256:e63a7e92cac8a5d0ceb9ed5f05e19ea9cd4d865a8bea6ff8f8a82c74c77fa180
     .kiro/skills/building-native-ui/references/form-sheet.md: sha256:947de9cf35a15aacf3f02e96e45942b5e4826e536e529570886e5ddbb7ec8591
     .kiro/skills/building-native-ui/references/gradients.md: sha256:63ced0392f67c41bf90e726613d139a389db609799bfcb91124e6e69b9a66e70
-    .kiro/skills/building-native-ui/references/icons.md: sha256:0436582534ae1cc468805ac5ab9a3cb0fb25faeaededb1d5f415ea246814c596
-    .kiro/skills/building-native-ui/references/media.md: sha256:b05966f4b2ab48b57ea82da172359000295726585f7ffe18a2e5a1be93f2c14f
+    .kiro/skills/building-native-ui/references/icons.md: sha256:b6e6c1226e83f6e7345e185294872dc9f2b7c8fe21b2315524c69c16e2a8d360
+    .kiro/skills/building-native-ui/references/media.md: sha256:06f92362a4a28c2ad0f8826b9b113c4747b199585e8afd205b94e787fb15c564
     .kiro/skills/building-native-ui/references/route-structure.md: sha256:4c3d70edeb7e36d965c4d96fa150f23ee57e01be5f6c57dd3e34c6309aab7e87
-    .kiro/skills/building-native-ui/references/search.md: sha256:6eefcc0345167031b3661d17090100b101cbedc1053de2e679090405658dfa92
+    .kiro/skills/building-native-ui/references/search.md: sha256:bb4785df4757d84f1aff09d34cdb84043e7099684b9731a24a1d79cc3c0df172
     .kiro/skills/building-native-ui/references/storage.md: sha256:265e8bc21adcd698062f18fa442e0e07e99e67868576f18aac2112e5381ffbf1
     .kiro/skills/building-native-ui/references/tabs.md: sha256:2793a7ac0a45cf65564bcf2f6f9282539d201a4b8bea620dc0b53de092454de4
     .kiro/skills/building-native-ui/references/toolbar-and-headers.md: sha256:14d9a71dd949bd2b28a5bd531f6b9c1b4f3fa847a86db8c5218fee67b5295769
-    .kiro/skills/building-native-ui/references/visual-effects.md: sha256:2c1dfd5438f27e4c15bc09ececc57810a58a13e633dc782caac93f8f52cadadf
+    .kiro/skills/building-native-ui/references/visual-effects.md: sha256:3b7cfcff2a3eb9e63cef42a0dbbaa31f659fc2e4b527e0da5f7906a50191279d
     .kiro/skills/building-native-ui/references/webgpu-three.md: sha256:3a247a7740e4bab4aea5dec8b81c7782a5918bb221838a05f6a94c669f145679
     .kiro/skills/building-native-ui/references/zoom-transitions.md: sha256:cacc1665e9f3044762765d2cd55fd1ead9627f06478f12dfa2280c6f9ae88ede
+    .kiro/skills/eas-simulator/SKILL.md: sha256:2ef147a7e14b96b40d263fa29870236fed40f8c8151bc1cb4deab652a4b03b7f
+    .kiro/skills/eas-simulator/references/controllers.md: sha256:6c0fe83bcbf5585a502b4f5b454bf96024732c8bff425c9cbf6afad7a5b26766
+    .kiro/skills/eas-simulator/references/run-your-app.md: sha256:a27a6903cced8bcd7de6a5f397c92ca03c8c8f957af75d3005a2c49a8f6b864c
+    .kiro/skills/eas-simulator/references/troubleshooting.md: sha256:eaeb43555be6a24e4e97519e1b849fb5d0053e934e4e8411d7b61aad999a605f
     .kiro/skills/eas-update-insights/SKILL.md: sha256:bb2796387c2781576d1ed75065559eb06bbd836ad2ca61269f862d9d29f8302c
     .kiro/skills/eas-update-insights/agents/openai.yaml: sha256:73b6a35552b7d2f829fddb3fb3186464977df37f897fa8260ac7221aabc245b4
     .kiro/skills/eas-update-insights/references/channel-insights-schema.md: sha256:4e11651a81f616017f04d99e1efbe014cde01db43d40c31a550665516f3442f0
@@ -785,14 +849,14 @@ dependencies:
     .kiro/skills/expo-cicd-workflows/scripts/fetch.js: sha256:6e00c6fa7277c429c18ae211d1b6515caf2fdf500136cf297921c05d27447483
     .kiro/skills/expo-cicd-workflows/scripts/package.json: sha256:c405e32c72836c09697b19e326ac56786b6d06d830fce577d0785c9382a69daf
     .kiro/skills/expo-cicd-workflows/scripts/validate.js: sha256:6cae9885ca926a450dc8ad08775d80334f551ed5192c7d1acadf89d34201bd4c
-    .kiro/skills/expo-deployment/SKILL.md: sha256:81b700b0cfe12ac175d4f64d052464db5f7ddc40e8a29cba52c642d87acee0dd
+    .kiro/skills/expo-deployment/SKILL.md: sha256:44271232a7372d62abf4f7d7001c63c3de043763be1c787e874050e29f1b6943
     .kiro/skills/expo-deployment/agents/openai.yaml: sha256:824534f57daa620a560653f922878fad0a2e8d619d37da8f00582aa02f2d45e1
-    .kiro/skills/expo-deployment/references/app-store-metadata.md: sha256:47fbf9077985548a1f58daf584f5fadea24f8b7edc9107230b5d93765708d81f
-    .kiro/skills/expo-deployment/references/ios-app-store.md: sha256:714ecc7855d899892dda359be4a2f8f55f636a4c12c95d96b623046fb4ca0b9b
+    .kiro/skills/expo-deployment/references/app-store-metadata.md: sha256:6fddf7b8b78bfd90fdcaed5ae0b16db7788a884aee46d1f42e01e4b7b8ad7bfa
+    .kiro/skills/expo-deployment/references/ios-app-store.md: sha256:a32a51e5e534bbb40e61de855deb184788296eb48f250616dc673b866ccfd518
     .kiro/skills/expo-deployment/references/play-store.md: sha256:54b7bf0729e8706bcb24c66c16b2c4fea81a4689709a37b6ed5776bc2974f074
     .kiro/skills/expo-deployment/references/testflight.md: sha256:2f6d2451c676f1360f46defcad6feebb1ad341926a49ed015c5d2aa100c9525d
-    .kiro/skills/expo-deployment/references/workflows.md: sha256:01b66f8fd1754cf2d51c90a4f65505aae32deeea0c6bed169cf8db151f8f415e
-    .kiro/skills/expo-dev-client/SKILL.md: sha256:aa79e42e9cd96ea92d4e691fb8222145055dec1b868b7defce224a41d8878a5f
+    .kiro/skills/expo-deployment/references/workflows.md: sha256:b37e13e0c0488957b0ca8234627e446509496c43daaa574fbb86244adca4ee25
+    .kiro/skills/expo-dev-client/SKILL.md: sha256:0f17483c10b672144e6e41aa92ced36c7e4c67190b9d6bbb3f64cb04bc829df6
     .kiro/skills/expo-dev-client/agents/openai.yaml: sha256:5264dcf91147638731286e38421b65de4bd60858bba93707ab6b4f1f1ad854aa
     .kiro/skills/expo-examples/SKILL.md: sha256:3758d0db0053021711a159fbae5f332c57a7b4e0c77dae311c299d3fd048ce71
     .kiro/skills/expo-examples/references/catalog.md: sha256:d0209653f295f177b50c62b726a95b4058c7bfc8293adf13d53f2e031ac870c4
@@ -810,13 +874,14 @@ dependencies:
     .kiro/skills/expo-observe/references/setup.md: sha256:b482975a937746fdc81eea37a97c645ec3c8279d0f3fad4ffc0e11c290442199
     .kiro/skills/expo-tailwind-setup/SKILL.md: sha256:6abfc223a376571e0ee84014b3b474a3f2828ac2ebcde59c5c2b6b4bc802e233
     .kiro/skills/expo-tailwind-setup/agents/openai.yaml: sha256:31dcb98d27e7f55c97cb019772f526323ee1445625edc156b42c6a57d1bb83c4
-    .kiro/skills/expo-ui/SKILL.md: sha256:9bdbd51eaeda3ae12d959e06f7c3a1e9d5965dbca6204c0e40c358501983d87b
+    .kiro/skills/expo-ui/SKILL.md: sha256:174ecca8065d46df5228e74a1d2f85cd8bf5e716bcc3105a81f8df47d081f396
     .kiro/skills/expo-ui/agents/openai.yaml: sha256:abe551630c5975e13cd06a55a698a880b0663b63436966abdd50053fcccafe5a
     .kiro/skills/expo-ui/references/drop-in-replacements.md: sha256:0929fb52954dd0a359a2925a23c392f650d0976f25d93bca190e5b9ff200373f
-    .kiro/skills/expo-ui/references/jetpack-compose.md: sha256:f9aad86a7d01b9fb9889c4c2eed50c8a1ac01c8a3bea585660e07066a649c73b
-    .kiro/skills/expo-ui/references/swift-ui.md: sha256:9358b7a30af323aee3769b642c4f938acd5388936e907707dd58b93fe37e805d
+    .kiro/skills/expo-ui/references/jetpack-compose.md: sha256:7322bb663fa260b3521c092f425e5d27589bd87e6a6a653e8864bd6f5f9ad749
+    .kiro/skills/expo-ui/references/swift-ui.md: sha256:9b2727190bd49dd5ddd495ce702745f9490bd7ed9a42d9bd9c7cb75219084f8e
     .kiro/skills/expo-ui/references/universal.md: sha256:b86bc899fca5af6bd8cd1c34ec617a13b4f6e769a9dda6dae1ccab2d079d71b4
-    .kiro/skills/native-data-fetching/SKILL.md: sha256:ab855acdad6f593eb597b2891671808bf57fc4618fb0eaa26a84ea30576a5d5e
+    .kiro/skills/expo-ui/scripts/list-components.js: sha256:cbc16cdbb2b924a3d73898e1baa3f9c5c634f513383d1a531b2d9ff6f2171f4c
+    .kiro/skills/native-data-fetching/SKILL.md: sha256:3d618d82a596c0ecf9edb05db869fcfcb414e11f3f307a43c5c2bbd3ca6ce3ba
     .kiro/skills/native-data-fetching/agents/openai.yaml: sha256:fac4963b9e8a548760d2712f15b65e7e60be6e38a6b49bcbfdd7a7ef67f1edda
     .kiro/skills/native-data-fetching/references/expo-router-loaders.md: sha256:f842c86483a15380c44a4b49db27bf3d41e17b48b1f44b9a2bbacc563a9dcbe6
     .kiro/skills/upgrading-expo/SKILL.md: sha256:54cec12d84cbf11c275e999444ba5a08936346062b12e701f44b78bd4454bb15
@@ -830,10 +895,17 @@ dependencies:
     .kiro/skills/upgrading-expo/references/react-navigation-to-expo-router.md: sha256:083fb891adb87a1ab02aff92b1f322014ecb2427014e20194ff9e05f5d321ca9
     .kiro/skills/use-dom/SKILL.md: sha256:7041bb26db02e24c45eb6c4c4879138a0f52786dd928eefd66c90a35b0e3197d
     .kiro/skills/use-dom/agents/openai.yaml: sha256:bd4ef942149c5483bf319bb7660e138e1cb2d52f48d160f3dd9fff7197141772
-  content_hash: sha256:8f27cab08bb5d4c8a3c31f16c19a45ebd569f09c9c14c26c0713f68e6a0061eb
+    .kiro/skills/web-to-native/SKILL.md: sha256:1da25df193a0b97455841b770e7863cb762550e9916d51f054f82fc253c802cf
+    .kiro/skills/web-to-native/references/false-friends.md: sha256:6a0b5a5c098aca6b9f2cbc51b20a3562c9f4447211f8ed0dc07fdebaaa9a088c
+    .kiro/skills/web-to-native/references/native-patterns.md: sha256:710aa8223ddcfe4f1cb146d1c31611fc2794c40a2170a748bbd764b64fb49159
+    .kiro/skills/web-to-native/references/run-as-goal.md: sha256:12915e6b1a466d1f43e358e5ba8f0df13490abfa1accdf50207614fe40691e34
+    .kiro/skills/web-to-native/references/verify-on-device.md: sha256:b9695542ae44ec973bf22588686a43f29fd1426d3447b09b709b271469e016cd
+  content_hash: sha256:90323c37379d656ac0a03d43501452e85048f5c99404b302f12f4090c69de359
 - repo_url: github/gh-stack
+  name: gh-stack
   host: github.com
-  resolved_commit: 67d118fbf47d462d660597e2df34d6ccc542c9f3
+  resolved_commit: 514f5abf867a4141f6cbf8b774a8f86991daa6b0
+  version: 0.0.0
   package_type: skill_bundle
   deployed_files:
   - .agents/skills/gh-stack
@@ -843,13 +915,15 @@ dependencies:
   - .kiro/skills/gh-stack
   - .kiro/skills/gh-stack/SKILL.md
   deployed_file_hashes:
-    .agents/skills/gh-stack/SKILL.md: sha256:b933788e51ad65144ce8218996063dc0a872a99fb75d59b70212e79007469ffa
-    .claude/skills/gh-stack/SKILL.md: sha256:b933788e51ad65144ce8218996063dc0a872a99fb75d59b70212e79007469ffa
-    .kiro/skills/gh-stack/SKILL.md: sha256:b933788e51ad65144ce8218996063dc0a872a99fb75d59b70212e79007469ffa
-  content_hash: sha256:8b5c24618647d7718bfb68cdb555aeafe5ddda3425e062dcfa97ba4ce4cf2604
+    .agents/skills/gh-stack/SKILL.md: sha256:e6d9b3fb1baeb39c4f382366d5a8ed89f87c1bcd88745d92d026d5588a9bd473
+    .claude/skills/gh-stack/SKILL.md: sha256:e6d9b3fb1baeb39c4f382366d5a8ed89f87c1bcd88745d92d026d5588a9bd473
+    .kiro/skills/gh-stack/SKILL.md: sha256:e6d9b3fb1baeb39c4f382366d5a8ed89f87c1bcd88745d92d026d5588a9bd473
+  content_hash: sha256:3e658619e42a3e788d4a3ba9f677839b4bf2fa530392b1e7100af92acbb83036
 - repo_url: mattpocock/skills
+  name: mattpocock-skills
   host: github.com
-  resolved_commit: 6eeb81b5fcfeeb5bd531dd47ab2f9f2bbea27461
+  resolved_commit: a83f22b60f61b4ac08a98477069988382948641a
+  version: a83f22b
   package_type: marketplace_plugin
   deployed_files:
   - .agents/skills/domain-modeling
@@ -901,15 +975,17 @@ dependencies:
     .kiro/skills/grill-me/SKILL.md: sha256:6189dfceb7304a6e5558f75d87e68fa3bc7fcf7ba120e44f21f8a61fe01eba54
     .kiro/skills/grill-with-docs/SKILL.md: sha256:610d091047bcfb9db0f75c057d15538481a721111579fc5ec7f83ad9131a2165
     .kiro/skills/grilling/SKILL.md: sha256:fe00af3e1815f97c0a7644605479328a726b5cd95ba6ef56a4be2a92fae6c20f
-  content_hash: sha256:0f141b68d72e78d13a9000f99542aaecd53ed7eea15f4611dbc2961ab79efcee
+  content_hash: sha256:6326ad57cb734f4721eb471da1350da11f9f2e146b840446c7a551e86a602522
   skill_subset:
   - skills/engineering/domain-modeling
   - skills/engineering/grill-with-docs
   - skills/productivity/grill-me
   - skills/productivity/grilling
 - repo_url: microsoft/apm
+  name: apm-guide
   host: github.com
-  resolved_commit: 975f8f00055806bbee4486c2ab6f1ebb2cfce746
+  resolved_commit: bf4a2b8101418a21332a3af59f26384a6ce27eb7
+  version: 1.0.0
   virtual_path: packages/apm-guide
   is_virtual: true
   package_type: apm_package
@@ -950,39 +1026,41 @@ dependencies:
   deployed_file_hashes:
     .agents/skills/apm-usage/SKILL.md: sha256:e020dd84d578054403884e7d71aaf6b87fdac7835da9661923d9de8853cbf140
     .agents/skills/apm-usage/authentication.md: sha256:da001e4b25e6ca8d10b3773dc0d998cbc4afaffda3e09ea18255c44b1c28b0b7
-    .agents/skills/apm-usage/commands.md: sha256:e6a48639c7f0838ba83009263d6e063ed0efb3dc2e8eb53bad55000e88a66c23
-    .agents/skills/apm-usage/dependencies.md: sha256:a6cae7d02d5f0bd4eddedf5282e543009237c1a728e98093f603a5c2f930c315
-    .agents/skills/apm-usage/governance.md: sha256:b6f81f3163616e73509a2fc29cf9bf0932c9f84c010dcb3d7c057547eebc2c29
+    .agents/skills/apm-usage/commands.md: sha256:1350696e2f7059047480bc1cebb3e1368c80022922bbbf34aac8e847791971a7
+    .agents/skills/apm-usage/dependencies.md: sha256:146ab49fbeed12c3dcc8f305f2600aa06cc0315376c9e6b9317b10eebea35ec2
+    .agents/skills/apm-usage/governance.md: sha256:9665f595117dee00840692a17fd7b0db3a987bb2b1eaf6df20eef876d0b2693d
     .agents/skills/apm-usage/installation.md: sha256:68bc959ac2d11f5ebf3edafcc7ac993395697dc5c99469ca7c10a09325a0c25e
-    .agents/skills/apm-usage/package-authoring.md: sha256:59bca6335b2507a885475c8cd0f7a4a5c56e7a98e0cf2ae2f3f4d45d13f3acd7
+    .agents/skills/apm-usage/package-authoring.md: sha256:a3a0817499473ed0795df1226abd8d597e6ab30681a52e9eb9295e6c615b97d8
     .agents/skills/apm-usage/troubleshooting.md: sha256:c0c2a9a6699b8512580e35a6b19c3cc105aa20e8ac65dbf8b8161dfd8ae7054b
     .agents/skills/apm-usage/workflow.md: sha256:805207ce68f51ee84d967f95ae9a3c316dfb7da011ebc8f5cc18a1817333a64f
     .claude/agents/apm-expert.md: sha256:e710ff88b7e4a96b55cb6a636bdc256b0b255492a87b3a5b008112d01ca441e5
     .claude/skills/apm-usage/SKILL.md: sha256:e020dd84d578054403884e7d71aaf6b87fdac7835da9661923d9de8853cbf140
     .claude/skills/apm-usage/authentication.md: sha256:da001e4b25e6ca8d10b3773dc0d998cbc4afaffda3e09ea18255c44b1c28b0b7
-    .claude/skills/apm-usage/commands.md: sha256:e6a48639c7f0838ba83009263d6e063ed0efb3dc2e8eb53bad55000e88a66c23
-    .claude/skills/apm-usage/dependencies.md: sha256:a6cae7d02d5f0bd4eddedf5282e543009237c1a728e98093f603a5c2f930c315
-    .claude/skills/apm-usage/governance.md: sha256:b6f81f3163616e73509a2fc29cf9bf0932c9f84c010dcb3d7c057547eebc2c29
+    .claude/skills/apm-usage/commands.md: sha256:1350696e2f7059047480bc1cebb3e1368c80022922bbbf34aac8e847791971a7
+    .claude/skills/apm-usage/dependencies.md: sha256:146ab49fbeed12c3dcc8f305f2600aa06cc0315376c9e6b9317b10eebea35ec2
+    .claude/skills/apm-usage/governance.md: sha256:9665f595117dee00840692a17fd7b0db3a987bb2b1eaf6df20eef876d0b2693d
     .claude/skills/apm-usage/installation.md: sha256:68bc959ac2d11f5ebf3edafcc7ac993395697dc5c99469ca7c10a09325a0c25e
-    .claude/skills/apm-usage/package-authoring.md: sha256:59bca6335b2507a885475c8cd0f7a4a5c56e7a98e0cf2ae2f3f4d45d13f3acd7
+    .claude/skills/apm-usage/package-authoring.md: sha256:a3a0817499473ed0795df1226abd8d597e6ab30681a52e9eb9295e6c615b97d8
     .claude/skills/apm-usage/troubleshooting.md: sha256:c0c2a9a6699b8512580e35a6b19c3cc105aa20e8ac65dbf8b8161dfd8ae7054b
     .claude/skills/apm-usage/workflow.md: sha256:805207ce68f51ee84d967f95ae9a3c316dfb7da011ebc8f5cc18a1817333a64f
     .codex/agents/apm-expert.toml: sha256:0b4bec64f7c6ab70df3841237928eaccfb927789d45300870ce56163230498c4
     .copilot/agents/apm-expert.agent.md: sha256:e710ff88b7e4a96b55cb6a636bdc256b0b255492a87b3a5b008112d01ca441e5
     .kiro/skills/apm-usage/SKILL.md: sha256:e020dd84d578054403884e7d71aaf6b87fdac7835da9661923d9de8853cbf140
     .kiro/skills/apm-usage/authentication.md: sha256:da001e4b25e6ca8d10b3773dc0d998cbc4afaffda3e09ea18255c44b1c28b0b7
-    .kiro/skills/apm-usage/commands.md: sha256:e6a48639c7f0838ba83009263d6e063ed0efb3dc2e8eb53bad55000e88a66c23
-    .kiro/skills/apm-usage/dependencies.md: sha256:a6cae7d02d5f0bd4eddedf5282e543009237c1a728e98093f603a5c2f930c315
-    .kiro/skills/apm-usage/governance.md: sha256:b6f81f3163616e73509a2fc29cf9bf0932c9f84c010dcb3d7c057547eebc2c29
+    .kiro/skills/apm-usage/commands.md: sha256:1350696e2f7059047480bc1cebb3e1368c80022922bbbf34aac8e847791971a7
+    .kiro/skills/apm-usage/dependencies.md: sha256:146ab49fbeed12c3dcc8f305f2600aa06cc0315376c9e6b9317b10eebea35ec2
+    .kiro/skills/apm-usage/governance.md: sha256:9665f595117dee00840692a17fd7b0db3a987bb2b1eaf6df20eef876d0b2693d
     .kiro/skills/apm-usage/installation.md: sha256:68bc959ac2d11f5ebf3edafcc7ac993395697dc5c99469ca7c10a09325a0c25e
-    .kiro/skills/apm-usage/package-authoring.md: sha256:59bca6335b2507a885475c8cd0f7a4a5c56e7a98e0cf2ae2f3f4d45d13f3acd7
+    .kiro/skills/apm-usage/package-authoring.md: sha256:a3a0817499473ed0795df1226abd8d597e6ab30681a52e9eb9295e6c615b97d8
     .kiro/skills/apm-usage/troubleshooting.md: sha256:c0c2a9a6699b8512580e35a6b19c3cc105aa20e8ac65dbf8b8161dfd8ae7054b
     .kiro/skills/apm-usage/workflow.md: sha256:805207ce68f51ee84d967f95ae9a3c316dfb7da011ebc8f5cc18a1817333a64f
-  content_hash: sha256:4dfe7362a629323f30d46aa2f909e6f58eb6baf2dd97f19ede7b7619da1d078c
+  content_hash: sha256:1623c2917653b9295c87a4b0b09fa0b3b3aa47a04f951cbe8f582e3f8d703b7e
   declared_license: MIT
 - repo_url: vercel-labs/agent-skills
+  name: agent-skills
   host: github.com
   resolved_commit: f8a72b9603728bb92a217a879b7e62e43ad76c81
+  version: unknown
   package_type: skill_bundle
   deployed_files:
   - .agents/skills/composition-patterns
@@ -2833,8 +2911,10 @@ dependencies:
     .kiro/skills/writing-guidelines/SKILL.md: sha256:89a5f581193289b80af58b980090aeed535047c8df2b55ccbaae0de40283a99d
   content_hash: sha256:18653366c6acc38365e61c70f29199d323b0a9ebbbc8f11f074aa600c7b0efad
 - repo_url: vercel-labs/skills
+  name: skills
   host: github.com
-  resolved_commit: e5c075e3a84b37c5eb398ab74e581558d3fceb0e
+  resolved_commit: 2adcfe5a4cce0ce5f4d5547a997b2a161ec5d127
+  version: 0.0.0
   package_type: skill_bundle
   deployed_files:
   - .agents/skills/find-skills
@@ -2844,10 +2924,10 @@ dependencies:
   - .kiro/skills/find-skills
   - .kiro/skills/find-skills/SKILL.md
   deployed_file_hashes:
-    .agents/skills/find-skills/SKILL.md: sha256:1e85f6f9686e145aca4a124e3b704b9bbea9aa87e08515c1e352eee70f6e6e7a
-    .claude/skills/find-skills/SKILL.md: sha256:1e85f6f9686e145aca4a124e3b704b9bbea9aa87e08515c1e352eee70f6e6e7a
-    .kiro/skills/find-skills/SKILL.md: sha256:1e85f6f9686e145aca4a124e3b704b9bbea9aa87e08515c1e352eee70f6e6e7a
-  content_hash: sha256:8ca44e1b8252b4785eeeef15bc0b64c0a45624abd570dbb1a2b31d3af91c7863
+    .agents/skills/find-skills/SKILL.md: sha256:deddc03b4b5f50755b97fcdb737a786676992ef7e9be614d2cd2c71e0320bebf
+    .claude/skills/find-skills/SKILL.md: sha256:deddc03b4b5f50755b97fcdb737a786676992ef7e9be614d2cd2c71e0320bebf
+    .kiro/skills/find-skills/SKILL.md: sha256:deddc03b4b5f50755b97fcdb737a786676992ef7e9be614d2cd2c71e0320bebf
+  content_hash: sha256:da9027bce1018aab91d6f4582683107511774979a6db8b80435d03d9e9de334b
 mcp_servers:
 - expo
 mcp_configs:
