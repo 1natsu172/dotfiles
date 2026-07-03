@@ -16,5 +16,9 @@
   "privacy": {
     "usageStatisticsEnabled": false
   },
-  "mcpServers": {}
+  "mcpServers": {
+    "context7": {
+      "httpUrl": "https://mcp.context7.com/mcp/oauth"
+    }
+  }
 }
