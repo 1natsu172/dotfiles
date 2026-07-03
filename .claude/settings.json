@@ -156,6 +156,7 @@
         ]
       },
       {
+        "_tag": "ccstatusline-managed",
         "hooks": [
           {
             "type": "command",
@@ -174,13 +175,14 @@
         ]
       },
       {
-        "matcher": "Skill",
+        "_tag": "ccstatusline-managed",
         "hooks": [
           {
             "type": "command",
             "command": "ccstatusline --hook"
           }
-        ]
+        ],
+        "matcher": "Skill"
       }
     ],
     "PostToolUse": [

@@ -106,7 +106,7 @@
         "rawValue": false,
         "metadata": {
           "hideWhenEmpty": "true",
-          "mode": "current"
+          "mode": "list"
         }
       }
     ],
@@ -152,6 +152,7 @@
   "defaultPadding": " ",
   "inheritSeparatorColors": true,
   "globalBold": true,
+  "gitCacheTtlSeconds": 5,
   "minimalistMode": false,
   "powerline": {
     "enabled": true,
@@ -167,6 +168,6 @@
     ],
     "theme": "tokyonight",
     "autoAlign": false,
-    "continueThemeAcrossLines": false
+    "continueThemeAcrossLines": true
   }
 }
