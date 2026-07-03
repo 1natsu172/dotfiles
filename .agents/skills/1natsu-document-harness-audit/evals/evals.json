@@ -1,0 +1,23 @@
+{
+  "skill_name": "1natsu-document-harness-audit",
+  "note": "fixture は document-harness-workspace/fixtures/ 配下。実行時に fixture をコピーしたrepo上で監査させ、提案一覧と（承認後の）修正を目視レビューする。実装結合（蒸留不足）の検出・コード乖離の裏取り・過剰検出しないこと（外部契約名）を報酬にする。",
+  "evals": [
+    {
+      "id": 1,
+      "name": "audit-distill-and-verify",
+      "fixture": "fixtures/fixture-c-audit",
+      "prompt": "このリポジトリのハーネスドキュメント、しばらく見直していないので実装と乖離していたり、書き方が古かったり、コードに寄りすぎている箇所がありそう。docs/ と .claude/rules/ を監査して問題と改善案を出してほしい。注: 現セッションでは私はまだ何も実装変更していません。既存ドキュメント全体の検査をお願いします。",
+      "expected_output": "audit として処理し（harness sync へリダイレクトしない）、9カテゴリで検査する。検出すべき主な問題: (1) コード乖離 = docs/auth-design.md が src/services/AuthService.ts を参照しているが実体は src/auth/service.ts。修正案の正しいパスはコードで裏取りする。(2) 実装結合 = docs/cache.md が内部変数名（_cache, _ttl）・メソッドシグネチャ・採用ライブラリ（node-cache）をそのまま転記している。swap test に基づき、契約と理由へ再蒸留する提案を出す。(3) 表現の陳腐化 = rules/auth.md の MUST/NEVER 連発を、意図を変えず短く理由ベースへ。過剰検出しないこと: env var 名 PASSWORD_RESET_TOKEN_TTL_MIN は外部契約面なので実装結合として槍玉に挙げない。提案→確認→実行のフローを取り、自動修正しない。",
+      "files": [],
+      "assertions": [
+        "audit として処理し、harness sync へリダイレクトしない",
+        "コード乖離を検出する: docs/auth-design.md の src/services/AuthService.ts 参照が古い（実体は src/auth/service.ts）。修正案の正しいパスをコードで裏取りしている（推測でない）",
+        "実装結合（蒸留不足）を検出する: docs/cache.md が内部変数名（_cache/_ttl）・メソッドシグネチャ・採用ライブラリ名（node-cache）を仕様として転記している",
+        "実装結合の是正方針が『再蒸留』である（記述を消すだけでなく、契約＋理由へ書き直す。機構名は rationale 側へ）",
+        "表現の陳腐化を検出する: rules/auth.md の MUST/NEVER 連発を、意図を変えず短く理由ベースに書き直す提案を出す",
+        "過剰検出しない: 外部契約面の env var 名（PASSWORD_RESET_TOKEN_TTL_MIN）を実装結合・蒸留不足として誤って槍玉に挙げない",
+        "提案→確認のフローを取り、自動修正しない"
+      ]
+    }
+  ]
+}

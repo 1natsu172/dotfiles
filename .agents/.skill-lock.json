@@ -1,0 +1,240 @@
+{
+  "version": 3,
+  "skills": {
+    "deploy-to-vercel": {
+      "source": "vercel-labs/agent-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/vercel-labs/agent-skills.git",
+      "skillPath": "skills/deploy-to-vercel/SKILL.md",
+      "skillFolderHash": "1378aa506439f26c809dbcfc61515cbd70f93d69",
+      "installedAt": "2026-07-03T12:37:55.558Z",
+      "updatedAt": "2026-07-03T12:37:55.558Z"
+    },
+    "vercel-cli-with-tokens": {
+      "source": "vercel-labs/agent-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/vercel-labs/agent-skills.git",
+      "skillPath": "skills/vercel-cli-with-tokens/SKILL.md",
+      "skillFolderHash": "279c8760375cb6a47a4a8a312b652b0745c6d776",
+      "installedAt": "2026-07-03T12:37:55.559Z",
+      "updatedAt": "2026-07-03T12:37:55.559Z"
+    },
+    "vercel-composition-patterns": {
+      "source": "vercel-labs/agent-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/vercel-labs/agent-skills.git",
+      "skillPath": "skills/composition-patterns/SKILL.md",
+      "skillFolderHash": "bf90d0a4b83ea054653350f9c67f6de235d3a368",
+      "installedAt": "2026-07-03T12:37:55.559Z",
+      "updatedAt": "2026-07-03T12:37:55.559Z"
+    },
+    "vercel-optimize": {
+      "source": "vercel-labs/agent-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/vercel-labs/agent-skills.git",
+      "skillPath": "skills/vercel-optimize/SKILL.md",
+      "skillFolderHash": "0901aa3667db7a6e5cc40b213327290bf6556373",
+      "installedAt": "2026-07-03T12:37:55.559Z",
+      "updatedAt": "2026-07-03T12:37:55.559Z"
+    },
+    "vercel-react-best-practices": {
+      "source": "vercel-labs/agent-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/vercel-labs/agent-skills.git",
+      "skillPath": "skills/react-best-practices/SKILL.md",
+      "skillFolderHash": "343db72180d05814949fef7d46be96b5c6ee86b3",
+      "installedAt": "2026-07-03T12:37:55.559Z",
+      "updatedAt": "2026-07-03T12:37:55.559Z"
+    },
+    "vercel-react-native-skills": {
+      "source": "vercel-labs/agent-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/vercel-labs/agent-skills.git",
+      "skillPath": "skills/react-native-skills/SKILL.md",
+      "skillFolderHash": "8b4c6a51914e2111ab6f4f00cb81778652aa241d",
+      "installedAt": "2026-07-03T12:37:55.559Z",
+      "updatedAt": "2026-07-03T12:37:55.559Z"
+    },
+    "vercel-react-view-transitions": {
+      "source": "vercel-labs/agent-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/vercel-labs/agent-skills.git",
+      "skillPath": "skills/react-view-transitions/SKILL.md",
+      "skillFolderHash": "4d46c637057aae90b9ec5280190c25dc0d90ec28",
+      "installedAt": "2026-07-03T12:37:55.560Z",
+      "updatedAt": "2026-07-03T12:37:55.560Z"
+    },
+    "web-design-guidelines": {
+      "source": "vercel-labs/agent-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/vercel-labs/agent-skills.git",
+      "skillPath": "skills/web-design-guidelines/SKILL.md",
+      "skillFolderHash": "3116f3e62dbd02b44a598b1aa690d2a8938e8f89",
+      "installedAt": "2026-07-03T12:37:55.560Z",
+      "updatedAt": "2026-07-03T12:37:55.560Z"
+    },
+    "writing-guidelines": {
+      "source": "vercel-labs/agent-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/vercel-labs/agent-skills.git",
+      "skillPath": "skills/writing-guidelines/SKILL.md",
+      "skillFolderHash": "17d954cadfb8dec50bf0c707c9e7634be9ae9fe8",
+      "installedAt": "2026-07-03T12:37:55.560Z",
+      "updatedAt": "2026-07-03T12:37:55.560Z"
+    },
+    "find-skills": {
+      "source": "vercel-labs/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/vercel-labs/skills.git",
+      "skillPath": "skills/find-skills/SKILL.md",
+      "skillFolderHash": "eb6a23305aea6e340d14b9de3766e721f9f4861b",
+      "installedAt": "2026-07-03T12:37:58.963Z",
+      "updatedAt": "2026-07-03T12:37:58.963Z"
+    },
+    "gh-stack": {
+      "source": "github/gh-stack",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/github/gh-stack.git",
+      "skillPath": "skills/gh-stack/SKILL.md",
+      "skillFolderHash": "c68c56b3414753690759b148af1ce5a5c717d774",
+      "installedAt": "2026-07-03T12:50:05.081Z",
+      "updatedAt": "2026-07-03T12:50:05.081Z"
+    },
+    "1natsu-auto-resolve-conflicts": {
+      "source": "1natsu-vacation/agent-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/1natsu-vacation/agent-skills.git",
+      "skillPath": "skills/1natsu-auto-resolve-conflicts/SKILL.md",
+      "skillFolderHash": "440cc1bf07c56195f4c7fd6d1487a3d20b253bbf",
+      "installedAt": "2026-07-03T12:50:32.623Z",
+      "updatedAt": "2026-07-03T12:50:32.623Z"
+    },
+    "1natsu-commit": {
+      "source": "1natsu-vacation/agent-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/1natsu-vacation/agent-skills.git",
+      "skillPath": "skills/1natsu-commit/SKILL.md",
+      "skillFolderHash": "74390963d162f2725a479b55d7c092f054802b90",
+      "installedAt": "2026-07-03T12:50:32.625Z",
+      "updatedAt": "2026-07-03T12:50:32.625Z"
+    },
+    "1natsu-conventional-commits": {
+      "source": "1natsu-vacation/agent-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/1natsu-vacation/agent-skills.git",
+      "skillPath": "skills/1natsu-conventional-commits/SKILL.md",
+      "skillFolderHash": "9304a00e01f6387453c23ae0ecf0638d8d6a4c23",
+      "installedAt": "2026-07-03T12:50:32.626Z",
+      "updatedAt": "2026-07-03T12:50:32.626Z"
+    },
+    "1natsu-create-pr": {
+      "source": "1natsu-vacation/agent-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/1natsu-vacation/agent-skills.git",
+      "skillPath": "skills/1natsu-create-pr/SKILL.md",
+      "skillFolderHash": "1644e8f20030211c20ad350ec0f92146dc64b19d",
+      "installedAt": "2026-07-03T12:50:32.627Z",
+      "updatedAt": "2026-07-03T12:50:32.627Z"
+    },
+    "1natsu-document-harness": {
+      "source": "1natsu-vacation/agent-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/1natsu-vacation/agent-skills.git",
+      "skillPath": "skills/1natsu-document-harness/SKILL.md",
+      "skillFolderHash": "f30c97643e18e5bf309be228451310e8efab86f0",
+      "installedAt": "2026-07-03T12:50:32.628Z",
+      "updatedAt": "2026-07-03T12:50:32.628Z"
+    },
+    "1natsu-document-harness-audit": {
+      "source": "1natsu-vacation/agent-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/1natsu-vacation/agent-skills.git",
+      "skillPath": "skills/1natsu-document-harness-audit/SKILL.md",
+      "skillFolderHash": "0c2c1099a95639499e18e7dfa46b1860ff3ee13b",
+      "installedAt": "2026-07-03T12:50:32.629Z",
+      "updatedAt": "2026-07-03T12:50:32.629Z"
+    },
+    "1natsu-document-harness-model": {
+      "source": "1natsu-vacation/agent-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/1natsu-vacation/agent-skills.git",
+      "skillPath": "skills/1natsu-document-harness-model/SKILL.md",
+      "skillFolderHash": "3e012adad032a2b540a6d020aa74fd4f9a474f9c",
+      "installedAt": "2026-07-03T12:50:32.629Z",
+      "updatedAt": "2026-07-03T12:50:32.629Z"
+    },
+    "1natsu-entire-context": {
+      "source": "1natsu-vacation/agent-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/1natsu-vacation/agent-skills.git",
+      "skillPath": "skills/1natsu-entire-context/SKILL.md",
+      "skillFolderHash": "5261b5b94668113041882bd8d931d9625efdc168",
+      "installedAt": "2026-07-03T12:50:32.630Z",
+      "updatedAt": "2026-07-03T12:50:32.630Z"
+    },
+    "1natsu-error-handling": {
+      "source": "1natsu-vacation/agent-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/1natsu-vacation/agent-skills.git",
+      "skillPath": "skills/1natsu-error-handling/SKILL.md",
+      "skillFolderHash": "b4f35851acef6e5b36ed1b7e9d0dd6a60dae2f42",
+      "installedAt": "2026-07-03T12:50:32.631Z",
+      "updatedAt": "2026-07-03T12:50:32.631Z"
+    },
+    "1natsu-git-analysis": {
+      "source": "1natsu-vacation/agent-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/1natsu-vacation/agent-skills.git",
+      "skillPath": "skills/1natsu-git-analysis/SKILL.md",
+      "skillFolderHash": "36505073d35982ccd88f9f292d0960986d4fe7ab",
+      "installedAt": "2026-07-03T12:50:32.631Z",
+      "updatedAt": "2026-07-03T12:50:32.631Z"
+    },
+    "1natsu-pair-debug": {
+      "source": "1natsu-vacation/agent-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/1natsu-vacation/agent-skills.git",
+      "skillPath": "skills/1natsu-pair-debug/SKILL.md",
+      "skillFolderHash": "479148c8754d754ded4cb70df0c457165be9f8b2",
+      "installedAt": "2026-07-03T12:50:32.632Z",
+      "updatedAt": "2026-07-03T12:50:32.632Z"
+    },
+    "1natsu-pair-resolve-conflicts": {
+      "source": "1natsu-vacation/agent-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/1natsu-vacation/agent-skills.git",
+      "skillPath": "skills/1natsu-pair-resolve-conflicts/SKILL.md",
+      "skillFolderHash": "547bd54ab180dad08e9f14af11fbcf833d1b98a3",
+      "installedAt": "2026-07-03T12:50:32.632Z",
+      "updatedAt": "2026-07-03T12:50:32.632Z"
+    },
+    "1natsu-pr-review-handler": {
+      "source": "1natsu-vacation/agent-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/1natsu-vacation/agent-skills.git",
+      "skillPath": "skills/1natsu-pr-review-handler/SKILL.md",
+      "skillFolderHash": "42f0afa8636f7c4f7e5de508f84adf162e27b4e4",
+      "installedAt": "2026-07-03T12:50:32.633Z",
+      "updatedAt": "2026-07-03T12:50:32.633Z"
+    }
+  },
+  "dismissed": {
+    "findSkillsPrompt": true
+  },
+  "lastSelectedAgents": [
+    "amp",
+    "antigravity",
+    "antigravity-cli",
+    "cline",
+    "codex",
+    "cursor",
+    "deepagents",
+    "gemini-cli",
+    "github-copilot",
+    "kimi-code-cli",
+    "opencode",
+    "warp",
+    "zed",
+    "claude-code"
+  ]
+}

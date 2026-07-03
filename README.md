@@ -303,7 +303,7 @@ Authorization ヘッダへの注入（Claude Code の headersHelper 経由）も
 ### Agent Skills
 
 個人のエージェントスキルは別リポジトリ（[`1natsu-vacation/agent-skills`](https://github.com/1natsu-vacation/agent-skills)）で管理している。
-apmで管理されており、`.apm/apm.yml` でグローバル管理している。`apm install -g` で展開される。
+vercel/skillsで管理されており、`.agents/.skill-lock.json` でグローバル管理している。
 
 ### mcp
 
