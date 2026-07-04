@@ -159,9 +159,9 @@
       "sourceType": "github",
       "sourceUrl": "https://github.com/1natsu-vacation/agent-skills.git",
       "skillPath": "skills/1natsu-document-harness-model/SKILL.md",
-      "skillFolderHash": "3e012adad032a2b540a6d020aa74fd4f9a474f9c",
+      "skillFolderHash": "b05be183a72333af1107f8e330e1db9fd3e6081b",
       "installedAt": "2026-07-03T12:50:32.629Z",
-      "updatedAt": "2026-07-03T12:50:32.629Z"
+      "updatedAt": "2026-07-04T12:29:53.675Z"
     },
     "1natsu-entire-context": {
       "source": "1natsu-vacation/agent-skills",

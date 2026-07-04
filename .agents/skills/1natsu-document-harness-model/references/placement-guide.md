@@ -81,6 +81,8 @@
 
 既定は lazy に倒し、eager にする時はその場に意図マーカーを残す（→ SKILL.md「コンテキスト経済: eager / lazy と意図の明示」）。
 
+> 注: `@path` は CLAUDE.md 本文に書いただけで import が発火する。パスを「説明として言及」したいだけならバックティックで囲む（例 `` `@README` ``）。import 解析は Markdown のコードスパン／フェンス内をスキップするため、囲めば literal のまま残る。
+
 ## ネスト rules と glob 解決（monorepo・実測準拠）
 
 ネストした `packages/xxx/.claude/rules/` は正式にロードされる（`paths` なしなら配下ファイルを Read した時に on-demand、`paths` ありならマッチ時）。
@@ -91,5 +93,7 @@
 - パッケージ `packages/api/.claude/rules/api.md` の `paths: ["src/**"]` → **パッケージ起点**で `packages/api/src/**` にマッチ
 
 → パッケージ内 rule の `paths` はパッケージ相対で短く書く（`src/**`）のが正しい。
+
+`paths` のマッチは、v2.1.198 以降 **symlink 経由でプロジェクトディレクトリへ到達したパスにも効く**（symlinked checkout 等）。これは上流ドキュメント記載の仕様で、本節の他項目（実測準拠）とは異なり未実測。
 
 > 注: プロジェクト `.claude/settings.json` は**起動ディレクトリのものだけ**読まれ、祖先からは継承されない（CLAUDE.md/rules の継承挙動とは別）。
