@@ -307,11 +307,12 @@ vercel/skillsで管理されており、`.agents/.skill-lock.json` でグロー�
 
 ### mcp
 
-`dotfiles/.mcp.json` が実質mcpサーバーのメモになっている。（なぜこんな運用になるかというと、`~/.claude.json`は秘匿情報がありうるためコミットできないから）。
+`dotfiles/.mcp.json` がグローバルのmcpサーバーのリスト兼テンプレートリストになっている。（`~/.claude.json`のmcpServersに書き込まれることがあるが、秘匿情報がありうるためコミットしない）。
 
-`dotfiles/.claude/settings.json` の `enabledMcpjsonServers` はこのdotfilesプロジェクト内でのみ有効にするMCPを記述している。
-`~/.claude.json` の `"mcpSevers"` に書かれているMCPが真のグローバルスコープ設定になっており、マシンWidenなMCPはここに記述する。
-プロジェクト固有のMCPはプロジェクトごとに `.mcp.json` を用意して、 `settings.json` で管理する。またプロジェクトの都合でマシンWidenなMCPをdisableにしたい場合は、個別に `~/.claude.json` のリポジトリスコープの設定でコントロールする（ `/mcp` で操作すると自動で記述される）
+`dotfiles/.claude/settings.json` の `enabledMcpjsonServers` で `dotfiles/.mcp.json` 定義の中からマシンWidenに有効にするMCPを定義している。
+`enabledMcpjsonServers` に定義していないが `dotfiles/.mcp.json` にリストされているMCPは、claude code初回起動時に個別有効するかをTUIで聞かれる。
+
+プロジェクト固有のMCPは、プロジェクトごとに `.mcp.json` を用意して、プロジェクトの `.claude/settings.json` で管理する。またプロジェクトの都合でマシンWidenなMCPをdisableにしたい場合は、個別に `~/.claude.json` のリポジトリスコープの設定でコントロールする（ `/mcp` で操作すると自動で記述される）。
 
 #### context7
 

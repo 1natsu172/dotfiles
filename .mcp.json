@@ -1,55 +1,51 @@
 {
-  "mcpServers": {
-    "github-pull-requests": {
-      "type": "http",
-      "url": "https://api.githubcopilot.com/mcp/x/pull_requests",
-      "headersHelper": "$HOME/dotfiles/bin/claude-utils/mcp-auth-header.sh GITHUB_MCP_TOKEN"
-    },
-    "github-issues-readonly": {
-      "type": "http",
-      "url": "https://api.githubcopilot.com/mcp/x/issues/readonly",
-      "headersHelper": "$HOME/dotfiles/bin/claude-utils/mcp-auth-header.sh GITHUB_MCP_TOKEN"
-    },
-    "github-repos-readonly": {
-      "type": "http",
-      "url": "https://api.githubcopilot.com/mcp/x/repos/readonly",
-      "headersHelper": "$HOME/dotfiles/bin/claude-utils/mcp-auth-header.sh GITHUB_MCP_TOKEN"
-    },
-    "github-discussions-readonly": {
-      "type": "http",
-      "url": "https://api.githubcopilot.com/mcp/x/discussions/readonly",
-      "headersHelper": "$HOME/dotfiles/bin/claude-utils/mcp-auth-header.sh GITHUB_MCP_TOKEN"
-    },
-    "github-actions-readonly": {
-      "type": "http",
-      "url": "https://api.githubcopilot.com/mcp/x/actions/readonly",
-      "headersHelper": "$HOME/dotfiles/bin/claude-utils/mcp-auth-header.sh GITHUB_MCP_TOKEN"
-    },
-    "context7": {
-      "type": "http",
-      "url": "https://mcp.context7.com/mcp/oauth"
-    },
-    "sentry": {
-      "type": "http",
-      "url": "https://mcp.sentry.dev/mcp"
-    },
-    "socket-mcp": {
-      "type": "http",
-      "url": "https://mcp.socket.dev/"
-    },
-    "playwright": {
-      "type": "stdio",
-      "command": "bunx",
-      "args": [
-        "@playwright/mcp@latest"
-      ],
-      "env": {}
-    },
-    "chrome-devtools": {
-      "command": "bunx",
-      "args": [
-        "chrome-devtools-mcp@latest"
-      ]
-    }
-  }
+	"mcpServers": {
+		"github-pull-requests": {
+			"type": "http",
+			"url": "https://api.githubcopilot.com/mcp/x/pull_requests",
+			"headersHelper": "$HOME/dotfiles/bin/claude-utils/mcp-auth-header.sh GITHUB_MCP_TOKEN"
+		},
+		"github-issues-readonly": {
+			"type": "http",
+			"url": "https://api.githubcopilot.com/mcp/x/issues/readonly",
+			"headersHelper": "$HOME/dotfiles/bin/claude-utils/mcp-auth-header.sh GITHUB_MCP_TOKEN"
+		},
+		"github-repos-readonly": {
+			"type": "http",
+			"url": "https://api.githubcopilot.com/mcp/x/repos/readonly",
+			"headersHelper": "$HOME/dotfiles/bin/claude-utils/mcp-auth-header.sh GITHUB_MCP_TOKEN"
+		},
+		"github-discussions-readonly": {
+			"type": "http",
+			"url": "https://api.githubcopilot.com/mcp/x/discussions/readonly",
+			"headersHelper": "$HOME/dotfiles/bin/claude-utils/mcp-auth-header.sh GITHUB_MCP_TOKEN"
+		},
+		"github-actions-readonly": {
+			"type": "http",
+			"url": "https://api.githubcopilot.com/mcp/x/actions/readonly",
+			"headersHelper": "$HOME/dotfiles/bin/claude-utils/mcp-auth-header.sh GITHUB_MCP_TOKEN"
+		},
+		"context7": {
+			"type": "http",
+			"url": "https://mcp.context7.com/mcp/oauth"
+		},
+		"sentry": {
+			"type": "http",
+			"url": "https://mcp.sentry.dev/mcp"
+		},
+		"socket-mcp": {
+			"type": "http",
+			"url": "https://mcp.socket.dev/"
+		},
+		"playwright": {
+			"type": "stdio",
+			"command": "bunx",
+			"args": ["@playwright/mcp@latest"],
+			"env": {}
+		},
+		"chrome-devtools": {
+			"command": "bunx",
+			"args": ["chrome-devtools-mcp@latest"]
+		}
+	}
 }
