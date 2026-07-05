@@ -2,7 +2,6 @@
   "env": {
     "ENABLE_TOOL_SEARCH": "true",
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
-    "CLAUDE_CODE_DISABLE_MOUSE_CLICKS": "1",
     "GIT_SSL_CAINFO": "/opt/homebrew/etc/ca-certificates/cert.pem",
     "SSL_CERT_FILE": "/opt/homebrew/etc/ca-certificates/cert.pem",
     "CURL_CA_BUNDLE": "/opt/homebrew/etc/ca-certificates/cert.pem"
