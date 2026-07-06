@@ -28,7 +28,19 @@ experimental = true
 # — so managing npm itself bypasses the FLATT registry/token (node still runs npm's JS).
 # Pin `npm:npm` explicitly only if a project needs the old npm-installs-npm backend.
 # See docs/fnox-token-management.md.
-idiomatic_version_file_enable_tools = ["node", "pnpm", "yarn", "npm"]
+idiomatic_version_file_enable_tools = [
+  "node",
+  "deno",
+  "pnpm",
+  "yarn",
+  "npm",
+  "bun",
+  "go",
+  "java",
+  "python",
+  "ruby",
+  "rust",
+]
 
 [env]
 # Make XDG-aware tools (e.g. pnpm 11+ -> ~/.config/pnpm/config.yaml) use ~/.config
