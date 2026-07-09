@@ -156,7 +156,6 @@
         ]
       },
       {
-        "_tag": "ccstatusline-managed",
         "hooks": [
           {
             "type": "command",
@@ -175,14 +174,13 @@
         ]
       },
       {
-        "_tag": "ccstatusline-managed",
+        "matcher": "Skill",
         "hooks": [
           {
             "type": "command",
             "command": "ccstatusline --hook"
           }
-        ],
-        "matcher": "Skill"
+        ]
       }
     ],
     "PostToolUse": [
@@ -300,6 +298,12 @@
         "source": "github",
         "repo": "anthropics/claude-plugins-official"
       }
+    },
+    "entire-skills": {
+      "source": {
+        "source": "github",
+        "repo": "entireio/skills"
+      }
     }
   },
   "language": "Japanese",
@@ -366,10 +370,10 @@
     ]
   },
   "effortLevel": "xhigh",
+  "tui": "fullscreen",
   "skipWorkflowUsageWarning": true,
   "teammateMode": "auto",
   "remoteControlAtStartup": false,
   "agentPushNotifEnabled": true,
-  "voiceEnabled": true,
-  "tui": "fullscreen"
+  "voiceEnabled": true
 }
