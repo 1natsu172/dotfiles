@@ -163,15 +163,6 @@
       "installedAt": "2026-07-03T12:50:32.629Z",
       "updatedAt": "2026-07-04T12:29:53.675Z"
     },
-    "1natsu-entire-context": {
-      "source": "1natsu-vacation/agent-skills",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/1natsu-vacation/agent-skills.git",
-      "skillPath": "skills/1natsu-entire-context/SKILL.md",
-      "skillFolderHash": "5261b5b94668113041882bd8d931d9625efdc168",
-      "installedAt": "2026-07-03T12:50:32.630Z",
-      "updatedAt": "2026-07-03T12:50:32.630Z"
-    },
     "1natsu-error-handling": {
       "source": "1natsu-vacation/agent-skills",
       "sourceType": "github",
