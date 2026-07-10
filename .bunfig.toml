@@ -2,3 +2,7 @@
 # bun does not honor .npmrc's `min-release-age`; this is the equivalent for bun. (oven-sh/bun#22679)
 [install]
 minimumReleaseAge = 604800
+
+# bun does not honor .npmrc's `save-exact` outside a project with its own .npmrc (oven-sh/bun#22971, open).
+# This is the equivalent for bun; also requires $XDG_CONFIG_HOME/.bunfig.toml to be readable (oven-sh/bun#30842).
+exact = true

@@ -22,6 +22,7 @@
 .config/fnox/*
 !.config/fnox/config.toml
 !.config/ccstatusline
+!.config/.bunfig.toml
 *node_modules
 .zsh/history/
 .direnv
