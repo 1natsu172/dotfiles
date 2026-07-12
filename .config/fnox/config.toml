@@ -1,3 +1,6 @@
+# env明示していない secrets が意図せず shell integration / `fnox export` で漏れないようにデフォルトを安全側にしておく(https://fnox.jdx.dev/reference/configuration.html#env)
+env = "exec"
+
 # OS keychain で秘匿値を保護する provider
 [providers.keychain]
 type = "keychain"
