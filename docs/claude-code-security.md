@@ -31,6 +31,7 @@
 | `D2` | 2026-05-25 | 2.1.150 | Bash matcher はシェルオペレータ（`&&` `;` `\|` 等）と `$(...)` を分解して各部に適用するが、**別パス名（`/bin/echo` 等）・インタプリタ包み（`sh -c` / `bash -c` / `python -c`）は取りこぼす**。`sh -c '<denied>'` 一発で deny を回避できる → Bash deny は「うっかり承認を防ぐ床」であって境界ではない（境界は sandbox） |
 | `D3` | 2026-05-25 | 2.1.150 | **`Write(...)` deny は組み込み Write tool をブロックしない**。Write tool（作成/上書き）は Edit カテゴリで `Edit(...)` のみが縛る。`Write(...)` の実効は Bash redirect 遮断のみ。パス形式（`~/dir/**`/exact/`**/X`）で差は無く `Edit` の有無が全て。live-reload は file tool でも正常。実証: `Write(~/.kube/**)` のみ→作成が通り `Edit(~/.kube/**)` 追加→ブロック |
 | `D4` | 2026-05-25 | 2.1.150 | **`Read(//**/*.pem)`（秘密鍵保護）が公開 CA バンドル（`cert.pem`）まで巻き込み**、sandbox 内で CA を read 遮断する。結果、sandbox 内の `git push`/`curl` 等が CA をロードできず **TLS 確立前に失敗**（`error setting certificate verify locations`）。commit はローカルのみで無傷。対策は「sandbox 内で TLS を通す」節（CA バンドルを `allowRead` 例外＋env で参照）。問題は **Claude Code sandbox 固有**（通常ターミナルでは `Read(...)` deny が効かないので無関係） |
+| `D6` | 2026-07-12 | 2.1.207 | **sandbox の filesystem 判定は symlink 解決後の実体パス**（macOS Seatbelt）。`allowWrite` に symlink 側パス（例 `~/.bun/install/cache`）を書いても、実体（`~/dotfiles/.bun/install/cache`）への書き込みは `Operation not permitted` のまま。dotfiles 管理で `~/.X` が symlink のパスを許可するときは**実体側パスも併記**する（symlink 側単独では無効、将来 symlink を外しても壊れないよう二重記載が正）。実証: kestrel の worktree 作成で bun cache 書き込みが symlink 側許可のみで拒否→実体側追加で解消 |
 | `D5` | 2026-06-08 | 2.1.168 | **`.git/config`（完全一致）と `.git/hooks/` は harness 組み込みで sandbox-write-deny**（settings.json 由来でない。worktree 非依存で main repo でも `git config --local` 書き込みが `Operation not permitted`）。`objects`/`refs`/`logs`/`index`/`.git` 直下・`config.xxx` は許可なので **`git commit` は通るが `git push -u`/`--set-upstream`/`push.autoSetupRemote` は落ちる非対称**（tracking を `.git/config` に書くため）。しかも config 書き込み拒否でも **git は exit 0 ＋「branch '...' set up to track」でサイレント失敗** → upstream 永続化されず次の素 `git push` が「no upstream configured」。理由は `.git/config` の `core.sshCommand`/`fsmonitor`/alias/`hooksPath` が RCE 源（`~/.gitconfig` deny と同系統）。対策は §git の `excludedCommands` 行き。**Claude の Edit tool は `.git/config` を書ける**（seatbelt 外・`Edit(.git/config)` deny も無し）＝in-sandbox の `git branch -D` が残す orphan config section の手当てに使える。D4 の TLS 失敗（push が落ちる別原因）とは無関係 |
 
 ## ファイル別の保護方針
@@ -137,6 +138,14 @@ sandbox は network を allowlist、write を cwd 中心の allowlist で絞る�
 - **registry への egress**: `sandbox.network.allowedDomains` に取得先を列挙する。本リポジトリの既定 registry は **`npm.flatt.tech`** ＝ Takumi Guard（旧 Shisho Guard, by GMO）の**公開 read-only セキュリティプロキシ registry**で、npmjs を代理しブロックリスト該当の悪性 package を**コード到達前に 403 で拒否**する（shai-hulud 等サプライチェーン防御の一層）。token は任意だが **rate limit が変わる**（匿名＝2,000 req/min/IP・ブロックのみ／個人 `tg_anon_`＝10,000 req/min/token＋download 追跡・breach 通知／`tg_org_`＝10,000 req/10s/token・有料 org。超過は 429、〜2 req/package）。dotfiles は**マシングローバルに個人 `tg_anon_` token**を使い（rate 緩和＋追跡）ORG/`tg_org_` は不使用（出典 <https://shisho.dev/docs/ja/t/guard/>、rate: <https://shisho.dev/docs/ja/t/guard/limitation>）。pnpm/yarn（及び **npm 本体の mise install**＝既定が `aqua:npm/cli`・npmjs.org tarball）は非 FLATT backend（aqua/github 等）で公開 `registry.npmjs.org` に直接当たるため、**両ドメインとも** allowedDomains に要る（プロジェクト依存の `npm install` 自体は従来どおり FLATT 経由）。無いと registry に到達できず install が失敗する。`~/.npmrc` の registry 設定自体は read 解放で効くが、**ネットワーク到達は allowedDomains が別ゲート**なので両方そろえる。
 - **キャッシュ書き込み**: `sandbox.filesystem.allowWrite` に `~/.npm/_cacache`（npm の content-addressable cache）を追加する。sandbox は cwd 外への write を塞ぐため、無いと install がキャッシュ書き込みで失敗する。`~/.npm/_logs` は Claude Code デフォルトで許可済みだが `_cacache` は別途必要。他の `~/.npm` 配下書き込みで失敗するなら `~/.npm` に広げる。
 - broad な `allowedDomains` は exfiltration 経路になりうる（公式 sandboxing の警告）。registry は必要最小限に絞る。
+
+### bun install を sandbox 内で通す
+
+`bun install` は既定キャッシュ **`~/.bun/install/cache`** に書く（インストールの staging temp もこの中）。sandbox は cwd 外 write を塞ぐため、許可が無いと file: 依存のオフライン install ですら `bun is unable to write files to tempdir: PermissionDenied` で失敗する（実機で発覚）。
+
+- **`sandbox.filesystem.allowWrite` に cache を追加**。ただし dotfiles 管理で **`~/.bun` は symlink**（→ `~/dotfiles/.bun`）なので、判定が実体パスで行われる（`D6`）ことから **`~/.bun/install/cache` と `~/dotfiles/.bun/install/cache` の両方を書く**。symlink 側単独では無効。二重記載は冗長ではなく、symlink 構成の変更に対する両対応。
+- 粒度は `~/.bun` 全体ではなく `install/cache` に絞る（`~/.bun/bin` 等への write 開放は `$PATH` 実行物の改ざん経路になるため）。`bun add -g` 等で別の書き込みが必要になったらその時に個別判断。
+- 対して `~/.npm/_cacache`・`~/.gnupg` が単記で効くのは、これらが symlink でない実ディレクトリだから。
 
 ### sandbox 内で TLS を通す（CA バンドル）
 

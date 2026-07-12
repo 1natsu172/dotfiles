@@ -325,7 +325,9 @@
     "filesystem": {
       "allowWrite": [
         "~/.gnupg",
-        "~/.npm/_cacache"
+        "~/.npm/_cacache",
+        "~/.bun/install/cache",
+        "~/dotfiles/.bun/install/cache"
       ],
       "denyWrite": [
         "~/.ssh",
