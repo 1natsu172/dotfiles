@@ -16,6 +16,7 @@ fnox = "latest"
 # https://github.com/perplexityai/bumblebee Check exposure to known software supply-chain compromises.
 "go:github.com/perplexityai/bumblebee/cmd/bumblebee" = "v0.1.1"
 java = "zulu-17"
+sqlite = "3.53.3"
 
 [settings]
 experimental = true
