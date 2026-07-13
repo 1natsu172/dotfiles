@@ -227,6 +227,16 @@
             "command": "afplay /System/Library/Sounds/Purr.aiff"
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/1natsu/dotfiles/bin/claude-utils/model-spin-detector/stop-hook.sh",
+            "timeout": 30,
+            "statusMessage": "thinking空転シグネチャを検査中"
+          }
+        ]
       }
     ],
     "StopFailure": [
