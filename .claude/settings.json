@@ -337,7 +337,8 @@
         "~/.gnupg",
         "~/.npm/_cacache",
         "~/.bun/install/cache",
-        "~/dotfiles/.bun/install/cache"
+        "~/dotfiles/.bun/install/cache",
+        "~/.local/state/mise/trusted-configs"
       ],
       "denyWrite": [
         "~/.ssh",
