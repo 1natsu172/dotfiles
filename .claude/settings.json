@@ -326,7 +326,8 @@
         "*.githubusercontent.com",
         "api.github.com",
         "registry.npmjs.org",
-        "npm.flatt.tech"
+        "npm.flatt.tech",
+        "*.r2.cloudflarestorage.com"
       ],
       "allowUnixSockets": [
         "~/.gnupg/S.gpg-agent"
