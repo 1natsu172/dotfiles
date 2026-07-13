@@ -17,6 +17,7 @@ fnox = "latest"
 "go:github.com/perplexityai/bumblebee/cmd/bumblebee" = "v0.1.1"
 java = "zulu-17"
 sqlite = "3.53.3"
+python = "3.14.6"
 
 [settings]
 experimental = true
