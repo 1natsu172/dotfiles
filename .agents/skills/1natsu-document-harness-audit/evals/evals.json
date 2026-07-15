@@ -1,11 +1,11 @@
 {
   "skill_name": "1natsu-document-harness-audit",
-  "note": "fixture は document-harness-workspace/fixtures/ 配下。実行時に fixture をコピーしたrepo上で監査させ、提案一覧と（承認後の）修正を目視レビューする。実装結合（蒸留不足）の検出・コード乖離の裏取り・過剰検出しないこと（外部契約名）を報酬にする。",
+  "note": "fixture はリポジトリルートの eval-fixtures/document-harness/ 配下（git 管理。再クローンしても evals を再実行できる）。実行時に fixture をコピーしたrepo上で監査させ、提案一覧と（承認後の）修正を目視レビューする。実行結果の iteration ディレクトリは skills/document-harness-workspace/（gitignore、再生成可能）に置く。実装結合（蒸留不足）の検出・コード乖離の裏取り・過剰検出しないこと（外部契約名）を報酬にする。旧evalsのシナリオ（redirect-to-harness-sync / context-economy / practice-evolution 単独）は全面改訂時に意図的にdefer（git履歴の本ファイル旧版から復元してfixture化可能）。既知の揺れ: セキュリティ系のpathsなしruleを実行によってはpaths化する（global＋意図マーカー維持が正の可能性が高い）。",
   "evals": [
     {
       "id": 1,
       "name": "audit-distill-and-verify",
-      "fixture": "fixtures/fixture-c-audit",
+      "fixture": "eval-fixtures/document-harness/fixture-c-audit",
       "prompt": "このリポジトリのハーネスドキュメント、しばらく見直していないので実装と乖離していたり、書き方が古かったり、コードに寄りすぎている箇所がありそう。docs/ と .claude/rules/ を監査して問題と改善案を出してほしい。注: 現セッションでは私はまだ何も実装変更していません。既存ドキュメント全体の検査をお願いします。",
       "expected_output": "audit として処理し（harness sync へリダイレクトしない）、9カテゴリで検査する。検出すべき主な問題: (1) コード乖離 = docs/auth-design.md が src/services/AuthService.ts を参照しているが実体は src/auth/service.ts。修正案の正しいパスはコードで裏取りする。(2) 実装結合 = docs/cache.md が内部変数名（_cache, _ttl）・メソッドシグネチャ・採用ライブラリ（node-cache）をそのまま転記している。swap test に基づき、契約と理由へ再蒸留する提案を出す。(3) 表現の陳腐化 = rules/auth.md の MUST/NEVER 連発を、意図を変えず短く理由ベースへ。過剰検出しないこと: env var 名 PASSWORD_RESET_TOKEN_TTL_MIN は外部契約面なので実装結合として槍玉に挙げない。提案→確認→実行のフローを取り、自動修正しない。",
       "files": [],
@@ -16,6 +16,26 @@
         "実装結合の是正方針が『再蒸留』である（記述を消すだけでなく、契約＋理由へ書き直す。機構名は rationale 側へ）",
         "表現の陳腐化を検出する: rules/auth.md の MUST/NEVER 連発を、意図を変えず短く理由ベースに書き直す提案を出す",
         "過剰検出しない: 外部契約面の env var 名（PASSWORD_RESET_TOKEN_TTL_MIN）を実装結合・蒸留不足として誤って槍玉に挙げない",
+        "提案→確認のフローを取り、自動修正しない"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "audit-memory-canonicality",
+      "fixture": "eval-fixtures/document-harness/fixture-d-memory-audit",
+      "prompt": "Claude Code のメモリにこのプロジェクトの知識がいろいろ溜まってきたんだけど、メモリにしかない知識や docs とズレてる内容がありそう。ドキュメントとメモリをまとめて監査して、整理の提案をしてほしい。（注: テスト環境のため、auto-memory のディレクトリは本来の ~/.claude/projects/... ではなく <fixture>/memory にあるものとして扱ってください。リポジトリは <fixture>/repo です。現セッションで実装変更はしていません）",
+      "expected_output": "ドキュメント9カテゴリ検査に加えてメモリ監査（M1〜M4）を実行する。M1 = デプロイリージョン制約（恒久チーム知識がメモリ限定）→ docs/rules へ蒸留＋メモリ削除の提案。M2/M3 = APIレスポンス形式（メモリ: camelCase、docs: snake_case）→ src/api/handlers.ts のレスポンスキーで裏取りし camelCase が実態と確認、docs 修正＋メモリ削除を提案（『リポジトリが正本だから docs の内容が正しい』と裏取りなしで判定しない）。M5 = エラーレスポンス形式（メモリ: project_error_response_format と docs/api-design.md の内容が一致する重複）→ docs は変更せず、メモリ削除のみを提案（蒸留不要。M2 と混同して裏取り騒ぎにしない）。content-over-type = feedback_commit_convention はチーム規約なので蒸留候補。個人系（user_preferences）は蒸留対象外。進行中の作業状態（project_wip_retry_pr）は削除・蒸留しない。project_migration_script（参照先 scripts/migrate.sh がリポジトリに不在）は、削除提案（M4）／実在確認付き要検証で保留／要検証注記付きで手順知識として蒸留（M1）のいずれも可（黙って放置・実在の推測断定・注記なし蒸留は不可）。削除提案には MEMORY.md インデックスの連動更新を含む。提案→確認のフローで自動修正しない。",
+      "files": [],
+      "assertions": [
+        "メモリ監査を実行し、Claude Code auto-memory の構造（frontmatter の type、MEMORY.md インデックス）を踏まえて処理する",
+        "M1 メモリ限定知識を検出する: デプロイリージョン制約（恒久的なチーム知識）を docs/rules へ蒸留し、メモリから削除する提案を出す",
+        "M2 不整合の真偽をコードで裏取りする: APIレスポンス形式について src/api/handlers.ts のレスポンスキー（camelCase）を確認し、docs 側を修正する提案を出す（裏取りなしで docs の内容を正としない）",
+        "M5 重複を検出する: project_error_response_format は docs/api-design.md のエラーレスポンス仕様と内容が一致する重複 → docs 側は変更せず、メモリ削除（＋MEMORY.md 連動）のみを提案する",
+        "個人系メモリ（user_preferences）をリポジトリへの蒸留対象にしない",
+        "content-over-type: type: feedback の commit convention をチーム規約として蒸留候補にする",
+        "進行中の作業状態（project_wip_retry_pr）を削除・蒸留の対象にしない",
+        "project_migration_script が参照する scripts/migrate.sh がリポジトリに存在しないことを明示的に扱う。正解は複数ある: 陳腐化（M4）として削除提案／実在確認の手順を添えた要検証で保留／手順知識（M1）として要検証注記付きで docs か skill へ蒸留。不合格は、黙って放置する・実在を推測で断定する・注記なしで蒸留する、のいずれか",
+        "メモリ削除の提案に MEMORY.md インデックスの連動更新が含まれる",
         "提案→確認のフローを取り、自動修正しない"
       ]
     }

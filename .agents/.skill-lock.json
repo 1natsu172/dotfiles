@@ -87,9 +87,9 @@
       "sourceType": "github",
       "sourceUrl": "https://github.com/vercel-labs/skills.git",
       "skillPath": "skills/find-skills/SKILL.md",
-      "skillFolderHash": "eb6a23305aea6e340d14b9de3766e721f9f4861b",
+      "skillFolderHash": "76a98a285cb0434f3d39e1a873823556330e398b",
       "installedAt": "2026-07-03T12:37:58.963Z",
-      "updatedAt": "2026-07-03T12:37:58.963Z"
+      "updatedAt": "2026-07-15T15:45:36.458Z"
     },
     "gh-stack": {
       "source": "github/gh-stack",
@@ -141,27 +141,27 @@
       "sourceType": "github",
       "sourceUrl": "https://github.com/1natsu-vacation/agent-skills.git",
       "skillPath": "skills/1natsu-document-harness/SKILL.md",
-      "skillFolderHash": "f30c97643e18e5bf309be228451310e8efab86f0",
+      "skillFolderHash": "0e73e5c2623c25ff6516ba3191cc6e798248aa2b",
       "installedAt": "2026-07-03T12:50:32.628Z",
-      "updatedAt": "2026-07-03T12:50:32.628Z"
+      "updatedAt": "2026-07-15T15:45:37.946Z"
     },
     "1natsu-document-harness-audit": {
       "source": "1natsu-vacation/agent-skills",
       "sourceType": "github",
       "sourceUrl": "https://github.com/1natsu-vacation/agent-skills.git",
       "skillPath": "skills/1natsu-document-harness-audit/SKILL.md",
-      "skillFolderHash": "0c2c1099a95639499e18e7dfa46b1860ff3ee13b",
+      "skillFolderHash": "9dc4f2b99f35406d895c3d81d80998b1c71211f5",
       "installedAt": "2026-07-03T12:50:32.629Z",
-      "updatedAt": "2026-07-03T12:50:32.629Z"
+      "updatedAt": "2026-07-15T15:45:39.499Z"
     },
     "1natsu-document-harness-model": {
       "source": "1natsu-vacation/agent-skills",
       "sourceType": "github",
       "sourceUrl": "https://github.com/1natsu-vacation/agent-skills.git",
       "skillPath": "skills/1natsu-document-harness-model/SKILL.md",
-      "skillFolderHash": "b05be183a72333af1107f8e330e1db9fd3e6081b",
+      "skillFolderHash": "01ab50148d4f7ebaa32f167d278d51877bbd58a1",
       "installedAt": "2026-07-03T12:50:32.629Z",
-      "updatedAt": "2026-07-04T12:29:53.675Z"
+      "updatedAt": "2026-07-15T15:45:41.072Z"
     },
     "1natsu-error-handling": {
       "source": "1natsu-vacation/agent-skills",

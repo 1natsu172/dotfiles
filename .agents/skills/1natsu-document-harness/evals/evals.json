@@ -1,11 +1,11 @@
 {
   "skill_name": "1natsu-document-harness",
-  "note": "fixture は document-harness-workspace/fixtures/ 配下。実行時に各 fixture をコピーしたrepo上でタスクを行わせ、canonical fixture との diff を目視レビューする。アサーションは『仕様への蒸留』を報酬にする（機構名の転記や変数名の仕様化を減点）。",
+  "note": "fixture はリポジトリルートの eval-fixtures/document-harness/ 配下（git 管理。再クローンしても evals を再実行できる）。実行結果の iteration ディレクトリは skills/document-harness-workspace/（gitignore、再生成可能）に置く。実行時に各 fixture をコピーしたrepo上でタスクを行わせ、canonical fixture との diff を目視レビューする。アサーションは『仕様への蒸留』を報酬にする（機構名の転記や変数名の仕様化を減点）。旧evalsのシナリオ sync-bugfix（TTL変更＋blacklist追加）は全面改訂時に意図的にdefer（git履歴の本ファイル旧版から復元してfixture化可能）。",
   "evals": [
     {
       "id": 1,
       "name": "harness-init-distill",
-      "fixture": "fixtures/fixture-a-init",
+      "fixture": "eval-fixtures/document-harness/fixture-a-init",
       "prompt": "（この repo の作業者として）packages/api に API リクエストのレート制限を実装しました。クライアント(IP)単位で 1 分あたりの上限を超えたら 429 を返します。上限とウィンドウは環境変数 RATE_LIMIT_PER_MINUTE / RATE_LIMIT_WINDOW_SEC で調整可能で、カウンタはプロセス内に TTL 付きで保持しています（lru-cache を使用）。動作確認も済みました。実装内容をこのプロジェクトのハーネスドキュメントに反映してください。",
       "expected_output": "init モードで動作し、packages/api のレート制限だけにスコープを絞る（packages/web には触れない）。仕様へ蒸留して配置する: ルール（指示層）は『クライアント単位でレート制限する』というポリシーで書き、機構名（lru-cache）を持ち込まない。docs には設計判断と理由（プロセス内保持を選んだ理由、複数インスタンス時の留意）を rationale として書く。env var 名は外部契約面なので名指ししてよい。コードのシグネチャ・内部変数名（hits 等）は転記しない。",
       "files": [],
@@ -21,7 +21,7 @@
     {
       "id": 2,
       "name": "harness-sync-redistill",
-      "fixture": "fixtures/fixture-b-sync",
+      "fixture": "eval-fixtures/document-harness/fixture-b-sync",
       "prompt": "（このセッションでは前のターンで harness を実行済みという想定。既存の .claude/rules/api-rate-limit.md と docs/api/rate-limit-design.md は、その時に Redis ベースで生成したものです）\n\nその後、Redis のラウンドトリップによるレイテンシ問題が判明し、レート制限をプロセス内の TTL 付きキャッシュ（lru-cache）に乗り換えました。コードは既に書き換え済みです（packages/api/src/middleware/rateLimit.ts）。ドキュメントを実装に追従させてください。",
       "expected_output": "sync モードと判定し、前回出力の rule と docs を再読する。単純な Redis→LRU の名前置換で済ませず再蒸留する: ルールから機構名（Redis）を取り除き『クライアント単位でレート制限する』というポリシー記述へ蒸留し直す。機構の乗り換え経緯（Redis→プロセス内キャッシュ、レイテンシが理由、複数インスタンス時は要再検討）は docs の rationale に寄せる。置換後の事実はコードで裏取りする。現行メカニズムとして Redis を指示・前提する記述（INCR/EXPIRE/REDIS_URL 等）が残らない。CLAUDE.md の docs 参照はプレーンポインタのまま。最終報告で削除・置換した内容を伝える。",
       "files": [],
