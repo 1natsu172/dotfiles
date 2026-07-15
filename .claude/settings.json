@@ -309,7 +309,8 @@
         "~/.npm/_cacache",
         "~/.bun/install/cache",
         "~/dotfiles/.bun/install/cache",
-        "~/.local/state/mise/trusted-configs"
+        "~/.local/state/mise/trusted-configs",
+        "~/Library/Caches/mise"
       ],
       "denyWrite": [
         "~/.ssh",
