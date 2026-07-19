@@ -1,10 +1,10 @@
 {
   "env": {
-    "ENABLE_TOOL_SEARCH": "true",
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
+    "CURL_CA_BUNDLE": "/opt/homebrew/etc/ca-certificates/cert.pem",
+    "ENABLE_TOOL_SEARCH": "true",
     "GIT_SSL_CAINFO": "/opt/homebrew/etc/ca-certificates/cert.pem",
-    "SSL_CERT_FILE": "/opt/homebrew/etc/ca-certificates/cert.pem",
-    "CURL_CA_BUNDLE": "/opt/homebrew/etc/ca-certificates/cert.pem"
+    "SSL_CERT_FILE": "/opt/homebrew/etc/ca-certificates/cert.pem"
   },
   "permissions": {
     "allow": [
@@ -116,20 +116,22 @@
     "github-discussions-readonly"
   ],
   "hooks": {
-    "UserPromptSubmit": [
+    "Notification": [
       {
         "hooks": [
           {
             "type": "command",
-            "command": "/Users/1natsu/dotfiles/bin/claude-utils/duration-logic-hooks/user-prompt-submit-hook.sh"
+            "command": "afplay /System/Library/Sounds/Ping.aiff"
           }
         ]
-      },
+      }
+    ],
+    "PostToolUse": [
       {
         "hooks": [
           {
             "type": "command",
-            "command": "ccstatusline --hook"
+            "command": "/Users/1natsu/dotfiles/bin/claude-utils/duration-logic-hooks/agent-in-progress-hook.sh"
           }
         ]
       }
@@ -153,30 +155,14 @@
         ]
       }
     ],
-    "PostToolUse": [
+    "SessionStart": [
       {
+        "matcher": "*",
         "hooks": [
           {
             "type": "command",
-            "command": "/Users/1natsu/dotfiles/bin/claude-utils/duration-logic-hooks/agent-in-progress-hook.sh"
-          }
-        ]
-      }
-    ],
-    "SubagentStop": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "/Users/1natsu/dotfiles/bin/claude-utils/duration-logic-hooks/agent-in-progress-hook.sh"
-          }
-        ]
-      },
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "afplay /System/Library/Sounds/Pop.aiff"
+            "command": "bash '/Users/1natsu/.claude/hooks/herdr-agent-state.sh' session",
+            "timeout": 10
           }
         ]
       }
@@ -219,12 +205,38 @@
         ]
       }
     ],
-    "Notification": [
+    "SubagentStop": [
       {
         "hooks": [
           {
             "type": "command",
-            "command": "afplay /System/Library/Sounds/Ping.aiff"
+            "command": "/Users/1natsu/dotfiles/bin/claude-utils/duration-logic-hooks/agent-in-progress-hook.sh"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "afplay /System/Library/Sounds/Pop.aiff"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/1natsu/dotfiles/bin/claude-utils/duration-logic-hooks/user-prompt-submit-hook.sh"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "ccstatusline --hook"
           }
         ]
       }
@@ -236,35 +248,34 @@
     "padding": 0
   },
   "enabledPlugins": {
-    "frontend-design@claude-plugins-official": true,
-    "superpowers@claude-plugins-official": true,
+    "agent-sdk-dev@claude-plugins-official": true,
+    "clangd-lsp@claude-plugins-official": true,
+    "claude-code-setup@claude-plugins-official": true,
+    "claude-md-management@claude-plugins-official": true,
+    "code-modernization@claude-plugins-official": true,
     "code-review@claude-plugins-official": true,
     "code-simplifier@claude-plugins-official": true,
-    "skill-creator@claude-plugins-official": true,
-    "feature-dev@claude-plugins-official": true,
-    "claude-md-management@claude-plugins-official": true,
-    "ralph-loop@claude-plugins-official": true,
-    "typescript-lsp@claude-plugins-official": true,
-    "security-guidance@claude-plugins-official": true,
-    "claude-code-setup@claude-plugins-official": true,
-    "pr-review-toolkit@claude-plugins-official": true,
-    "agent-sdk-dev@claude-plugins-official": true,
-    "plugin-dev@claude-plugins-official": true,
-    "hookify@claude-plugins-official": true,
     "csharp-lsp@claude-plugins-official": true,
+    "feature-dev@claude-plugins-official": true,
+    "frontend-design@claude-plugins-official": true,
     "gopls-lsp@claude-plugins-official": true,
-    "rust-analyzer-lsp@claude-plugins-official": true,
+    "hookify@claude-plugins-official": true,
     "jdtls-lsp@claude-plugins-official": true,
-    "php-lsp@claude-plugins-official": true,
-    "clangd-lsp@claude-plugins-official": true,
-    "swift-lsp@claude-plugins-official": true,
     "kotlin-lsp@claude-plugins-official": true,
     "lua-lsp@claude-plugins-official": true,
     "mcp-server-dev@claude-plugins-official": true,
-    "ruby-lsp@claude-plugins-official": true,
+    "php-lsp@claude-plugins-official": true,
     "playground@claude-plugins-official": true,
-    "code-modernization@claude-plugins-official": true,
-    "pyright-lsp@claude-plugins-official": true
+    "plugin-dev@claude-plugins-official": true,
+    "pr-review-toolkit@claude-plugins-official": true,
+    "pyright-lsp@claude-plugins-official": true,
+    "ralph-loop@claude-plugins-official": true,
+    "ruby-lsp@claude-plugins-official": true,
+    "rust-analyzer-lsp@claude-plugins-official": true,
+    "security-guidance@claude-plugins-official": true,
+    "skill-creator@claude-plugins-official": true,
+    "swift-lsp@claude-plugins-official": true,
+    "typescript-lsp@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "claude-code-workflows": {
