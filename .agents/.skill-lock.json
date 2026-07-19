@@ -96,9 +96,9 @@
       "sourceType": "github",
       "sourceUrl": "https://github.com/github/gh-stack.git",
       "skillPath": "skills/gh-stack/SKILL.md",
-      "skillFolderHash": "c68c56b3414753690759b148af1ce5a5c717d774",
+      "skillFolderHash": "26320e8be554b0cc1d122c353e8897f0c69739cd",
       "installedAt": "2026-07-03T12:50:05.081Z",
-      "updatedAt": "2026-07-03T12:50:05.081Z"
+      "updatedAt": "2026-07-19T11:01:34.770Z"
     },
     "1natsu-auto-resolve-conflicts": {
       "source": "1natsu-vacation/agent-skills",
@@ -150,9 +150,9 @@
       "sourceType": "github",
       "sourceUrl": "https://github.com/1natsu-vacation/agent-skills.git",
       "skillPath": "skills/1natsu-document-harness-audit/SKILL.md",
-      "skillFolderHash": "9dc4f2b99f35406d895c3d81d80998b1c71211f5",
+      "skillFolderHash": "fef745367800c9e05400bc1973eac2730bbe9079",
       "installedAt": "2026-07-03T12:50:32.629Z",
-      "updatedAt": "2026-07-15T15:45:39.499Z"
+      "updatedAt": "2026-07-19T11:01:36.099Z"
     },
     "1natsu-document-harness-model": {
       "source": "1natsu-vacation/agent-skills",
