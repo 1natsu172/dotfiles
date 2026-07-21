@@ -42,7 +42,9 @@
 # [url "git@github.com:"]
 # 	pushinsteadof = https://github.com/
 [credential]
-	helper = osxkeychain
+	# /opt/homebrew/etc/gitconfig のようなシステムワイドのｋeychain設定はマージではなく多重ロードなので空文字を介すことで打ち消すハック
+	helper =
+	helper = "!$HOME/dotfiles/bin/credential-helper.sh"
 [gpg]
 	program = gpg
 [user]
