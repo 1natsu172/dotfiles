@@ -16,9 +16,11 @@ for f in .??* ${SPECIFY_FILES}; do
   ln -snfv "${DOT_DIRECTORY}/${f}" "${HOME}/${f}"
 done
 
-# Make bin directory executable
+# Make bin scripts (files starting with a shebang) executable
 if [[ -d "${DOT_DIRECTORY}/bin" ]]; then
-  chmod +x "${DOT_DIRECTORY}"/bin/*
+  while IFS= read -r -d '' f; do
+    [[ "$(head -c 2 -- "${f}")" == "#!" ]] && chmod +x "${f}"
+  done < <(find "${DOT_DIRECTORY}/bin" -type f -print0)
   echo "$(tput setaf 3)Made bin scripts executable$(tput sgr0)"
 fi
 
