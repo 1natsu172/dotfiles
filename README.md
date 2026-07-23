@@ -149,8 +149,6 @@ https://memo.yammer.jp/posts/pdef を使って再構成するのもいいかも�
   * 検索エンジンクエリにen検索ショートカットを追加する
     * ショートカットは `e`
     * クエリは `{google:baseURL}search?q=%s&lr=lang_en&hl=ja`
-* Divvy
-  * バックアップファイルの中身がURIディープリンクなのでブラウザで開くことでimportできる
 * BTT
   * バックアップファイルを手動インポートしてライセンスファイルを読み込む
 * Raycast
@@ -158,12 +156,13 @@ https://memo.yammer.jp/posts/pdef を使って再構成するのもいいかも�
     * インポートに際して保管しているパスフレーズが別途必要
 * Warp
   * `BlexMono Nerd Font Mono` fontsize:`28` lineheight:`1.2`
-* Whiskey
+* Sikarugir
   * 必要なWindowsアプリのインストーラーを用意してインストールする
 * claude code
-  * `npm install -g @anthropic-ai/claude-code` 
-    * `claude doctor`してauto-updateにwarnが出る場合、local installationに切り替える必要がある
-    * `claude migrate-installer`を実行すると`.claude/local`にbinが生える
+  * 公式ネイティブインストーラでインストールする
+* tailscale
+  * 公式ネイティブインストーラでインストールする
+
 
 ## シェルのデフォルトを変更する
 
