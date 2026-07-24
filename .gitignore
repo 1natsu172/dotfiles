@@ -23,6 +23,9 @@
 !.config/fnox/config.toml
 !.config/ccstatusline
 !.config/.bunfig.toml
+!.config/herdr
+.config/herdr/*
+!.config/herdr/config.toml
 !.config/lazygit
 .config/lazygit/*
 !.config/lazygit/config.yml
@@ -43,6 +46,8 @@ Brewfile.lock.json
 !.claude/skills
 .claude/skills/*
 !.claude/skills/.gitkeep
+.agents/skills/herdr/*
+!.agents/skills/herdr/SKILL.md
 
 .gemini/*
 !.gemini/GEMINI.md
