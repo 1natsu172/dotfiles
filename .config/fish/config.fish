@@ -108,6 +108,8 @@ alias glogor='g log @{upstream} --oneline'
 alias gdiffo='g diff origin/(git symbolic-ref refs/remotes/origin/HEAD --short | xargs basename)...HEAD'
 alias grepow='gh repo view --web --branch=(git rev-parse --short HEAD)'
 alias gwt='g worktree'
+alias gg='lazygit'
+alias hrd='herdr'
 
 ## eza
 #-----------------------------------------------------------------------------
