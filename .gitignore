@@ -23,6 +23,9 @@
 !.config/fnox/config.toml
 !.config/ccstatusline
 !.config/.bunfig.toml
+!.config/lazygit
+.config/lazygit/*
+!.config/lazygit/config.yml
 *node_modules
 .zsh/history/
 .direnv
