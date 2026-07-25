@@ -1,0 +1,140 @@
+[
+  {
+    "plugin_id": "chouxcreams.url-picker",
+    "name": "URL Picker",
+    "version": "0.1.0",
+    "min_herdr_version": "0.7.5",
+    "description": "Pick a URL from the focused pane and open it in your browser",
+    "manifest_path": "/Users/1natsu/dotfiles/.config/herdr/plugins/github/chouxcreams.url-picker-628b0b881e44/herdr-plugin.toml",
+    "plugin_root": "/Users/1natsu/dotfiles/.config/herdr/plugins/github/chouxcreams.url-picker-628b0b881e44",
+    "enabled": true,
+    "platforms": [
+      "linux",
+      "macos"
+    ],
+    "actions": [
+      {
+        "id": "pick",
+        "title": "Pick URL from focused pane",
+        "command": [
+          "bash",
+          "open-popup.sh"
+        ]
+      }
+    ],
+    "panes": [
+      {
+        "id": "picker",
+        "title": "URL Picker",
+        "placement": "popup",
+        "width": "60%",
+        "height": 20,
+        "command": [
+          "bash",
+          "picker.sh"
+        ]
+      }
+    ],
+    "source": {
+      "kind": "github",
+      "owner": "chouxcreams",
+      "repo": "herdr-url-picker",
+      "resolved_commit": "0dc85989d851157bc57738c35532e73a4da38186",
+      "managed_path": "/Users/1natsu/.config/herdr/plugins/github/chouxcreams.url-picker-628b0b881e44",
+      "installed_unix_ms": 1784964129571
+    }
+  },
+  {
+    "plugin_id": "persiyanov.reviewr",
+    "name": "reviewr",
+    "version": "0.24.1",
+    "min_herdr_version": "0.7.0",
+    "description": "Review agent-written diffs beside the chat and add line comments to the agent input.",
+    "manifest_path": "/Users/1natsu/dotfiles/.config/herdr/plugins/github/persiyanov.reviewr-e87b654a74f8/herdr-plugin.toml",
+    "plugin_root": "/Users/1natsu/dotfiles/.config/herdr/plugins/github/persiyanov.reviewr-e87b654a74f8",
+    "enabled": true,
+    "platforms": [
+      "macos",
+      "linux"
+    ],
+    "build": [
+      {
+        "command": [
+          "bash",
+          "herdr/install.sh"
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "id": "close",
+        "title": "reviewr: close sidebar",
+        "contexts": [
+          "pane",
+          "workspace"
+        ],
+        "command": [
+          "bash",
+          "herdr/sidebar.sh",
+          "close"
+        ]
+      },
+      {
+        "id": "open",
+        "title": "reviewr: open sidebar",
+        "contexts": [
+          "pane",
+          "workspace"
+        ],
+        "command": [
+          "bash",
+          "herdr/sidebar.sh",
+          "open"
+        ]
+      },
+      {
+        "id": "toggle",
+        "title": "reviewr: toggle sidebar",
+        "contexts": [
+          "pane",
+          "workspace"
+        ],
+        "command": [
+          "bash",
+          "herdr/sidebar.sh",
+          "toggle"
+        ]
+      }
+    ],
+    "events": [
+      {
+        "on": "worktree.created",
+        "command": [
+          "bash",
+          "herdr/sidebar.sh",
+          "auto-open"
+        ]
+      }
+    ],
+    "panes": [
+      {
+        "id": "sidebar",
+        "title": "reviewr",
+        "placement": "split",
+        "command": [
+          "sh",
+          "-c",
+          "exec \"$HERDR_PLUGIN_ROOT/bin/herdr-reviewr\""
+        ]
+      }
+    ],
+    "source": {
+      "kind": "github",
+      "owner": "persiyanov",
+      "repo": "herdr-reviewr",
+      "resolved_commit": "27309ecb68435700d58dffd32d518ed998998462",
+      "managed_path": "/Users/1natsu/.config/herdr/plugins/github/persiyanov.reviewr-e87b654a74f8",
+      "installed_unix_ms": 1784911930864
+    }
+  }
+]

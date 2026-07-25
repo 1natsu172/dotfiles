@@ -26,6 +26,7 @@
 !.config/herdr
 .config/herdr/*
 !.config/herdr/config.toml
+!.config/herdr/plugins.json
 !.config/lazygit
 .config/lazygit/*
 !.config/lazygit/config.yml

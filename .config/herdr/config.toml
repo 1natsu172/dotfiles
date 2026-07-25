@@ -8,3 +8,10 @@ auto_switch = false
 
 [ui.toast]
 delivery = "herdr"
+
+# Keybindings related to plugins
+[[keys.command]]
+key = "prefix+u"
+type = "plugin_action"
+command = "chouxcreams.url-picker.pick"
+description = "pick URL from focused pane"
