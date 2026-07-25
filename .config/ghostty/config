@@ -1,5 +1,8 @@
-font-family = "BlexMono Nerd Font Mono"
-font-family = "Osaka"
+font-family = "MonaspiceNe Nerd Font"
+# font-family = "BlexMono Nerd Font Mono"
+# font-family = "JetBrainsMono Nerd Font"
+# font-family = "monospace"
+font-family = "IBM Plex Sans JP"
 font-size = 28
 quick-terminal-animation-duration = 0
 keybind = shift+enter=text:\n
