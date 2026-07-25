@@ -1,4 +1,7 @@
 onboarding = false
+[keys]
+open_worktree = "prefix+alt+g"
+
 [ui]
 agent_panel_sort = "priority"
 
