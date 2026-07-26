@@ -144,6 +144,15 @@
       "skillFolderHash": "e9b22084e03880f43d1f1daaf5d9f45c717b77c4",
       "installedAt": "2026-07-24T19:33:08.136Z",
       "updatedAt": "2026-07-24T19:33:08.136Z"
+    },
+    "context7-mcp": {
+      "source": "upstash/context7",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/upstash/context7.git",
+      "skillPath": "skills/context7-mcp/SKILL.md",
+      "skillFolderHash": "92080dfde0cd06366b451bb4bb567c4d4cb64e68",
+      "installedAt": "2026-07-26T13:30:36.422Z",
+      "updatedAt": "2026-07-26T13:32:06.758Z"
     }
   },
   "dismissed": {
