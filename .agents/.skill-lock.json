@@ -1,69 +1,6 @@
 {
   "version": 3,
   "skills": {
-    "deploy-to-vercel": {
-      "source": "vercel-labs/agent-skills",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/vercel-labs/agent-skills.git",
-      "skillPath": "skills/deploy-to-vercel/SKILL.md",
-      "skillFolderHash": "1378aa506439f26c809dbcfc61515cbd70f93d69",
-      "installedAt": "2026-07-03T12:37:55.558Z",
-      "updatedAt": "2026-07-03T12:37:55.558Z"
-    },
-    "vercel-cli-with-tokens": {
-      "source": "vercel-labs/agent-skills",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/vercel-labs/agent-skills.git",
-      "skillPath": "skills/vercel-cli-with-tokens/SKILL.md",
-      "skillFolderHash": "279c8760375cb6a47a4a8a312b652b0745c6d776",
-      "installedAt": "2026-07-03T12:37:55.559Z",
-      "updatedAt": "2026-07-03T12:37:55.559Z"
-    },
-    "vercel-composition-patterns": {
-      "source": "vercel-labs/agent-skills",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/vercel-labs/agent-skills.git",
-      "skillPath": "skills/composition-patterns/SKILL.md",
-      "skillFolderHash": "bf90d0a4b83ea054653350f9c67f6de235d3a368",
-      "installedAt": "2026-07-03T12:37:55.559Z",
-      "updatedAt": "2026-07-03T12:37:55.559Z"
-    },
-    "vercel-optimize": {
-      "source": "vercel-labs/agent-skills",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/vercel-labs/agent-skills.git",
-      "skillPath": "skills/vercel-optimize/SKILL.md",
-      "skillFolderHash": "0901aa3667db7a6e5cc40b213327290bf6556373",
-      "installedAt": "2026-07-03T12:37:55.559Z",
-      "updatedAt": "2026-07-03T12:37:55.559Z"
-    },
-    "vercel-react-best-practices": {
-      "source": "vercel-labs/agent-skills",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/vercel-labs/agent-skills.git",
-      "skillPath": "skills/react-best-practices/SKILL.md",
-      "skillFolderHash": "343db72180d05814949fef7d46be96b5c6ee86b3",
-      "installedAt": "2026-07-03T12:37:55.559Z",
-      "updatedAt": "2026-07-03T12:37:55.559Z"
-    },
-    "vercel-react-native-skills": {
-      "source": "vercel-labs/agent-skills",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/vercel-labs/agent-skills.git",
-      "skillPath": "skills/react-native-skills/SKILL.md",
-      "skillFolderHash": "8b4c6a51914e2111ab6f4f00cb81778652aa241d",
-      "installedAt": "2026-07-03T12:37:55.559Z",
-      "updatedAt": "2026-07-03T12:37:55.559Z"
-    },
-    "vercel-react-view-transitions": {
-      "source": "vercel-labs/agent-skills",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/vercel-labs/agent-skills.git",
-      "skillPath": "skills/react-view-transitions/SKILL.md",
-      "skillFolderHash": "4d46c637057aae90b9ec5280190c25dc0d90ec28",
-      "installedAt": "2026-07-03T12:37:55.560Z",
-      "updatedAt": "2026-07-03T12:37:55.560Z"
-    },
     "web-design-guidelines": {
       "source": "vercel-labs/agent-skills",
       "sourceType": "github",
@@ -90,15 +27,6 @@
       "skillFolderHash": "76a98a285cb0434f3d39e1a873823556330e398b",
       "installedAt": "2026-07-03T12:37:58.963Z",
       "updatedAt": "2026-07-15T15:45:36.458Z"
-    },
-    "gh-stack": {
-      "source": "github/gh-stack",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/github/gh-stack.git",
-      "skillPath": "skills/gh-stack/SKILL.md",
-      "skillFolderHash": "26320e8be554b0cc1d122c353e8897f0c69739cd",
-      "installedAt": "2026-07-03T12:50:05.081Z",
-      "updatedAt": "2026-07-19T11:01:34.770Z"
     },
     "1natsu-auto-resolve-conflicts": {
       "source": "1natsu-vacation/agent-skills",
