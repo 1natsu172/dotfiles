@@ -12,6 +12,8 @@ age = "latest"
 sops = "latest"
 fnox = "latest"
 # https://mise.jdx.dev/dev-tools/backends/gem.html
+# cocoapods はここでバージョン固定して管理する。brew では入れない
+# （`brew bundle dump --force` の差分に `brew "cocoapods"` が出ても Brewfile に追加しないこと）
 "gem:cocoapods" = "1.16.2"
 # https://github.com/perplexityai/bumblebee Check exposure to known software supply-chain compromises.
 "go:github.com/perplexityai/bumblebee/cmd/bumblebee" = "v0.1.1"
