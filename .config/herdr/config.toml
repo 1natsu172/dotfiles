@@ -5,6 +5,7 @@ open_worktree = "prefix+alt+g"
 [ui]
 agent_panel_sort = "priority"
 
+show_agent_labels_on_pane_borders = true
 [theme]
 name = "nord"
 auto_switch = false
@@ -18,3 +19,7 @@ key = "prefix+u"
 type = "plugin_action"
 command = "chouxcreams.url-picker.pick"
 description = "pick URL from focused pane"
+[[keys.command]]
+key = "cmd+r"
+type = "plugin_action"
+command = "persiyanov.reviewr.toggle"   # <plugin_id>.<action_id> — note the id, not the name
