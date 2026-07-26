@@ -33,8 +33,9 @@
 | `D2` | 2026-05-25 | 2.1.150 | Bash matcher はシェルオペレータ（`&&` `;` `\|` 等）と `$(...)` を分解して各部に適用するが、**別パス名（`/bin/echo` 等）・インタプリタ包み（`sh -c` / `bash -c` / `python -c`）は取りこぼす**。`sh -c '<denied>'` 一発で deny を回避できる → Bash deny は「うっかり承認を防ぐ床」であって境界ではない（境界は sandbox） |
 | `D3` | 2026-07-15 | 2.1.210 | **`Write(...)` permission rule は file permission check の対象外＝無機能**。組み込み Write tool（作成/上書き）は Edit カテゴリで `Edit(...)` のみが縛る（公式 Docs: 「Read and Edit deny rules apply to Claude's built-in file tools」／「add an `Edit` deny rule for paths no tool may change」）。`Write(...)` は Bash redirect も含め何も gate しない（Bash subprocess の write 遮断は sandbox `denyWrite` の OS 強制が担い、permission rule には依存しない）。パス形式（`~/dir/**`/exact/`**/X`）で差は無く `Edit` の有無が全て。live-reload は file tool でも正常。実証2件（2026-07-15・2.1.210）: (1) 現行有効な `Edit(**/*secret*)` にマッチするパスへ組み込み Write tool で新規作成→`denied by your permission settings` でブロック（Edit が Write tool を縛る）。(2) `Edit`・sandbox 非該当のテストパスに `Write(...)` のみ deny を仕込み bash redirect（`echo x > path`）→**成功**（Write() は redirect も弾かない。deny は auto-allow より優先評価されるので機能していれば必ず発火するが、しなかった）。旧記述の「`Write(...)` の実効は Bash redirect 遮断のみ」は誤り（2.1.150 での誤帰属か挙動変更）で、CC 2.1.20x 以降は起動時に `Write(...)` deny を「not matched by file permission checks — Use Edit(...)」と WARN する→`Write(...)` deny は書かず全て `Edit(...)` に寄せる。**無機能なのは `Write(path)` 形式**で、**パスなしのツール名ルール（`Write` 単体）は別扱い**＝tool 全体にマッチし WARN も出ない（Docs 明記。うちでは未使用だが「Write は一切禁止」としたい場合の唯一の書き方） |
 | `D4` | 2026-05-25 | 2.1.150 | **`Read(//**/*.pem)`（秘密鍵保護）が公開 CA バンドル（`cert.pem`）まで巻き込み**、sandbox 内で CA を read 遮断する。結果、sandbox 内の `git push`/`curl` 等が CA をロードできず **TLS 確立前に失敗**（`error setting certificate verify locations`）。commit はローカルのみで無傷。対策は「sandbox 内で TLS を通す」節（CA バンドルを `allowRead` 例外＋env で参照）。問題は **Claude Code sandbox 固有**（通常ターミナルでは `Read(...)` deny が効かないので無関係） |
-| `D6` | 2026-07-12 | 2.1.207 | **sandbox の filesystem 判定は symlink 解決後の実体パス**（macOS Seatbelt）。`allowWrite` に symlink 側パス（例 `~/.bun/install/cache`）を書いても、実体（`~/dotfiles/.bun/install/cache`）への書き込みは `Operation not permitted` のまま。dotfiles 管理で `~/.X` が symlink のパスを許可するときは**実体側パスも併記**する（symlink 側単独では無効、将来 symlink を外しても壊れないよう二重記載が正）。実証: kestrel の worktree 作成で bun cache 書き込みが symlink 側許可のみで拒否→実体側追加で解消 |
+| `D6` | 2026-07-12 | 2.1.207 | **sandbox の filesystem 判定は symlink 解決後の実体パス**（macOS Seatbelt）。`allowWrite` に symlink 側パス（例 `~/.bun/install/cache`）を書いても、実体（`~/dotfiles/.bun/install/cache`）への書き込みは `Operation not permitted` のまま。dotfiles 管理で `~/.X` が symlink のパスを許可するときは**実体側パスも併記**する（symlink 側単独では無効、将来 symlink を外しても壊れないよう二重記載が正）。実証: 別リポジトリの worktree 作成で bun cache 書き込みが symlink 側許可のみで拒否→実体側追加で解消 |
 | `D5` | 2026-06-08 | 2.1.168 | **`.git/config`（完全一致）と `.git/hooks/` は harness 組み込みで sandbox-write-deny**（settings.json 由来でない。worktree 非依存で main repo でも `git config --local` 書き込みが `Operation not permitted`）。`objects`/`refs`/`logs`/`index`/`.git` 直下・`config.xxx` は許可なので **`git commit` は通るが `git push -u`/`--set-upstream`/`push.autoSetupRemote` は落ちる非対称**（tracking を `.git/config` に書くため）。しかも config 書き込み拒否でも **git は exit 0 ＋「branch '...' set up to track」でサイレント失敗** → upstream 永続化されず次の素 `git push` が「no upstream configured」。理由は `.git/config` の `core.sshCommand`/`fsmonitor`/alias/`hooksPath` が RCE 源（`~/.gitconfig` deny と同系統）。対策は §git の `excludedCommands` 行き。**Claude の Edit tool は `.git/config` を書ける**（seatbelt 外・`Edit(.git/config)` deny も無し）＝in-sandbox の `git branch -D` が残す orphan config section の手当てに使える。D4 の TLS 失敗（push が落ちる別原因）とは無関係 |
+| `D8` | 2026-06-18 | 未記録 | **`autoAllowBashIfSandboxed: true` でも明示 `ask` ルールは auto-allow を上書きし、sandbox 内で発火する**（優先順位 `deny` > 明示 `ask` > auto-allow）。auto-allow は「明示ルールに当たらなかったコマンドの受け皿」でしかない。実測: `grep -n … \| sed -n '1,40p'` で `Ask rule Bash(sed *) overrides auto mode for this command.`。`\|`/`&&` はサブコマンド分割評価（`D2`）なのでパイプ後段の `sed` 単体が当たる。**旧記述「sandbox 内では `ask` に到達しない」は誤り**。実用含意: 純 read-only viewer（`sed`/`awk`/`od`/`xxd`/`strings`/`more`/`nl`/`tac`）を `ask` に置くとページング用途（`sed -n '1,Np'`）で毎回発火し、**非対話 subagent（`/code-review`）は ask を捌けず denied 扱い**になって実害が出る。しかも防御には寄与しない（`/bin/sed`・`sh -c` で迂回可＝`D2`。秘匿 read/改ざんの実効防御は sandbox `denyRead` ＋ `Read`/`Edit(//**/X)` の OS 層）→ これらは 2026-06-18 に `ask` から削除済み |
 | `D7` | 2026-07-22 | 2.1.216 | **sandbox は keychain 書き込み（osxkeychain の store）を遮断**。git の credential helper `osxkeychain` は認証成功後に資格情報を keychain へ store するが、sandbox 下では keychain write が拒否され `fatal: failed to store: <数字>`（実測 `100001`）を毎回吐く（`get`＝認証は通るので **cosmetic・exit 0**）。helper が system(`/opt/homebrew/etc/gitconfig`)＋global(`~/.gitconfig`)の**二重設定＝多値リストで2件連結**なので2行出る（行数＝helper 件数）。対策は §git の CLAUDECODE 条件 helper。keychain を sandbox allowlist に足す方向は不採用（機微）。`.git/config` 書き込み(D5)とは別系統の write-deny |
 
 ## ファイル別の保護方針
@@ -78,12 +79,25 @@ read を解放し、write のみ防御する。
 
 `autoAllowBashIfSandboxed: true`（詳細は公式 sandboxing）:
 
-- sandbox 内コマンドは **auto-allow**（`ask`/prompt 不到達）。`deny` は実行前評価で全経路に効く。`rm`/`rmdir` が `/`・home 直撃時のみ circuit breaker で prompt。
+- 優先順位は **`deny` > 明示 `ask` ルール > auto-allow**。auto-allow が受けるのは**明示ルールに当たらなかったコマンドだけ**で、**明示 `ask` は sandbox 内でも発火する**（`D8`）。`deny` は実行前評価で全経路に効く。`rm`/`rmdir` が `/`・home 直撃時のみ circuit breaker で prompt。
 - → 純粋系コマンド（`dirname`/`basename`/`realpath`/`date` 等）の `allow` 列挙は冗長。`allow` が効くのは sandbox 外実行（`excludedCommands`）の `gh *`・`git push -u origin *` 系と、Bash 外の `WebFetch` だけ。
+- `ask` は sandbox 内でも実効を持つため、**境界（sandbox）の内側で「人間に一拍置かせたい」操作の置き場**になる（→「ask」節）。ただし高頻度コマンドを置くと摩擦が実害になる（`D8`）。
+
+### ask（sandbox の内側で人間を挟む操作）
+
+`ask` は sandbox 内でも発火する（`D8`）ので、**sandbox 境界だけでは止まらない性質の操作**を人間に捌かせるレイヤとして使う。置いているのは次の3系統で、いずれも「実行そのものは正当だが、AI が自律的にやると取り返しがつかない／気づけない」ものに限る。
+
+- **exfiltration と破壊の都度承認**: `curl *` / `wget *` / `rm *`。curl/wget は `allowedDomains` の外へ出る送信経路、`rm` は不可逆な削除。sandbox の内側に留まっていても外部到達・データ喪失は起きるため、人間が捌く。
+- **環境変数の一括ダンプ**: `env` / `printenv *`。fnox は token を消費プロセスの env にだけ注入する（[docs/fnox-token-management.md](./fnox-token-management.md)）ので、env の一括ダンプは**注入済み token を出力に載せる直接経路**になる。Shai-Hulud 型マルウェアが env を漁って認証情報を持ち出す挙動そのものでもあり、ダンプ操作自体を情報収集の前段として扱って承認を挟む。
+- **外部公開（publish）**: `* publish *`。registry への公開は不可逆かつ外部到達で、AI が自律実行してよい操作ではない。加えて Shai-Hulud 型は**侵害環境から汚染版を publish して拡散する**ワーム挙動を取るため、publish を人間の承認点に固定しておくこと自体が拡散の遮断になる。
+
+`gh` 系の `ask`（`gh api *` / `gh workflow run *` / `gh run rerun *`）は別の理由（matcher で read/write を区別できない・CI を動かす）で置いている。→「gh」節。
+
+read-only viewer 系（`sed`/`awk`/`od` 等）を `ask` に置くのは**不採用**。防御に寄与せず（`sh -c` 等で迂回可＝`D2`）、非対話 subagent が捌けず実害だけが残る（`D8`）。
 
 ### git
 
-**in-sandbox の git には permission ルールを置かない**（auto-allow なので冗長）。read-only git は built-in 認識で allow 不要。write・破壊系は sandbox 内完結で auto-allow（`github.com` は `allowedDomains` 内なので push/fetch も）。`ask` は不到達なので無意味。破壊系は sandbox 境界＋`allowedDomains`（github 限定＝外部流出にならない）を信頼して容認。確実に止めたい操作は `deny` か PreToolUse hook。
+**in-sandbox の git には permission ルールを置かない**（auto-allow なので冗長）。read-only git は built-in 認識で allow 不要。write・破壊系は sandbox 内完結で auto-allow（`github.com` は `allowedDomains` 内なので push/fetch も）。**`ask` を置けば sandbox 内でも発火する（`D8`）が、git には置かない判断**＝破壊系は sandbox 境界＋`allowedDomains`（github 限定＝ローカル/自リポジトリに留まり外部流出にならない）を信頼して容認し、高頻度な git 操作に prompt を挟む摩擦を避ける。確実に止めたい操作は `deny` か PreToolUse hook。
 
 **例外: upstream 設定の push は `excludedCommands` 行き＝§gh と同じ扱い**。`git push -u origin *` / `git push --set-upstream origin *` は sandbox 外実行にする。理由は upstream tracking（`branch.X.remote`/`merge`）の書き込み先 `.git/config` が sandbox-write-deny で、in-sandbox だと **exit 0 のサイレント失敗で upstream が永続化されない**ため（`D5`）。sandbox 外＝permission flow に乗るので、§gh の write 系と同様に **allow が必要**（無いと default mode で `ask` に落ち毎回プロンプト。in-sandbox の auto-allow は効かない）。
 
@@ -119,9 +133,23 @@ fnox（秘匿情報の live fetch。詳細は [docs/fnox-token-management.md](./
 - **`dd *` は維持**: 正規利用がなく誤爆コスト ≒ 0。sandbox を切った日に効く床。
 - **`defaults write`/`delete`/`import` は採用**: `defaults` は cfprefsd デーモン（sandbox 外プロセス）経由で macOS 設定を変えるため、sandbox の filesystem 制限を貫通しうる数少ない「本物の」防御。設定削除・一括上書きも塞ぐ。
 
-## bun のサプライチェーン対策
+## サプライチェーン対策（新規公開版の保持期間）
 
-bun は `.npmrc` の `min-release-age` を読まない（[oven-sh/bun#22679](https://github.com/oven-sh/bun/issues/22679)）。`~/.bunfig.toml` の `[install] minimumReleaseAge` で別途設定する。単位は秒（`604800` = 7 日）。pnpm/npm の `min-release-age` は日単位。
+新規公開版を一定期間掴まないための保持設定は、**PM ごとに設定ファイル・キー名・単位がすべて違う**。本リポジトリは 7 日保持で揃えている:
+
+| PM | 設定ファイル | キー | 7 日相当 |
+|----|------------|-----|---------|
+| npm | `.npmrc` | `min-release-age` | `7`（日） |
+| pnpm <=10 | `.npmrc` | `minimum-release-age` | `10080`（分） |
+| pnpm 11+ | `.config/pnpm/config.yaml` | `minimumReleaseAge` | `10080`（分） |
+| bun | `.config/.bunfig.toml` の `[install]` | `minimumReleaseAge` | `604800`（秒） |
+
+**キーやファイルを取り違えると、エラーを出さずに防御が丸ごと無効化される**（設定した気になるのが最大のリスク）。要点:
+
+- **npm の `min-release-age` を pnpm は読まない**（no-op）。キー名が別なので `.npmrc` に両方書く。
+- **pnpm 11+ は `.npmrc`（INI）を一切読まない**。`config.yaml`(YAML/camelCase) のみで、`save-exact` も同様に無視されるため `saveExact: true` を併記しないと 11 昇格で厳密固定が静かに失われる。置き場は `XDG_CONFIG_HOME=~/.config`（fish の `config.fish` で設定）前提の `~/.config/pnpm/config.yaml`。設定が無いと macOS 既定の `~/Library/Preferences/pnpm/config.yaml` を見に行く。
+- **bun の設定は `~/.bunfig.toml` では効かない**。`XDG_CONFIG_HOME` が設定されていると bun は `$XDG_CONFIG_HOME/.bunfig.toml` だけを見て**ホーム側にフォールバックしない**（[oven-sh/bun#30842](https://github.com/oven-sh/bun/issues/30842)）。本リポジトリは `.config/.bunfig.toml` を `../.bunfig.toml` への**相対 symlink** にして同一実体を 2 箇所から参照させている。この symlink を外すと `minimumReleaseAge` ごと bun のグローバル設定が全滅する。
+- bun は `.npmrc` の `min-release-age` も読まない（[oven-sh/bun#22679](https://github.com/oven-sh/bun/issues/22679)）。`save-exact` もプロジェクトローカルに `.npmrc` が無いとホーム側にフォールバックしない（[oven-sh/bun#22971](https://github.com/oven-sh/bun/issues/22971)）ため、`.bunfig.toml` の `exact = true` で代替している。
 
 ### ccstatusline
 
@@ -151,6 +179,15 @@ sandbox は network を allowlist、write を cwd 中心の allowlist で絞る�
 - **`sandbox.filesystem.allowWrite` に cache を追加**。ただし dotfiles 管理で **`~/.bun` は symlink**（→ `~/dotfiles/.bun`）なので、判定が実体パスで行われる（`D6`）ことから **`~/.bun/install/cache` と `~/dotfiles/.bun/install/cache` の両方を書く**。symlink 側単独では無効。二重記載は冗長ではなく、symlink 構成の変更に対する両対応。
 - 粒度は `~/.bun` 全体ではなく `install/cache` に絞る（`~/.bun/bin` 等への write 開放は `$PATH` 実行物の改ざん経路になるため）。`bun add -g` 等で別の書き込みが必要になったらその時に個別判断。
 - 対して `~/.npm/_cacache`・`~/.gnupg` が単記で効くのは、これらが symlink でない実ディレクトリだから。
+
+### mise を sandbox 内で通す
+
+mise は cwd 外の 2 箇所に書くため `sandbox.filesystem.allowWrite` に追加している。npm/bun の cache と同じく「sandbox は cwd 外 write を allowlist で塞ぐ」の帰結:
+
+- `~/.local/state/mise/trusted-configs`: mise が config ファイルの信頼状態を記録する先（追加経緯は `5b5c0b3`）。
+- `~/Library/Caches/mise`: mise のキャッシュ（追加経緯は `720ca53`）。
+
+粒度は `~/.local/state` や `~/Library/Caches` 全体に広げず、mise の 2 パスに絞る。
 
 ### sandbox 内で TLS を通す（CA バンドル）
 
@@ -184,6 +221,7 @@ permission は挙動が直感に反するため、**推測せず公式 Docs ＋�
 
 - 公式 Docs（仕様の一次情報・毎回参照）: [permissions](https://code.claude.com/docs/en/permissions) / [sandboxing](https://code.claude.com/docs/en/sandboxing)
 - `.claude/rules/claude-code-settings.md`: 設定変更時の鉄則（公式 Docs 参照・実機検証）
-- `## AI tools`（README.md）: MCP / plugins / Agent Skills の管理方針
+- `### AI tools`（README.md）: MCP / plugins / Agent Skills の管理方針
 - `dotfiles/.claude/settings.json`: 設定の実体
-- `dotfiles/.bunfig.toml`: bun の supply-chain 設定
+- `dotfiles/.bunfig.toml`: bun の supply-chain 設定（実効パスは `.config/.bunfig.toml` の symlink 経由）
+- `dotfiles/.config/pnpm/config.yaml`: pnpm 11+ の supply-chain 設定
