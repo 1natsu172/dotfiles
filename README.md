@@ -1,18 +1,18 @@
 # dotfiles
 
-# Memo
+## Memo
 
 *ルートにシンボリックリンク張りたくないファイル*は`install.sh`で除外指定します。
 
 *git で管理したくないファイル*は`.gitignore`で指定します。
 
-## Utilities
+### Utilities
 
-### gwte (Git WorkTree Executor)
+#### gwte (Git WorkTree Executor)
 
 Git WorkTreeの複数ワークツリーに対してコマンドを一括実行するためのユーティリティです。
 
-#### 基本的な使い方
+##### 基本的な使い方
 
 ```bash
 # 全てのワークツリーでコマンドを実行（ドライラン）
@@ -25,7 +25,7 @@ gwte --command "git pull" --interactive
 gwte --command "./scripts/build.sh" --all
 ```
 
-#### オプション
+##### オプション
 
 - `-c, --command COMMAND`: 実行するコマンドを指定
 - `-d, --dry-run`: 実際に実行せずに何が実行されるかを表示
@@ -33,7 +33,7 @@ gwte --command "./scripts/build.sh" --all
 - `-i, --interactive`: インタラクティブモードでワークツリーを選択
 - `-h, --help`: ヘルプメッセージを表示
 
-#### 使用例
+##### 使用例
 
 ```bash
 # 全ワークツリーのステータス確認
@@ -46,9 +46,9 @@ gwte -c "npm test" -i
 gwte -c "git log --oneline -1" -a -d
 ```
 
-# Usage
+## Usage
 
-## シンボリックリンクをルートに張る
+### シンボリックリンクをルートに張る
 
 `dotfiles`の中にある`.hoge`類のファイルをもとにルートにシンボリックリンクを張る。
 
@@ -59,7 +59,7 @@ cd dotfiles
 sh install.sh
 ```
 
-## Homebrew
+### Homebrew
 
 1. まずインストールする
 
@@ -85,7 +85,7 @@ brew bundle
 brew bundle dump --force
 ```
 
-## MacOSXの設定
+### MacOSXの設定
 
 **まあまあコマンド構成が古くなっているので、次の初期化時はdefaultsコマンドを使わずにセットアップする**
 
@@ -100,9 +100,9 @@ https://memo.yammer.jp/posts/pdef を使って再構成するのもいいかも�
 
 ※ https://macos-defaults.com/ に多少のリファレンスがある
 
-## 手動でやるリスト
+### 手動でやるリスト
 
-### MacOSの設定
+#### MacOSの設定
 
 * デスクトップとDock > デフォルトのWebブラウザ
 * デスクトップとDock > ウィンドウ > `タイル表示されたウィンドウを隙間を入れて表示` をオフにする
@@ -137,13 +137,13 @@ https://memo.yammer.jp/posts/pdef を使って再構成するのもいいかも�
 
 **一部設定は再起動しないと反映されないため、設定変更後は要再起動**
 
-#### メモ
+##### メモ
 
 * Mission ControlとアプリExposeはOSのトラックパッドの設定ではオフにしておく
   * デフォルトでは速度遅い問題があり、BTTのジェスチャ経由にしないと解決できない
   * 
 
-### アプリケーションの設定
+#### アプリケーションの設定
 
 * ブラウザ
   * 検索エンジンクエリにen検索ショートカットを追加する
@@ -164,9 +164,9 @@ https://memo.yammer.jp/posts/pdef を使って再構成するのもいいかも�
   * 公式ネイティブインストーラでインストールする
 
 
-## シェルのデフォルトを変更する
+### シェルのデフォルトを変更する
 
-### fish にするなら
+#### fish にするなら
 
 ```
 # /etc/shells の末尾に /usr/local/bin/fish を追記します。
@@ -179,7 +179,7 @@ chsh -s $(which fish)
 cd ~; mkdir .ssh; touch .ssh/environment; ssh-agent > .ssh/environment;
 ```
 
-## Homebrew の対象ディレクトリが Path 優先順位負けするので最優先にする
+### Homebrew の対象ディレクトリが Path 優先順位負けするので最優先にする
 
 [Homebrew コマンドが優先的に実行されるようにデフォルトパスを追加する](https://qiita.com/n-oshiro/items/3c571a4fcdb023b1fe77)
 
@@ -204,15 +204,15 @@ sudo vi /etc/paths
 exec $SHELL
 ``` 
 
-## fishのセットアップ
+### fishのセットアップ
 
-### rustup のセットアップを先にしておく
+#### rustup のセットアップを先にしておく
 
 fish configがrustupの生成するenvで詰まるので先にしておく方が二度手間にならない
 
 ref: https://www.rust-lang.org/ja/tools/install
 
-### fisher のセットアップ
+#### fisher のセットアップ
 
 ref: https://github.com/jorgebucaran/fisher#using-your-fish_plugins-file
 
@@ -221,13 +221,13 @@ ref: https://github.com/jorgebucaran/fisher#using-your-fish_plugins-file
 fisher update
 ```
 
-## mise で 各種ランタイム類の用意をする
+### mise で 各種ランタイム類の用意をする
 
 [mise](https://mise.jdx.dev/getting-started.html)
 
-## Git アカウントの設定
+### Git アカウントの設定
 
-### メインアカウント設定
+#### メインアカウント設定
 
 リポジトリは https 形式で clone するようにして、認証キーは`credential-osxkeychain`で管理するようにする。また全てのコミットに署名をつけるためにGPGの設定をする。
 
@@ -235,7 +235,7 @@ fisher update
 - GPG署名鍵の設定をする
   - 鍵保管場所に別途ドキュメント
 
-### [Deprecated] 複数アカウント運用
+#### [Deprecated] 複数アカウント運用
 
 **今ならmiseでやるのがいいが、やっていない**
 
@@ -262,7 +262,7 @@ export GIT_AUTHOR_EMAIL="mail@example.com"
 
 これで OS ログインユーザーのメインアカウントの設定が完了
 
-### サブアカウント設定
+#### サブアカウント設定
 
 サブアカウント用のディレクトリを切って、そこ以下での git の環境変数を direnv で制御することでサブアカウント実現をする。
 
@@ -285,11 +285,11 @@ export GIT_AUTHOR_EMAIL="mail@example.com"
 
 これで`~/dev_folder/sub_ccount`以下での作業はサブアカウントでの作業になる
 
-## 参考
+### 参考
 
 - [Mac の環境構築自動化 2016 年 10 月版](http://jnst.hateblo.jp/entry/2016/09/30/051636)
 
-## fnox（秘匿情報の live fetch 管理）
+### fnox（秘匿情報の live fetch 管理）
 
 `.npmrc` の registry token をはじめ、秘匿情報を [fnox](https://fnox.jdx.dev/) 経由で op vault から
 実行時に取得する（disk に平文を置かない）。解決チェーン（keychain→1Password SA→op）・各シェル rc の
@@ -297,14 +297,14 @@ export GIT_AUTHOR_EMAIL="mail@example.com"
 [docs/fnox-token-management.md](./docs/fnox-token-management.md) に集約している。remote(HTTP) MCP の
 Authorization ヘッダへの注入（Claude Code の headersHelper 経由）も同書を参照。
 
-## AI tools
+### AI tools
 
-### Agent Skills
+#### Agent Skills
 
 個人のエージェントスキルは別リポジトリ（[`1natsu-vacation/agent-skills`](https://github.com/1natsu-vacation/agent-skills)）で管理している。
 vercel/skillsで管理されており、`.agents/.skill-lock.json` でグローバル管理している。
 
-### mcp
+#### mcp
 
 `dotfiles/.mcp.json` がグローバルのmcpサーバーのリスト兼テンプレートリストになっている。（`~/.claude.json`のmcpServersに書き込まれることがあるが、秘匿情報がありうるためコミットしない）。
 
@@ -313,25 +313,25 @@ vercel/skillsで管理されており、`.agents/.skill-lock.json` でグロー�
 
 プロジェクト固有のMCPは、プロジェクトごとに `.mcp.json` を用意して、プロジェクトの `.claude/settings.json` で管理する。またプロジェクトの都合でマシンWidenなMCPをdisableにしたい場合は、個別に `~/.claude.json` のリポジトリスコープの設定でコントロールする（ `/mcp` で操作すると自動で記述される）。
 
-#### context7
+##### context7
 
 例外的にsetupを `bunx ctx7 setup --oauth` でセットアップしている。このコマンドはmcpの設定＋各AIツールのSKILL最適化したものを展開するので純粋なSKILL配置ではないのであえて `bunx skills add` で他のSKILLSと同じように展開していない。
 
-### plugins
+#### plugins
 
 marketplaceからuser scopeでグローバル有効にしたものは、 `~/.claude/settings.json` に書き込まれる。
 プロジェクトごとにproject scopeで有効にしたものは `<project_dir>/.claude/settings.json` に書き込まれる。
 プロジェクトごとにlocal scopeで有効にしたものは `<project_dir>/.claude/settings.local.json` に書き込まれる。
 
-### セキュリティ運用（Sandbox / Permission の二層モデル）
+#### セキュリティ運用（Sandbox / Permission の二層モデル）
 
 `~/.claude/settings.json` の Sandbox / Permission によるセキュリティ設計（脅威モデル＝プロンプトインジェクションとサプライチェーン攻撃）は、ファイル別の保護方針・設計判断・検証済み挙動を [docs/claude-code-security.md](./docs/claude-code-security.md) に集約している（仕様の一次情報は公式 Docs。同 doc 参照）。設定変更時の鉄則は [.claude/rules/claude-code-settings.md](./.claude/rules/claude-code-settings.md)。
 
 > ここに仕様の詳細を再掲しない（ドリフトの温床になるため）。保護方針・delta は上記 doc を参照。
 
-# Trouble shooting
+## Trouble shooting
 
-## huskyやsimple-git-hooks実行時にコマンドが見つからない
+### huskyやsimple-git-hooks実行時にコマンドが見つからない
 
 特殊なケースではPATHを別途通したりshimの再生成をする必要がある。例えばmiseで管理しているランタイムのshimの先にバイナリがあるようなケースが該当する。
 
