@@ -23,3 +23,6 @@ description = "pick URL from focused pane"
 key = "cmd+r"
 type = "plugin_action"
 command = "persiyanov.reviewr.toggle"   # <plugin_id>.<action_id> — note the id, not the name
+
+[experimental]
+switch_ascii_input_source_in_prefix = true
