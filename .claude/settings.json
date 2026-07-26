@@ -7,6 +7,7 @@
     "SSL_CERT_FILE": "/opt/homebrew/etc/ca-certificates/cert.pem"
   },
   "permissions": {
+    "defaultMode": "auto",
     "allow": [
       "Bash(gh pr view *)",
       "Bash(gh pr list *)",
@@ -365,7 +366,7 @@
       "git push --set-upstream origin *"
     ]
   },
-  "effortLevel": "xhigh",
+  "effortLevel": "high",
   "tui": "fullscreen",
   "skipWorkflowUsageWarning": true,
   "teammateMode": "auto",
