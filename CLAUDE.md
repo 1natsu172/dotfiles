@@ -10,7 +10,7 @@ macOS の個人 dotfiles。シェル・各種ツール・AI エージェント�
 
 コードや設定ファイルからは読み取れない設計判断・検証済みの挙動は `docs/` にある。**該当する設定を触る前に読むこと。**
 
-- [docs/claude-code-security.md](./docs/claude-code-security.md) — Claude Code の sandbox / permission 設計、脅威モデル、公式 Docs から自明でない検証済み挙動（`D1`〜`D8`）
+- [docs/claude-code-security.md](./docs/claude-code-security.md) — Claude Code の sandbox / permission 設計、脅威モデル、公式 Docs から自明でない検証済み挙動（`D` 付きの delta 表）
 - [docs/supply-chain-defenses.md](./docs/supply-chain-defenses.md) — npm / bun / pnpm のサプライチェーン多層防御。保持期間・postinstall・proxy registry
 - [docs/fnox-token-management.md](./docs/fnox-token-management.md) — 秘匿情報を disk に置かず、実行時に消費プロセスへ注入する仕組み
 
