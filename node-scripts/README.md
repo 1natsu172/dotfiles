@@ -3,7 +3,9 @@
 Claude Code 周辺の補助スクリプト（bun ランタイム）。statusline / hook の裏方や設定バックアップに使う。
 
 ```bash
-bun install   # 依存のインストール
+bun install         # 依存のインストール
+bun run typecheck   # 型チェック（tsc --noEmit / TypeScript 7）
+bun run check       # biome の lint + format
 ```
 
 ## スクリプト一覧
@@ -21,4 +23,5 @@ bun install   # 依存のインストール
 - **claude-code-debug-statusline.ts** — statusline に渡る入力 JSON を `_debug_statusline.json` に記録して
   デバッグする。
 
-> 初期化は bun v1.2.13 の `bun init` ベース。[Bun](https://bun.sh) ドキュメントも参照。
+> 初期化は bun v1.2.13 の `bun init` ベース。TypeScript 7 移行に伴い `tsconfig.json` の `types` だけ
+> テンプレートから乖離している（理由は同ファイルのコメント）。[Bun](https://bun.sh) ドキュメントも参照。

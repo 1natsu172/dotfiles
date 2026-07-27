@@ -7,6 +7,10 @@
     "moduleDetection": "force",
     "jsx": "react-jsx",
     "allowJs": true,
+    // TS6 で types の既定が [] になり @types の暗黙読み込みが廃止された（TS7 も踏襲）。
+    // 未指定だと process / console / node:* / Bun が全て「見つかりません」になる。
+    // @types/bun が @types/node も引き込むのでこれ1つで足りる（旧挙動に戻すなら ["*"]）。
+    "types": ["bun"],
 
     // Bundler mode
     "moduleResolution": "bundler",

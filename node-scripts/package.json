@@ -4,13 +4,12 @@
   "scripts": {
     "lint": "bunx --bun biome lint --write ./src",
     "format": "bunx --bun biome format --write ./src",
-    "check": "bunx --bun biome check --write ./src"
+    "check": "bunx --bun biome check --write ./src",
+    "typecheck": "bunx --bun tsc --noEmit"
   },
   "devDependencies": {
     "@biomejs/biome": "2.2.2",
-    "@types/bun": "latest"
-  },
-  "peerDependencies": {
-    "typescript": "^5"
+    "@types/bun": "1.3.14",
+    "typescript": "7.0.2"
   }
 }
