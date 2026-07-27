@@ -20,7 +20,7 @@
 
 - パスを subprocess と Claude tool の両方から守るには **Permission `Read`/`Edit` deny** を書けば足りる（sandbox にマージされる）。**write 防御は必ず `Edit(...)`**（`Write(...)` は組み込み Write tool に無効＝`D3`）。
 - **2 つの deny リストを丸ごと同期する必要はない**。read は Permission deny が自動マージ（`sandbox.denyRead` への複製は冗長）、write は sandbox allowlist が home を元から塞ぐ（home 系 `sandbox.denyWrite` は冗長で、実効を持つのは allow 内の例外＝`~/.gnupg/*`・cwd 内のみ）。
-- **冗長な sandbox 列挙は意図的に残す**: 「sandbox config 単体で何が遮断されるか」が明示され、Permission 層を取り違えても安全側に倒れるため。
+- **冗長な sandbox 列挙は意図的に残す**: 「sandbox config 単体で何が遮断されるか」が明示され、Permission 層を取り違えても安全側に倒れるため。これは**層をまたぐ冗長**（同じパスを permission と sandbox の両方に書く）の話で、**同じパスを 2 通りの綴りで書く冗長は採らない**（symlink 綴り＋実体パスの併記は片方が無言で効かず、読み手に区別が伝わらない＝`D10`）。
 - **Permission 層に `Write(...)` deny は書かない**（`D3`）。無機能なうえ CC 2.1.20x 以降は起動時 WARN を出す。write を縛るのは組み込み file tool 経路＝`Edit(...)`、Bash subprocess 経路＝sandbox `denyWrite` の 2 つ。この「冗長でも明示」方針は **sandbox 側の列挙にのみ**適用し、`Write(...)` permission rule には適用しない（後者は明示ですらなく雑音）。
 
 ## 検証済み delta（インデックス）
@@ -31,11 +31,15 @@
 |----|--------|--------|-------------|
 | `D1` | 2026-05-23 | 未記録 | Read/Edit deny が Permission 層でカバーする Bash コマンドは `cat`/`head`/`tail`/`sed` 等の**認識コマンドのみ**で、`xxd`/`od`/`wc`/`less`/`bat`/`more`/`strings` は漏れる。ただし **sandbox 内では Read deny が sandbox にマージされ全 read が OS 遮断されるので顕在化しない**。漏れるのは **unsandbox / `excludedCommands` 経路**で、対策は必要時に明示 Bash viewer deny（現状は未配備）。`sed` は read-only 用途でも Edit 扱い。`allowRead` 内のパスは Read deny の Bash カバーが外れる |
 | `D2` | 2026-05-25 | 2.1.150 | Bash matcher はシェルオペレータ（`&&` `;` `\|` 等）と `$(...)` を分解して各部に適用するが、**別パス名（`/bin/echo` 等）・インタプリタ包み（`sh -c` / `bash -c` / `python -c`）は取りこぼす**。`sh -c '<denied>'` 一発で deny を回避できる → Bash deny は「うっかり承認を防ぐ床」であって境界ではない（境界は sandbox） |
-| `D3` | 2026-07-15 | 2.1.210 | **`Write(...)` permission rule は file permission check の対象外＝無機能**。組み込み Write tool（作成/上書き）は Edit カテゴリで `Edit(...)` のみが縛る（公式 Docs: 「Read and Edit deny rules apply to Claude's built-in file tools」／「add an `Edit` deny rule for paths no tool may change」）。`Write(...)` は Bash redirect も含め何も gate しない（Bash subprocess の write 遮断は sandbox `denyWrite` の OS 強制が担い、permission rule には依存しない）。パス形式（`~/dir/**`/exact/`**/X`）で差は無く `Edit` の有無が全て。live-reload は file tool でも正常。実証2件（2026-07-15・2.1.210）: (1) 現行有効な `Edit(**/*secret*)` にマッチするパスへ組み込み Write tool で新規作成→`denied by your permission settings` でブロック（Edit が Write tool を縛る）。(2) `Edit`・sandbox 非該当のテストパスに `Write(...)` のみ deny を仕込み bash redirect（`echo x > path`）→**成功**（Write() は redirect も弾かない。deny は auto-allow より優先評価されるので機能していれば必ず発火するが、しなかった）。旧記述の「`Write(...)` の実効は Bash redirect 遮断のみ」は誤り（2.1.150 での誤帰属か挙動変更）で、CC 2.1.20x 以降は起動時に `Write(...)` deny を「not matched by file permission checks — Use Edit(...)」と WARN する→`Write(...)` deny は書かず全て `Edit(...)` に寄せる。**無機能なのは `Write(path)` 形式**で、**パスなしのツール名ルール（`Write` 単体）は別扱い**＝tool 全体にマッチし WARN も出ない（Docs 明記。うちでは未使用だが「Write は一切禁止」としたい場合の唯一の書き方） |
+| `D3` | 2026-07-15 | 2.1.210 | **`Write(...)` permission rule は file permission check の対象外＝無機能**。組み込み Write tool（作成/上書き）は Edit カテゴリで `Edit(...)` のみが縛る（公式 Docs: 「Read and Edit deny rules apply to Claude's built-in file tools」／「add an `Edit` deny rule for paths no tool may change」）。`Write(...)` は Bash redirect も含め何も gate しない（**ただし `Edit(...)` deny は sandbox 境界へマージされ Bash redirect も遮断する**＝`D9`。ここで無機能なのは `Write(...)` のみ）。パス形式（`~/dir/**`/exact/`**/X`）で差は無く `Edit` の有無が全て。live-reload は file tool でも正常。実証2件（2026-07-15・2.1.210）: (1) 現行有効な `Edit(**/*secret*)` にマッチするパスへ組み込み Write tool で新規作成→`denied by your permission settings` でブロック（Edit が Write tool を縛る）。(2) `Edit`・sandbox 非該当のテストパスに `Write(...)` のみ deny を仕込み bash redirect（`echo x > path`）→**成功**（Write() は redirect も弾かない。deny は auto-allow より優先評価されるので機能していれば必ず発火するが、しなかった）。旧記述の「`Write(...)` の実効は Bash redirect 遮断のみ」は誤り（2.1.150 での誤帰属か挙動変更）で、CC 2.1.20x 以降は起動時に `Write(...)` deny を「not matched by file permission checks — Use Edit(...)」と WARN する→`Write(...)` deny は書かず全て `Edit(...)` に寄せる。**無機能なのは `Write(path)` 形式**で、**パスなしのツール名ルール（`Write` 単体）は別扱い**＝tool 全体にマッチし WARN も出ない（Docs 明記。うちでは未使用だが「Write は一切禁止」としたい場合の唯一の書き方） |
 | `D4` | 2026-05-25 | 2.1.150 | **`Read(//**/*.pem)`（秘密鍵保護）が公開 CA バンドル（`cert.pem`）まで巻き込み**、sandbox 内で CA を read 遮断する。結果、sandbox 内の `git push`/`curl` 等が CA をロードできず **TLS 確立前に失敗**（`error setting certificate verify locations`）。commit はローカルのみで無傷。対策は「sandbox 内で TLS を通す」節（CA バンドルを `allowRead` 例外＋env で参照）。問題は **Claude Code sandbox 固有**（通常ターミナルでは `Read(...)` deny が効かないので無関係） |
-| `D6` | 2026-07-12 | 2.1.207 | **sandbox の filesystem 判定は symlink 解決後の実体パス**（macOS Seatbelt）。`allowWrite` に symlink 側パス（例 `~/.bun/install/cache`）を書いても、実体（`~/dotfiles/.bun/install/cache`）への書き込みは `Operation not permitted` のまま。dotfiles 管理で `~/.X` が symlink のパスを許可するときは**実体側パスも併記**する（symlink 側単独では無効、将来 symlink を外しても壊れないよう二重記載が正）。実証: 別リポジトリの worktree 作成で bun cache 書き込みが symlink 側許可のみで拒否→実体側追加で解消 |
+| `D6` | 2026-07-12 | 2.1.207 | **sandbox の filesystem 判定は symlink 解決後の実体パス**（macOS Seatbelt）。`allowWrite` に symlink 側パス（例 `~/.bun/install/cache`）を書いても、実体（`~/dotfiles/.bun/install/cache`）への書き込みは `Operation not permitted` のまま。dotfiles 管理で `~/.X` が symlink のパスを扱うときは**実体パス（`~/dotfiles/...`）で書く**。symlink 側の綴りは無効なので併記しない（deny 側の同じ性質は `D10`）。実証: 別リポジトリの worktree 作成で bun cache 書き込みが symlink 側許可のみで拒否され、実体側パスで解消 |
 | `D5` | 2026-06-08 | 2.1.168 | **`.git/config`（完全一致）と `.git/hooks/` は harness 組み込みで sandbox-write-deny**（settings.json 由来でない。worktree 非依存で main repo でも `git config --local` 書き込みが `Operation not permitted`）。`objects`/`refs`/`logs`/`index`/`.git` 直下・`config.xxx` は許可なので **`git commit` は通るが `git push -u`/`--set-upstream`/`push.autoSetupRemote` は落ちる非対称**（tracking を `.git/config` に書くため）。しかも config 書き込み拒否でも **git は exit 0 ＋「branch '...' set up to track」でサイレント失敗** → upstream 永続化されず次の素 `git push` が「no upstream configured」。理由は `.git/config` の `core.sshCommand`/`fsmonitor`/alias/`hooksPath` が RCE 源（`~/.gitconfig` deny と同系統）。対策は §git の `excludedCommands` 行き。**Claude の Edit tool は `.git/config` を書ける**（seatbelt 外・`Edit(.git/config)` deny も無し）＝in-sandbox の `git branch -D` が残す orphan config section の手当てに使える。D4 の TLS 失敗（push が落ちる別原因）とは無関係 |
-| `D8` | 2026-06-18 | 未記録 | **`autoAllowBashIfSandboxed: true` でも明示 `ask` ルールは auto-allow を上書きし、sandbox 内で発火する**（優先順位 `deny` > 明示 `ask` > auto-allow）。auto-allow は「明示ルールに当たらなかったコマンドの受け皿」でしかない。実測: `grep -n … \| sed -n '1,40p'` で `Ask rule Bash(sed *) overrides auto mode for this command.`。`\|`/`&&` はサブコマンド分割評価（`D2`）なのでパイプ後段の `sed` 単体が当たる。**旧記述「sandbox 内では `ask` に到達しない」は誤り**。実用含意: 純 read-only viewer（`sed`/`awk`/`od`/`xxd`/`strings`/`more`/`nl`/`tac`）を `ask` に置くとページング用途（`sed -n '1,Np'`）で毎回発火し、**非対話 subagent（`/code-review`）は ask を捌けず denied 扱い**になって実害が出る。しかも防御には寄与しない（`/bin/sed`・`sh -c` で迂回可＝`D2`。秘匿 read/改ざんの実効防御は sandbox `denyRead` ＋ `Read`/`Edit(//**/X)` の OS 層）→ これらは 2026-06-18 に `ask` から削除済み |
+| `D8` | 2026-06-18 | 未記録 | **`autoAllowBashIfSandboxed: true` でも明示 `ask` ルールは auto-allow を上書きし、sandbox 内で発火する**（優先順位 `deny` > 明示 `ask` > auto-allow）。auto-allow は「明示ルールに当たらなかったコマンドの受け皿」でしかない。実測: `grep -n … \| sed -n '1,40p'` で `Ask rule Bash(sed *) overrides auto mode for this command.`。`\|`/`&&` はサブコマンド分割評価（`D2`）なのでパイプ後段の `sed` 単体が当たる。実用含意: 純 read-only viewer（`sed`/`awk`/`od`/`xxd`/`strings`/`more`/`nl`/`tac`）を `ask` に置くとページング用途（`sed -n '1,Np'`）で毎回発火し、**非対話 subagent（`/code-review`）は ask を捌けず denied 扱い**になって実害が出る。しかも防御には寄与しない（`/bin/sed`・`sh -c` で迂回可＝`D2`。秘匿 read/改ざんの実効防御は sandbox `denyRead` ＋ `Read`/`Edit(//**/X)` の OS 層）→ これらは `ask` に置かない |
+| `D9` | 2026-07-27 | 2.1.220 | **`Edit(...)` deny は sandbox の write 境界へマージされ、Bash subprocess の書き込みも OS レベルで遮断する**（公式 Docs sandboxing: "Filesystem restrictions in the sandbox combine the `sandbox.filesystem` settings with Read and Edit deny rules"）。実証: cwd 配下に `Edit(//**/*auth*.json)` 等にマッチする名前で `echo x > <path>` を実行 → シェルが `operation not permitted`（EPERM）で失敗。非マッチ名（`plain.json`/`mytoken.txt`）は書けたので、Bash matcher ではなく OS 境界による遮断。含意: パス名で表現できる保護は `Edit(...)` 1 本で file tool と subprocess の両経路を塞げる。`sandbox.denyWrite` が要るのは**パターンで表現しない／Edit deny を掛けたくない**ケース（例: ディレクトリ全体の subprocess 書き込みは止めるが Claude の file tool では編集したい `~/dotfiles/.codex`） |
+| `D10` | 2026-07-27 | 2.1.220 | **deny rule のパスが「symlink されたディレクトリ」を経由すると、file tool にしか効かない**（Bash の認識コマンドにも OS 層にも届かず、無言で通る）。**ファイル自体の symlink は解決される**ので `~/.gitconfig`・`~/.zshrc`（dotfiles への file symlink）は実体パス経由でも遮断された一方、`~/.config/fish/**`・`~/.codex/auth.json`（`~/.config`・`~/.codex` が dir symlink）は実体パス経由で read/write とも素通りした。**実体パス（`~/dotfiles/...`）で書けば1本で3層すべてに効く**（symlink 綴りでのアクセスも止まる＝公式 Docs「When Claude accesses a symlink, permission rules check two paths: the symlink itself and the file it resolves to」の挙動）。逆は成り立たない。実証（ダミー `probe/link → real`）: rule を symlink 綴りで書くと file tool のみ deny・`cat`/`wc` は素通り、実体綴りで書くと file tool も `cat` も `wc` も deny。**Docs は「Read/Edit deny は Bash の `cat`/`head`/`tail`/`sed` にも適用される」と書いているので、この Bash 層の取りこぼしは記述との乖離**（upstream は `#71072` で `.claude/rules` の同種問題を bug 扱いで 2.1.198 修正、settings ファイル保護の symlink 解決も 2.1.210 で後追い追加＝個別に塞いでいる最中）。**実体パスで書くのは upstream が直しても正しいままなので、剥がす前提の回避策ではない** |
+| `D11` | 2026-07-27 | 2.1.220 | **相対アンカー `**/X` の deny は層ごとに効き方が食い違うので使わない。FS 全体アンカー `//**/X` で書く**。dotfiles の外（`/tmp/cc-permcheck` を cwd にした別セッション）で実測した結果: **ファイル型 `Edit(**/.env)`・`Edit(**/.npmrc)` は file tool を素通りし（`String to replace not found` に到達＝permission 通過）Bash/OS 層でのみ遮断**、逆に**ディレクトリ型 `Edit(**/secrets/**)` は file tool では遮断されたが Bash からの書き込みは通った**。どちらも片肺で、`**/` は cwd 基準でもない（file tool 側）。公式 Docs は「Bare filenames follow gitignore semantics and match at any depth」かつ「A rule only matches files under its anchor」と書いており、user settings のアンカーは設定の置き場（`~/.claude`）。**dotfiles リポジトリで検証すると cwd と `~/.claude` が同じツリーになるため、この食い違いは検出できない**（`~/.claude` は `~/dotfiles/.claude` への symlink）。`//**/` 形式にすれば file tool 層は全パターンで遮断される（別 cwd セッションで確認）。OS 層まで届くかは接頭辞の形に依存する＝`D12` |
+| `D12` | 2026-07-27 | 2.1.220 | **deny が OS 層まで届くかは「ディレクトリ型かどうか」ではなく「接頭辞が具体パスかワイルドカードか」で決まる**。`//**/*.pem` 等のファイル名型と、`~/dotfiles/.config/gh/**` のような**具体接頭辞のディレクトリ型**は配下まで OS 層に載る（Bash の read/write とも遮断を実測）。一方 **`//**/secrets/**` のようにディレクトリ名までワイルドカードだと、OS 層にはディレクトリ自体の作成禁止までしか届かず、既存ディレクトリ配下のファイルへの Bash 書き込みは通る**（実測: `mkdir ./secrets`・`mkdir $TMPDIR/secrets` は `Operation not permitted`、しかし別 cwd セッションで既存 `secrets/inner.txt` への追記は成功）。file tool 層では両方とも効く。**含意**: 守る対象を具体パスで名指しできるなら接頭辞を具体にする（例 `~/dotfiles/.config/gh/**`）。任意プロジェクトの `secrets/` のように名指しできないものは、file tool 経路とディレクトリ新規作成までが防御範囲で、**既存ディレクトリへの Bash 書き込みは残る**と割り切る（permission rule の書き方では塞げない。塞ぐなら対象プロジェクト側の `sandbox.denyWrite` に実パスを列挙する） |
 | `D7` | 2026-07-22 | 2.1.216 | **sandbox は keychain 書き込み（osxkeychain の store）を遮断**。git の credential helper `osxkeychain` は認証成功後に資格情報を keychain へ store するが、sandbox 下では keychain write が拒否され `fatal: failed to store: <数字>`（実測 `100001`）を毎回吐く（`get`＝認証は通るので **cosmetic・exit 0**）。helper が system(`/opt/homebrew/etc/gitconfig`)＋global(`~/.gitconfig`)の**二重設定＝多値リストで2件連結**なので2行出る（行数＝helper 件数）。対策は §git の CLAUDECODE 条件 helper。keychain を sandbox allowlist に足す方向は不採用（機微）。`.git/config` 書き込み(D5)とは別系統の write-deny |
 
 ## ファイル別の保護方針
@@ -44,11 +48,12 @@
 
 | クラス | 例 | レシピ |
 |--------|-----|--------|
-| **A. 全遮断ディレクトリ**（read も write も不可） | `~/.ssh` `~/.aws` `~/.config/gh` `~/.config/op` `~/.config/1Password` `~/.kube` `~/.gnupg/private-keys-v1.d` | Permission `Read(~/dir/**)` + `Edit(~/dir/**)`（read 自動マージで subprocess も。write は Edit で新規作成も止まる）。＋明示性で sandbox `denyRead`/`denyWrite` も列挙 |
+| **A. 全遮断ディレクトリ**（read も write も不可） | `~/.ssh` `~/.aws` `~/.kube` `~/.gnupg/private-keys-v1.d`、および dotfiles 管理下は実体パスで `~/dotfiles/.config/{gh,op,1Password}`（`D10`） | Permission `Read(~/dir/**)` + `Edit(~/dir/**)`（read 自動マージで subprocess も。write は Edit で新規作成も止まる）。＋明示性で sandbox `denyRead`/`denyWrite` も列挙 |
 | **B. 公開 dotfile**（read 可・write 不可） | `~/.gitconfig` `~/.npmrc`（home） | Permission `Edit(~/file)`。Read deny は**書かない**。＋ sandbox `denyWrite` |
 | **C. 解放だが改ざん防止**（read 可・write 不可） | shell rc（`~/.bashrc` `~/.zshrc` `~/.config/fish`）、gpg conf | exact-file または `~/dir/**` で Permission `Edit`。＋ sandbox `denyWrite`（allow 内例外はここが実効） |
 | **D. FS 全体対称 deny**（`//**`） | 秘密鍵 `*.pem` `*.key` `id_rsa` 等 | Permission `Read(//**/X)` + `Edit(//**/X)`（read は sandbox マージで subprocess も遮断。unsandbox は `D1` の viewer 漏れが残る。**Bash subprocess の write は sandbox `denyWrite` 未列挙のため OS 遮断されない**＝Claude file tool 経路のみ Edit で塞ぐ限界を許容） |
-| **E. プロジェクト内 secret**（read 可・write 不可） | `.env` `.env.*` `secrets/**` `*secret*` `*credential*` | Permission `Edit(**/X)`（組み込み file tool を塞ぐ）。**Bash subprocess の write は sandbox `denyWrite` 未列挙のため OS 遮断されない**（プロジェクト内 glob なので sandbox denyWrite に列挙せず、Claude file tool 経路のみ Edit で塞ぐ限界を許容） |
+| **E. secret / 認証ファイル名**（read 可・write 不可） | `.env` `.env.*` `secrets/**` `*secret*` `*credential*` `*auth*.{json,toml,yaml,yml}` | Permission `Edit(//**/X)` を **FS 全体アンカー**で書く。`D9` により file tool と Bash subprocess の**両経路**が塞がる（sandbox `denyWrite` への列挙は不要） |
+| **F. ツールの認証ファイル・ディレクトリ**（read も不可） | `~/dotfiles/.codex/auth.json`・`~/dotfiles/.config/{gh,op}` | クラスE の write 防御に加えて `Read(...)` deny を書く。パスは**実体のある側**で書く（`D10`）。`sandbox.credentials.files` は使わない（`Read()` で足りる） |
 
 | パス | Read | Write | 区分 |
 |------|------|-------|------|
@@ -73,7 +78,44 @@ read を解放し、write のみ防御する。
 ### 秘密鍵・シークレット系
 
 - 秘密鍵は `*.pem` `*.key` `id_rsa` `id_ed25519` `id_ecdsa` `id_dsa` の各パターンを **`Read` は `//**/...`（FS 全体）で対称遮断**（read=exfil 防止。sandbox マージで subprocess も OS レベル遮断）し、**`Edit(//**/...)` で改ざん・偽鍵設置を防止**（組み込み file tool 経路。`Write(...)` は無機能なので書かない＝`D3`）。`Read(//**/*.key)`/`Read(//**/*.pem)` は秘密鍵以外の `.key`（i18n キー等）や**公開 CA バンドル（`cert.pem`）**も巻き込む。CA バンドルを巻き込むと sandbox 内 TLS が壊れる（`D4`）→「sandbox 内で TLS を通す」で read だけ個別解放（write は `Edit` ルールのまま遮断）。
-- `.env`（プロジェクト内）は開発上の正当な read 用途があるため read 解放。書き換えは **`Edit(**/X)`** で防止: `.env`/`.env.*`/`secrets/**`/`*secret*`/`*credential*`、project ローカル認証ファイルは `**/.npmrc`/`**/.netrc`。`Edit(**/X)` が Claude の組み込み file tool（Write/Edit/NotebookEdit）を塞ぐ。**これらプロジェクト内 glob は sandbox `denyWrite` に列挙していないため、Bash subprocess の直接 write は OS 遮断されない**（tool 経路のみの防御という限界を許容。`D3`）。
+- `.env`（プロジェクト内）は開発上の正当な read 用途があるため read 解放。書き換えは `Edit` で防止する。`D9` により Edit deny は sandbox 境界へマージされるので、**組み込み file tool と Bash subprocess の両方**がこれ 1 本で止まる。
+
+### 認証ファイルは名前のパターンで塞ぐ
+
+ツールごとの認証ファイルは名前が揃っていない（`auth.json` / `.credentials.json` / `credentials.toml` / `oauth.yaml` …）。**個別列挙は必ず穴が残る**ので、ファイル名をワイルドカードにし、**FS 全体アンカー `//**/`** で書く:
+
+```
+Edit(//**/*secret*)  Edit(//**/*credential*)
+Edit(//**/*auth*.json)  Edit(//**/*auth*.toml)  Edit(//**/*auth*.yaml)  Edit(//**/*auth*.yml)
+```
+
+- **`*auth*` に拡張子の制約を付ける**のが要点。無制約の `*auth*` はソースコード（`useAuth.tsx`・`authors.md`・`src/auth/`）まで巻き込んで日常の編集を壊す。設定・データ形式に限れば、実質すべての認証ファイルを捕まえつつ誤爆がほぼ無い。`oauth-*.yaml` のような派生も `*auth*` が拾う。
+- アンカーは `**/`（cwd 相対）ではなく **`//**/`**（FS 全体）にする。前者は home 側の `~/.<tool>/auth.json` を取りこぼす。
+- 遮断範囲（`D9`・`D11` で検証済み）: `service-auth.json` / `app.auth.toml` / `oauth-cache.yaml` / `my-credential.txt` / `api-secret.env` は Bash・組み込み file tool の双方で拒否。非マッチの `plain.json` / `mytoken.txt` は通常どおり編集できる。
+
+**read まで塞ぐのは認証ファイル・認証ディレクトリだけ**にする（クラスF）。名前パターンで一律に read を止めるとテスト fixture や公開設定まで読めなくなり、摩擦が防御を上回る。
+
+### dotfiles 管理下のパスは実体パスで deny する
+
+`~/.config`・`~/.codex`・`~/.claude`・`~/.gemini`・`~/.agents` は dotfiles への**ディレクトリ symlink**。この配下を守る deny rule を `~/.config/...` の綴りで書くと、**file tool しか守れず Bash と OS 層は素通りする**（`D10`）。実体パス `~/dotfiles/...` で書けば 1 本で 3 層すべてに効き、symlink 綴りでのアクセスも止まる。
+
+判定は **実体が dotfiles 側にあるか** の一点で足りる。
+
+| 対象 | 綴り | 例 |
+|------|------|-----|
+| home に実体があるもの | `~/...`（それが実体） | `~/.ssh` `~/.aws` `~/.kube` `~/.docker` `~/.gnupg` `~/.netrc` |
+| **dotfiles に実体があるもの** | **`~/dotfiles/...`** | `~/dotfiles/{.gitconfig,.npmrc,.bashrc,.zshrc}`、`~/dotfiles/.config/{gh,op,1Password,fish}/**`、`~/dotfiles/.codex` |
+
+ファイル単体の symlink（`~/.gitconfig` 等）は sandbox が解決するので `~/...` 綴りでも 3 層に効くが、**綴りを使い分けない**。dir symlink 経由かどうかを読み手に判別させるより、dotfiles 管理下は一律に実体パスで書く方が誤りが起きない。
+
+**両方の綴りを併記しない。** 実体パス形式は symlink 綴りでのアクセスも止める（包含関係にある）ので併記は純粋な冗長で、しかも「片方が無言で効いていない」状態を読み手に伝えられない。`~/.config` を symlink でなくす等、実体の置き場を変えたときはこの表に戻って綴りを見直す。
+
+### Codex の設定を dotfiles 管理下に置く
+
+`~/.codex` は `dotfiles/.codex` への symlink（他のツール dir と同じ型。追跡は `.gitignore` の allowlist で `AGENTS.md` のみ）。dotfiles 配下は cwd＝sandbox の write allowlist 内にあるため、**home 直下に置く場合と違って Bash subprocess から書き換えられる**点に注意する。`~/.claude` 配下のような harness 組み込みの保護は `.codex` には無い。
+
+- `auth.json`: クラスF。`Read(~/dotfiles/.codex/auth.json)` と実体パスで書く
+- `.codex` ディレクトリ全体: `sandbox.denyWrite` に `~/dotfiles/.codex` を置く。`hooks.json` を書き換えられると Codex 起動時のコード実行に繋がるため、subprocess からの write を丸ごと止める。Claude の file tool は sandbox を通らないので `AGENTS.md` の編集はできる
 
 ## Bash コマンドの実行制御（auto-allow / git / gh）
 
@@ -133,27 +175,13 @@ fnox（秘匿情報の live fetch。詳細は [docs/fnox-token-management.md](./
 - **`dd *` は維持**: 正規利用がなく誤爆コスト ≒ 0。sandbox を切った日に効く床。
 - **`defaults write`/`delete`/`import` は採用**: `defaults` は cfprefsd デーモン（sandbox 外プロセス）経由で macOS 設定を変えるため、sandbox の filesystem 制限を貫通しうる数少ない「本物の」防御。設定削除・一括上書きも塞ぐ。
 
-## サプライチェーン対策（新規公開版の保持期間）
+## サプライチェーン対策
 
-新規公開版を一定期間掴まないための保持設定は、**PM ごとに設定ファイル・キー名・単位がすべて違う**。本リポジトリは 7 日保持で揃えている:
-
-| PM | 設定ファイル | キー | 7 日相当 |
-|----|------------|-----|---------|
-| npm | `.npmrc` | `min-release-age` | `7`（日） |
-| pnpm <=10 | `.npmrc` | `minimum-release-age` | `10080`（分） |
-| pnpm 11+ | `.config/pnpm/config.yaml` | `minimumReleaseAge` | `10080`（分） |
-| bun | `.config/.bunfig.toml` の `[install]` | `minimumReleaseAge` | `604800`（秒） |
-
-**キーやファイルを取り違えると、エラーを出さずに防御が丸ごと無効化される**（設定した気になるのが最大のリスク）。要点:
-
-- **npm の `min-release-age` を pnpm は読まない**（no-op）。キー名が別なので `.npmrc` に両方書く。
-- **pnpm 11+ は `.npmrc`（INI）を一切読まない**。`config.yaml`(YAML/camelCase) のみで、`save-exact` も同様に無視されるため `saveExact: true` を併記しないと 11 昇格で厳密固定が静かに失われる。置き場は `XDG_CONFIG_HOME=~/.config`（fish の `config.fish` で設定）前提の `~/.config/pnpm/config.yaml`。設定が無いと macOS 既定の `~/Library/Preferences/pnpm/config.yaml` を見に行く。
-- **bun の設定は `~/.bunfig.toml` では効かない**。`XDG_CONFIG_HOME` が設定されていると bun は `$XDG_CONFIG_HOME/.bunfig.toml` だけを見て**ホーム側にフォールバックしない**（[oven-sh/bun#30842](https://github.com/oven-sh/bun/issues/30842)）。本リポジトリは `.config/.bunfig.toml` を `../.bunfig.toml` への**相対 symlink** にして同一実体を 2 箇所から参照させている。この symlink を外すと `minimumReleaseAge` ごと bun のグローバル設定が全滅する。
-- bun は `.npmrc` の `min-release-age` も読まない（[oven-sh/bun#22679](https://github.com/oven-sh/bun/issues/22679)）。`save-exact` もプロジェクトローカルに `.npmrc` が無いとホーム側にフォールバックしない（[oven-sh/bun#22971](https://github.com/oven-sh/bun/issues/22971)）ため、`.bunfig.toml` の `exact = true` で代替している。
+PM（npm / bun / pnpm）側の多層防御は Claude Code 固有の話ではないため [docs/supply-chain-defenses.md](./supply-chain-defenses.md) が扱う。本書の範囲は、それを Claude Code の sandbox / permission で補強する部分（`env` ダンプと publish の `ask`、registry への egress 許可、cache の write 許可）。
 
 ### ccstatusline
 
-statusLine / hooks で使う `ccstatusline` は `bunx -y @latest` を避け、`bun add -g ccstatusline@<固定版>` でグローバル導入し、コマンドを `ccstatusline --hook`（PATH 経由）にする。`@latest` の毎起動 fetch（UserPromptSubmit / PreToolUse / statusLine）はサプライチェーン攻撃経路になる。更新は `bun update -g ccstatusline`（`minimumReleaseAge` が効く）。PATH に `~/.bun/bin` が通っている前提。
+statusLine / hooks で使う `ccstatusline` は `bunx -y @latest` を避け、`bun add -g ccstatusline@<固定版>` でグローバル導入し、コマンドを `ccstatusline --hook`（PATH 経由）にする。`@latest` は UserPromptSubmit / PreToolUse / statusLine の毎起動 fetch になり攻撃面が広い（理由は supply-chain-defenses の「層4」）。更新は `bun update -g ccstatusline`。PATH に `~/.bun/bin` が通っている前提。
 
 ## Sandbox 追加設定
 
@@ -168,7 +196,7 @@ macOS Sandbox 内のシステム TLS 信頼サービス（`com.apple.trustd.agen
 
 sandbox は network を allowlist、write を cwd 中心の allowlist で絞るため、`npm install` には2点の明示許可が要る（実機で発覚）:
 
-- **registry への egress**: `sandbox.network.allowedDomains` に取得先を列挙する。本リポジトリの既定 registry は **`npm.flatt.tech`** ＝ Takumi Guard（旧 Shisho Guard, by GMO）の**公開 read-only セキュリティプロキシ registry**で、npmjs を代理しブロックリスト該当の悪性 package を**コード到達前に 403 で拒否**する（shai-hulud 等サプライチェーン防御の一層）。token は任意だが **rate limit が変わる**（匿名＝2,000 req/min/IP・ブロックのみ／個人 `tg_anon_`＝10,000 req/min/token＋download 追跡・breach 通知／`tg_org_`＝10,000 req/10s/token・有料 org。超過は 429、〜2 req/package）。dotfiles は**マシングローバルに個人 `tg_anon_` token**を使い（rate 緩和＋追跡）ORG/`tg_org_` は不使用（出典 <https://shisho.dev/docs/ja/t/guard/>、rate: <https://shisho.dev/docs/ja/t/guard/limitation>）。pnpm/yarn（及び **npm 本体の mise install**＝既定が `aqua:npm/cli`・npmjs.org tarball）は非 FLATT backend（aqua/github 等）で公開 `registry.npmjs.org` に直接当たるため、**両ドメインとも** allowedDomains に要る（プロジェクト依存の `npm install` 自体は従来どおり FLATT 経由）。無いと registry に到達できず install が失敗する。`~/.npmrc` の registry 設定自体は read 解放で効くが、**ネットワーク到達は allowedDomains が別ゲート**なので両方そろえる。
+- **registry への egress**: `sandbox.network.allowedDomains` に取得先を列挙する。**proxy registry `npm.flatt.tech` と公開 `registry.npmjs.org` の両方**が要る。プロジェクト依存の install は proxy 経由だが、pnpm / yarn と mise 経由の npm 本体は非 FLATT backend で npmjs へ直接当たるため（この非対称の理由は [docs/supply-chain-defenses.md](./supply-chain-defenses.md) の「層3」）。`~/.npmrc` の registry 設定は read 解放で効くが、**ネットワーク到達は allowedDomains が別ゲート**なので両方そろえる。
 - **キャッシュ書き込み**: `sandbox.filesystem.allowWrite` に `~/.npm/_cacache`（npm の content-addressable cache）を追加する。sandbox は cwd 外への write を塞ぐため、無いと install がキャッシュ書き込みで失敗する。`~/.npm/_logs` は Claude Code デフォルトで許可済みだが `_cacache` は別途必要。他の `~/.npm` 配下書き込みで失敗するなら `~/.npm` に広げる。
 - broad な `allowedDomains` は exfiltration 経路になりうる（公式 sandboxing の警告）。registry は必要最小限に絞る。
 
@@ -207,6 +235,20 @@ mise は cwd 外の 2 箇所に書くため `sandbox.filesystem.allowWrite` に�
 - **ハードニング**: `gpg-agent.conf`/`gpg.conf`/`dirmngr.conf` の改ざん（特に `pinentry-program` 書き換えによるパスフレーズ窃取）を塞ぐ。**2 経路必要**: sandbox `denyWrite`（subprocess）＋ Permission **`Edit` deny**（組み込み file tool。`Write` deny は無機能なので書かない＝`D3`）。秘密鍵 `private-keys-v1.d` も `Edit` deny を書く。
 - **注意**: socket を塞ぐと gpg-agent が停止し sandbox 内から再起動できない（fork が Seatbelt で制限）。復活は sandbox 外で `gpgconf --launch gpg-agent`。
 
+## 別セッションでの実地検証
+
+permission の効き方は cwd と設定の置き場に依存する。dotfiles では `~/.claude` が `~/dotfiles/.claude` への symlink なので、**この repo を cwd にしている限り両者が同じツリーに重なり、アンカー由来の欠陥を観測できない**（実際 `D11`・`D12` はこの方法でしか見つからなかった）。
+
+**subagent は代替にならない。** 公式 Docs（sandboxing / Scope）に "subagents run in the same process as the parent session and use the same sandbox configuration" とあるとおり、親の cwd と sandbox 設定をそのまま引き継ぐため、cwd 依存の問題は原理的に再現できない。**シェルもセッションも独立した別インスタンスを user に起動してもらう**必要がある。
+
+手順:
+
+1. dotfiles の外に検証用ディレクトリを作る（`.claude/` を置かない＝project 設定が載らない素の状態にする）
+2. **fixture は sandbox 外から作る**。deny 対象の名前を持つファイルは検証セッション自身では作れないため、呼び出し元が `dangerouslyDisableSandbox` で用意しておく
+3. 引き継ぎ資料を同ディレクトリに置く。含めるのは**期待値つきのテスト手順**、**判定方法**（Bash は EPERM の有無、file tool は `denied by your permission settings` か `String to replace not found` かで判別）、**報告項目**
+4. 禁止事項を明記する: 設定を変更しない／問題を修正しない（報告のみ）／認証ファイルを `cat` しない（`wc -c` を使う）／**`dangerouslyDisableSandbox` で再実行しない**／拒否されたコマンドを別手段で迂回しない。拒否されること自体が測定結果なので、回避されるとデータが失われる
+5. 書き込み拒否は原因の切り分けを添える。cwd 外への write は deny ルールとは無関係に sandbox の write allowlist で拒否されるため、保護対象でないファイルを対照に置く
+
 ## 設定変更時の検証
 
 permission は挙動が直感に反するため、**推測せず公式 Docs ＋実機で検証する**（`.claude/rules/claude-code-settings.md`）。
@@ -220,6 +262,7 @@ permission は挙動が直感に反するため、**推測せず公式 Docs ＋�
 ## 関連
 
 - 公式 Docs（仕様の一次情報・毎回参照）: [permissions](https://code.claude.com/docs/en/permissions) / [sandboxing](https://code.claude.com/docs/en/sandboxing)
+- [docs/supply-chain-defenses.md](./supply-chain-defenses.md): PM のサプライチェーン防御（保持期間・postinstall・proxy registry）
 - `.claude/rules/claude-code-settings.md`: 設定変更時の鉄則（公式 Docs 参照・実機検証）
 - `### AI tools`（README.md）: MCP / plugins / Agent Skills の管理方針
 - `dotfiles/.claude/settings.json`: 設定の実体
