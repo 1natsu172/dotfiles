@@ -257,14 +257,10 @@ token 不要かつレイテンシ敏感なら、呼び出しを `command <tool>`
 ## 既知の制約・別タスク
 
 - **FLATT registry token は npm 子・孫プロセス（postinstall 等）の env に乗る**。npm が `.npmrc` の
-  `${VAR}` を展開して使う以上、注入が必要な registry token なので原理的に避けられない。**追加の
-  `ignore-scripts` 防御はグローバル導入しない判断（YAGNI）**: 既存の `min-release-age`(7日) が「汚染版を
-  掴む確率」を主に潰しており、注入される秘匿情報は `FLATT_NPM_TOKEN` 1件（rotatable な registry token・
-  OP_SA は `env=false`）で blast radius が小さい。一方 npm の `ignore-scripts` は allowlist 無しの全停止
-  （依存だけでなく自プロジェクトの prepare/postinstall や native module ビルドも止まる）で摩擦が大きく
-  サイレント失敗を招く。bun・pnpm 10+ は依存スクリプトを既定でブロックする safe-by-default なので穴は
-  npm/yarn-classic に限る。**運用**: 高リスクな単発 install は手動で `npm install --ignore-scripts`
-  →必要分だけ `npm rebuild`、未知パッケージは bun/pnpm を優先する。
+  `${VAR}` を展開して使う以上、注入が必要な registry token なので原理的に避けられない。対処は blast
+  radius を小さく保つことで、注入対象は `FLATT_NPM_TOKEN` 1 件（rotate 可能な registry token。OP_SA は
+  `env = false`）に絞ってある。postinstall ベクタそのものへの防御方針（グローバル `ignore-scripts` を
+  採らない判断と運用レバー）は [docs/supply-chain-defenses.md](./supply-chain-defenses.md) の「層2」。
 - **provider 認証の SA token（OP_SA）は `env = false` で注入しない**。以前は default `[secrets]` の通常
   エントリで、`fnox exec` が npm 子 env まで SA token を載せていた（postinstall から vault 全体を引ける
   露出）。`env = false` 化で解決済み（上述「env 注入の制御」）。
@@ -279,4 +275,5 @@ token 不要かつレイテンシ敏感なら、呼び出しを `command <tool>`
 ## 関連
 
 - sandbox/permission の保護方針・delta: [docs/claude-code-security.md](./claude-code-security.md)
+- PM のサプライチェーン防御: [docs/supply-chain-defenses.md](./supply-chain-defenses.md)
 - fnox 公式: <https://fnox.jdx.dev/>
