@@ -6,6 +6,7 @@ Claude Code 周辺の補助スクリプト（bun ランタイム）。statusline
 bun install         # 依存のインストール
 bun run typecheck   # 型チェック（tsc --noEmit / TypeScript 7）
 bun run check       # biome の lint + format
+bun run test        # テスト（bun test）
 ```
 
 ## スクリプト一覧
@@ -22,6 +23,13 @@ bun run check       # biome の lint + format
   ccstatusline の custom-command から呼ばれる。
 - **claude-code-debug-statusline.ts** — statusline に渡る入力 JSON を `_debug_statusline.json` に記録して
   デバッグする。
+- **claude-settings-symlink-guard.ts** — `settings.json` の deny / sandbox のパスが symlink を経由して
+  いないか検査する。hook（PostToolUse / SessionStart）から呼ばれるほか、引数に
+  settings ファイルを渡せば手動でも回せる。設計と実測は
+  [docs/claude-code-security.md](../docs/claude-code-security.md) の「settings のパス綴りを hook で検査する」。
+  ```bash
+  bun ./node-scripts/src/claude-settings-symlink-guard.ts ~/.claude/settings.json
+  ```
 
 > 初期化は bun v1.2.13 の `bun init` ベース。TypeScript 7 移行に伴い `tsconfig.json` の `types` だけ
 > テンプレートから乖離している（理由は同ファイルのコメント）。[Bun](https://bun.sh) ドキュメントも参照。

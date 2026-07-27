@@ -138,6 +138,18 @@
             "command": "/Users/1natsu/dotfiles/bin/claude-utils/duration-logic-hooks/agent-in-progress-hook.sh"
           }
         ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "if": "Edit(//**/.claude/settings*.json)",
+            "command": "bun ~/dotfiles/node-scripts/src/claude-settings-symlink-guard.ts",
+            "timeout": 10,
+            "statusMessage": "settings のパス綴りを検査中"
+          }
+        ]
       }
     ],
     "PreToolUse": [
@@ -167,6 +179,17 @@
             "type": "command",
             "command": "bash '/Users/1natsu/.claude/hooks/herdr-agent-state.sh' session",
             "timeout": 10
+          }
+        ]
+      },
+      {
+        "matcher": "startup|resume",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bun ~/dotfiles/node-scripts/src/claude-settings-symlink-guard.ts",
+            "timeout": 10,
+            "statusMessage": "settings のパス綴りを検査中"
           }
         ]
       }

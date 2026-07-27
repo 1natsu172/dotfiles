@@ -40,6 +40,9 @@
 | `D10` | 2026-07-27 | 2.1.220 | **deny rule のパスが「symlink されたディレクトリ」を経由すると、file tool にしか効かない**（Bash の認識コマンドにも OS 層にも届かず、無言で通る）。**ファイル自体の symlink は解決される**ので `~/.gitconfig`・`~/.zshrc`（dotfiles への file symlink）は実体パス経由でも遮断された一方、`~/.config/fish/**`・`~/.codex/auth.json`（`~/.config`・`~/.codex` が dir symlink）は実体パス経由で read/write とも素通りした。**実体パス（`~/dotfiles/...`）で書けば1本で3層すべてに効く**（symlink 綴りでのアクセスも止まる＝公式 Docs「When Claude accesses a symlink, permission rules check two paths: the symlink itself and the file it resolves to」の挙動）。逆は成り立たない。実証（ダミー `probe/link → real`）: rule を symlink 綴りで書くと file tool のみ deny・`cat`/`wc` は素通り、実体綴りで書くと file tool も `cat` も `wc` も deny。**Docs は「Read/Edit deny は Bash の `cat`/`head`/`tail`/`sed` にも適用される」と書いているので、この Bash 層の取りこぼしは記述との乖離**（upstream は `#71072` で `.claude/rules` の同種問題を bug 扱いで 2.1.198 修正、settings ファイル保護の symlink 解決も 2.1.210 で後追い追加＝個別に塞いでいる最中）。**実体パスで書くのは upstream が直しても正しいままなので、剥がす前提の回避策ではない** |
 | `D11` | 2026-07-27 | 2.1.220 | **相対アンカー `**/X` の deny は層ごとに効き方が食い違うので使わない。FS 全体アンカー `//**/X` で書く**。dotfiles の外（`/tmp/cc-permcheck` を cwd にした別セッション）で実測した結果: **ファイル型 `Edit(**/.env)`・`Edit(**/.npmrc)` は file tool を素通りし（`String to replace not found` に到達＝permission 通過）Bash/OS 層でのみ遮断**、逆に**ディレクトリ型 `Edit(**/secrets/**)` は file tool では遮断されたが Bash からの書き込みは通った**。どちらも片肺で、`**/` は cwd 基準でもない（file tool 側）。公式 Docs は「Bare filenames follow gitignore semantics and match at any depth」かつ「A rule only matches files under its anchor」と書いており、user settings のアンカーは設定の置き場（`~/.claude`）。**dotfiles リポジトリで検証すると cwd と `~/.claude` が同じツリーになるため、この食い違いは検出できない**（`~/.claude` は `~/dotfiles/.claude` への symlink）。`//**/` 形式にすれば file tool 層は全パターンで遮断される（別 cwd セッションで確認）。OS 層まで届くかは接頭辞の形に依存する＝`D12` |
 | `D12` | 2026-07-27 | 2.1.220 | **deny が OS 層まで届くかは「ディレクトリ型かどうか」ではなく「接頭辞が具体パスかワイルドカードか」で決まる**。`//**/*.pem` 等のファイル名型と、`~/dotfiles/.config/gh/**` のような**具体接頭辞のディレクトリ型**は配下まで OS 層に載る（Bash の read/write とも遮断を実測）。一方 **`//**/secrets/**` のようにディレクトリ名までワイルドカードだと、OS 層にはディレクトリ自体の作成禁止までしか届かず、既存ディレクトリ配下のファイルへの Bash 書き込みは通る**（実測: `mkdir ./secrets`・`mkdir $TMPDIR/secrets` は `Operation not permitted`、しかし別 cwd セッションで既存 `secrets/inner.txt` への追記は成功）。file tool 層では両方とも効く。**含意**: 守る対象を具体パスで名指しできるなら接頭辞を具体にする（例 `~/dotfiles/.config/gh/**`）。任意プロジェクトの `secrets/` のように名指しできないものは、file tool 経路とディレクトリ新規作成までが防御範囲で、**既存ディレクトリへの Bash 書き込みは残る**と割り切る（permission rule の書き方では塞げない。塞ぐなら対象プロジェクト側の `sandbox.denyWrite` に実パスを列挙する） |
+| `D13` | 2026-07-28 | 2.1.220 | **`ConfigChange` hook は settings の変更で確実に発火するが、変更の反映は止められない**。公式 Docs は「exit 2 で設定変更の反映をブロック」「top-level `decision: block` に対応」と書いているが、**どちらでも新しい permission rule はそのまま効いた**。実証: hook 側で判定用マーカーを吐かせて発火を確認（1 変更につき複数回発火）したうえで、`Bash(echo <probe> *)` の deny を bad path と同時に投入 → clean な状態では probe が通り、投入後は拒否された＝反映済み。exit 2 版・`decision: block` 版とも同結果で、hook 由来の通知はモデル側にも届かなかった。**含意**: 防御の実効は別イベントに置く（うちでは PostToolUse がモデルへの差し戻し、SessionStart が起動時の掃き出し）。**うちでは ConfigChange を採らない**: 反映も止められずモデルにも届かないうえ、1 変更につき 4 回発火する（`systemMessage` が user の画面に出るかもセッション内からは確認できていない） |
+| `D14` | 2026-07-28 | 2.1.220 | **hook の `if` フィルタは symlink を解決しない**。`if: "Edit(//Users/<user>/dotfiles/.claude/settings*.json)"`（実体パス）は、**同じファイルを `~/.claude/settings.json`（symlink 綴り）で編集した tool call にマッチせず hook が発火しなかった**。permission の deny rule は実体パスで書けば symlink 綴りのアクセスも捕まえる（`D10`）のに対し、`if` は tool の引数文字列に対する素のマッチという非対称。**対処は suffix アンカー**（`if: "Edit(//**/.claude/settings*.json)"`）で、実体パス・symlink 綴り・他プロジェクトの `.claude/settings.json` の 3 者とも発火を実測（非マッチのファイルではプロセスも起きない）。綴りごとに `if` を並べる必要はない |
+| `D15` | 2026-07-28 | 2.1.220 | **user へ出る hook 通知は 200 文字で打ち切られる（末尾 `…`）。しかも `[<hook の command>]: ` の接頭辞がその 200 文字に含まれる**。実測: SessionStart（exit 2）の表示が `[bun <スクリプトの絶対パス>]: ` 80 文字＋本文 120 文字＝ちょうど 200 文字＋`…`。**モデルへ返る PostToolUse の stderr は全文**（複数行そのまま）なので、切り詰めは「表示側の通知」だけ。**含意**: user 向けの hook は (1) 1 行目に結論を詰める、(2) 後ろから消えるので derive しやすい情報を末尾へ、(3) **command 文字列を短く書くほど本文の予算が増える**（`bun ~/dotfiles/…` と書けば絶対パスより 12 文字得。`~` はシェル経由で展開されるので動作は同じ＝実測）。接頭辞が出ること自体は upstream `#41226` で報告済み（closed）だが、**200 文字打ち切りの issue は検索した範囲では見つからなかった** |
 | `D7` | 2026-07-22 | 2.1.216 | **sandbox は keychain 書き込み（osxkeychain の store）を遮断**。git の credential helper `osxkeychain` は認証成功後に資格情報を keychain へ store するが、sandbox 下では keychain write が拒否され `fatal: failed to store: <数字>`（実測 `100001`）を毎回吐く（`get`＝認証は通るので **cosmetic・exit 0**）。helper が system(`/opt/homebrew/etc/gitconfig`)＋global(`~/.gitconfig`)の**二重設定＝多値リストで2件連結**なので2行出る（行数＝helper 件数）。対策は §git の CLAUDECODE 条件 helper。keychain を sandbox allowlist に足す方向は不採用（機微）。`.git/config` 書き込み(D5)とは別系統の write-deny |
 
 ## ファイル別の保護方針
@@ -108,7 +111,39 @@ Edit(//**/*auth*.json)  Edit(//**/*auth*.toml)  Edit(//**/*auth*.yaml)  Edit(//*
 
 ファイル単体の symlink（`~/.gitconfig` 等）は sandbox が解決するので `~/...` 綴りでも 3 層に効くが、**綴りを使い分けない**。dir symlink 経由かどうかを読み手に判別させるより、dotfiles 管理下は一律に実体パスで書く方が誤りが起きない。
 
-**両方の綴りを併記しない。** 実体パス形式は symlink 綴りでのアクセスも止める（包含関係にある）ので併記は純粋な冗長で、しかも「片方が無言で効いていない」状態を読み手に伝えられない。`~/.config` を symlink でなくす等、実体の置き場を変えたときはこの表に戻って綴りを見直す。
+**両方の綴りを併記しない。** 実体パス形式は symlink 綴りでのアクセスも止める（包含関係にある）ので併記は純粋な冗長で、しかも「片方が無言で効いていない」状態を読み手に伝えられない。`~/.config` を symlink でなくす等、実体の置き場を変えたときはこの表に戻って綴りを見直す。この綴りの陳腐化は次節の hook が機械的に検出する。
+
+### settings のパス綴りを hook で検査する
+
+上の規約は「人とエージェントの注意力」でしか担保できず、`~/.config` を symlink でなくす等の構成変更で無言に陳腐化する。そこで `node-scripts/src/claude-settings-symlink-guard.ts` が `settings.json` を走査し、**symlink を経由するパスがあれば実体パスの綴りを添えて報告する**。
+
+判定はパスの literal な接頭辞を root から 1 要素ずつ辿り、symlink があるかを見るだけ（実体が home にある `~/.ssh` 等は素通り、接頭辞が glob で始まる `//**/*.pem` 等は実体を特定できないので対象外）。**解決は「見つかった要素ごと」に行う**: 既に deny を掛けた `~/dotfiles/.config/gh` は自プロセスからも lstat が EPERM で落ちるため、一括 `realpath` にすると**最も守りたい行だけが例外で黙って落ちる**。
+
+深刻度は 2 段階:
+
+| 対象 | 深刻度 | 理由 |
+|------|--------|------|
+| permissions の `Read`/`Edit`/`Write` deny、sandbox の `denyRead`/`denyWrite` | error | 防御が効かないまま効いたつもりになる（`D10`） |
+| permissions の allow / ask、sandbox の `allowRead`/`allowWrite`/`allowUnixSockets` | warn | 許可が効かず動かなくなるだけで穴にはならない（`D6`） |
+
+配線は 2 つだけにする。**hook はイベントを増やすほど効くわけではない**（`ConfigChange` は発火しても反映を止められず、モデルにも届かないので採らない＝`D13`）:
+
+| イベント | 検査対象 | error のとき |
+|---|---|---|
+| **PostToolUse**（`matcher: Edit\|Write` ＋ `if: Edit(//**/.claude/settings*.json)`） | 編集された当のファイル（`tool_input.file_path`） | exit 2 → **stderr がモデルに返り、その場で直させられる**。実効的な防御線はここ |
+| **SessionStart**（`startup\|resume`） | user settings（`~/.claude/settings.json` と `settings.local.json`） | exit 2 → stderr を user に表示（起動は止まらない。表示は実測済み）。構成変更による陳腐化はここでしか拾えない |
+
+**報告の 1 行目に結論を詰める**のは表示の都合。user 向け通知は接頭辞込み 200 文字で打ち切られる（`D15`）ので、`⚠️ NG <ファイル名>: symlink 綴りの <該当記述> → <直した形>（ほかN件）` の順で、後ろから消えても困らない並びにしてある。hook の command も `bun ~/dotfiles/…` と短く書いて本文の予算を稼ぐ。**接頭辞をさらに縮める案（`~/dotfiles/bin` は PATH 上なので bare name のラッパーを置けば 25 文字まで縮む）は採らない**: hook の PATH は claude を起動した親プロセスからの継承なので（fish の設定がその場で読まれるわけではない）、fish 経由でない起動では引けなくなる。現状は `bun` だけが PATH 依存で、スクリプトは絶対で指している。
+
+`if` を **`//**/.claude/settings*.json`（suffix アンカー）**で書くのが要点:
+
+- **綴りを 1 本で吸収する**。`if` は symlink を解決しない（`D14`）ため実体パスで書くと `~/.claude/...` 綴りの編集を取り逃がすが、suffix アンカーなら実体・symlink どちらの綴りでもマッチする（両方で発火を実測）
+- **プロジェクト側の `.claude/settings.json` も検査対象になる**。permission 設定はプロジェクトでも普通に書くもので、そこに `~/.config/...` を書けば同じ欠陥になる。グローバル設定に置いた hook から全プロジェクトを見る形にして、各プロジェクトへ hook を挿さない
+- 発火は settings ファイルの編集時のみ（`if` は harness 側で評価され、非マッチならプロセスも起こさない。NG を含む別名の JSON を編集しても発火しないことを実測）
+
+手動実行は `bun ./node-scripts/src/claude-settings-symlink-guard.ts <settings.json ...>`（error があれば exit 1）。検査ロジックのテストは `node-scripts` で `bun run test`（一時ディレクトリに `link -> real` を作って回すので、machine の symlink 構成に依存しない）。テストは**辿れないパスでも検出できること**（上の EPERM）と**1 行目が短く収まること**も縛っているので、直すときはそこを壊さない。
+
+コストは実測で **1 回 47ms**、うち 42ms が bun の起動で走査は約 5ms（58 エントリ・lstat 236 回）。**キャッシュは採らない**: 削れるのは 5ms 側だけなうえ、settings のハッシュでキャッシュすると「ファイルは無変更で FS 構成だけ変わった」という**検出したい当のケースで skip する**。
 
 ### Codex の設定を dotfiles 管理下に置く
 
