@@ -52,6 +52,10 @@ Brewfile.lock.json
 .gemini/*
 !.gemini/GEMINI.md
 !.gemini/settings.json
+
+# Codex: auth.json / sessions / sqlite 等は機械固有の state なので追跡しない
+.codex/*
+!.codex/AGENTS.md
 .bun/*
 !.bun/install/
 .bun/install/*

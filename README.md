@@ -299,6 +299,18 @@ Authorization ヘッダへの注入（Claude Code の headersHelper 経由）も
 
 ### AI tools
 
+#### コンテキストファイル（CLAUDE.md / AGENTS.md）
+
+ツールごとに読むファイル名と探索場所が違うので、global（全プロジェクト共通の作業ルール）と repo（dotfiles 固有の index）を分けて配置している。
+
+| ツール | global | dotfiles repo 用 |
+|---|---|---|
+| Claude Code | `~/.claude/CLAUDE.md` | `dotfiles/CLAUDE.md` |
+| Codex | `~/.codex/AGENTS.md` | `dotfiles/AGENTS.md`（実態はsymlink） |
+
+- 作業ルールの本体は `.claude/CLAUDE.md` の1箇所だけ。Codex と Gemini の global はそこを参照するだけの薄いファイルにしてある
+- Claude Code は `AGENTS.md` を読まず、AGENTS.md 系のツールは `CLAUDE.md` を読まない。そのため `AGENTS.md` を `CLAUDE.md` への symlink にして、どちらのツールにも同じ index が渡るようにしている
+
 #### Agent Skills
 
 個人のエージェントスキルは別リポジトリ（[`1natsu-vacation/agent-skills`](https://github.com/1natsu-vacation/agent-skills)）で管理している。
