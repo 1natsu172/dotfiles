@@ -79,11 +79,7 @@ sh install.sh
 brew bundle
 ```
 
-なお Brewfile 再生成は以下でできる
-
-```
-brew bundle dump --force
-```
+なお Brewfile 再生成やメンテナンスは[Homebrewのメンテナンスオペレーション](./docs/homebrew-maintenance-ops.md)に記載がある。
 
 ### MacOSXの設定
 
