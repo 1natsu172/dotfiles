@@ -77,10 +77,14 @@ _.path = [
   "${AQUA_ROOT_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/aquaproj-aqua}/bin",
   "{{env.HOME}}/.orbstack/bin",
   "{{env.HOME}}/.bun/bin",
-  "{{env.HOME}}/go/bin",
+  # No ~/go/bin: mise points GOBIN at its own go install dir, and Go CLI tools
+  # are managed through the `go:` backend in [tools] instead of `go install`.
+  # Flipping `go.set_gobin = false` would send `go install` to ~/go/bin and make
+  # this entry necessary again.
   "{{env.HOME}}/Library/Android/sdk/platform-tools",
   "{{env.HOME}}/Library/Android/sdk/emulator",
-  "/Applications/Ghostty.app/Contents/MacOS",
+  # Ghostty.app/Contents/MacOS is deliberately absent: Ghostty puts it on PATH
+  # itself, so listing it here only duplicated the entry.
   # Homebrew's bin/sbin are deliberately absent: `brew shellenv <shell>` supplies
   # them from each rc (it also exports HOMEBREW_PREFIX and friends, which this
   # cannot). It has to run before `mise activate`, or its `--move` pulls
