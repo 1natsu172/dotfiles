@@ -81,6 +81,8 @@ _.path = [
   "{{env.HOME}}/Library/Android/sdk/platform-tools",
   "{{env.HOME}}/Library/Android/sdk/emulator",
   "/Applications/Ghostty.app/Contents/MacOS",
-  # Empty directory, but `brew doctor` warns unless it is on PATH.
-  "/opt/homebrew/sbin",
+  # Homebrew's bin/sbin are deliberately absent: `brew shellenv <shell>` supplies
+  # them from each rc (it also exports HOMEBREW_PREFIX and friends, which this
+  # cannot). It has to run before `mise activate`, or its `--move` pulls
+  # /opt/homebrew/bin ahead of the mise-managed tools and brew's python3 wins.
 ]

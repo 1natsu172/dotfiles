@@ -42,6 +42,10 @@ set -g fish_key_bindings fish_default_key_bindings
 # Other settings
 set -gx LSCOLORS gxfxcxdxbxegedabagacad
 
+# Homebrew
+#-----------------------------------------------------------------------------
+/opt/homebrew/bin/brew shellenv fish | source
+
 # mise-en-place
 #-----------------------------------------------------------------------------
 # IDE integration: https://mise.jdx.dev/ide-integration.html
