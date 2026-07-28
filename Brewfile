@@ -2,6 +2,9 @@ tap "aquaproj/aqua", trusted: true
 tap "entireio/tap", trusted: true
 tap "github/gh", trusted: true
 tap "mobile-dev-inc/tap", trusted: true
+tap "modem-dev/tap"
+tap "rjyo/moshi", trusted: true
+tap "sikarugir-app/sikarugir", "https://github.com/Sikarugir-App/homebrew-sikarugir", trusted: true
 # Static analysis and lint tool, for (ba)sh scripts
 brew "shellcheck"
 # Static checker for GitHub Actions workflow files
@@ -18,6 +21,8 @@ brew "tree"
 brew "ansible"
 # TIFF library and utilities
 brew "libtiff"
+# Image format providing lossless and lossy compression for web images
+brew "webp"
 # Color management engine supporting ICC profiles
 brew "little-cms2"
 # New file format for still image compression
@@ -68,6 +73,8 @@ brew "ffmpeg"
 brew "fish"
 # Plugin manager for the Fish shell
 brew "fisher"
+# Text editor for your terminal: easy, powerful and fast
+brew "fresh-editor"
 # Command-line fuzzy finder written in Go
 brew "fzf"
 # GNU compiler collection
@@ -92,18 +99,22 @@ brew "gnutls"
 brew "gobject-introspection"
 # OpenType text shaping engine
 brew "harfbuzz"
+# Post-modern modal text editor
+brew "helix"
+# Agent multiplexer that lives in your terminal
+brew "herdr"
 # User-friendly cURL replacement (command-line HTTP client)
 brew "httpie"
 # Database of common MIME types
 brew "shared-mime-info"
-# Image format providing lossless and lossy compression for web images
-brew "webp"
 # ISO/IEC 23008-12:2017 HEIF file format decoder and encoder
 brew "libheif"
 # Tools and libraries to manipulate images in select formats
 brew "imagemagick"
 # Lightweight and flexible command-line JSON processor
 brew "jq"
+# Simple terminal UI for git commands
+brew "lazygit"
 # Library for JPEG-2000 image manipulation
 brew "openjpeg"
 # Image processing and image analysis library
@@ -124,6 +135,8 @@ brew "mas"
 brew "mise"
 # Simple tool to make locally trusted development certificates
 brew "mkcert"
+# Remote terminal application
+brew "mosh"
 # Open source relational database management system
 brew "mysql"
 # NCurses Disk Usage
@@ -156,6 +169,10 @@ brew "yt-dlp"
 brew "zoxide"
 # The easiest way to automate UI testing for your mobile app
 brew "mobile-dev-inc/tap/maestro"
+# Desktop-inspired terminal diff viewer for agent-authored changesets
+brew "modem-dev/tap/hunk", trusted: true
+# Portable daemon + CLI that bridges AI coding agents to the Moshi mobile app
+brew "rjyo/moshi/moshi-hook"
 # Password manager that keeps all passwords secure behind one password
 cask "1password"
 # Command-line interface for 1Password
@@ -172,8 +189,6 @@ cask "bettertouchtool"
 cask "brave-browser"
 # OpenAI's official ChatGPT desktop app
 cask "chatgpt"
-# OpenAI's official browser with ChatGPT built in
-cask "chatgpt-atlas"
 # Anthropic's official Claude AI desktop app
 cask "claude"
 # Disk space visualiser
@@ -243,6 +258,8 @@ cask "orbstack"
 cask "raycast"
 # Plugin for AWS CLI to start and end sessions that connect to managed instances
 cask "session-manager-plugin"
+# Porting tool, to make Windows programs/games into native apps
+cask "sikarugir-app/sikarugir/sikarugir", trusted: true
 # Team communication and collaboration software
 cask "slack"
 # Music streaming service
@@ -255,8 +272,6 @@ cask "visual-studio-code"
 cask "vlc"
 # Rust-based terminal
 cask "warp"
-# Wine wrapper built with SwiftUI
-cask "whisky"
 # Install and switch between multiple versions of Xcode
 cask "xcodes-app"
 # Video communication and virtual meeting platform
@@ -271,18 +286,14 @@ mas "Numbers", id: 409203825
 mas "Pages", id: 409201541
 mas "Whisper Transcription", id: 1668083311
 mas "WiFi Signal", id: 525912054
-vscode "1natsu.insert-br-tag"
-vscode "alefragnani.project-manager"
 vscode "anthropic.claude-code"
 vscode "astro-build.astro-vscode"
-vscode "bierner.markdown-mermaid"
 vscode "biomejs.biome"
 vscode "bmalehorn.vscode-fish"
 vscode "bradlc.vscode-tailwindcss"
 vscode "cardinal90.multi-cursor-case-preserve"
 vscode "dbaeumer.vscode-eslint"
 vscode "denoland.vscode-deno"
-vscode "devsense.composer-php-vscode"
 vscode "devsense.intelli-php-vscode"
 vscode "devsense.phptools-vscode"
 vscode "devsense.profiler-php-vscode"
@@ -294,7 +305,6 @@ vscode "editorconfig.editorconfig"
 vscode "esbenp.prettier-vscode"
 vscode "expo.vscode-expo-tools"
 vscode "fill-labs.dependi"
-vscode "foxundermoon.shell-format"
 vscode "fwcd.kotlin"
 vscode "github.codespaces"
 vscode "github.remotehub"
@@ -307,7 +317,6 @@ vscode "hashicorp.terraform"
 vscode "hediet.vscode-drawio"
 vscode "kaiwood.indentation-level-movement"
 vscode "llvm-vs-code-extensions.lldb-dap"
-vscode "lumirelle.shell-format-rev"
 vscode "mechatroner.rainbow-csv"
 vscode "mikestead.dotenv"
 vscode "ms-azuretools.vscode-containers"
@@ -326,13 +335,9 @@ vscode "ms-vscode.cpptools"
 vscode "ms-vscode.live-server"
 vscode "ms-vscode.remote-explorer"
 vscode "ms-vscode.remote-repositories"
-vscode "ms-vscode.vscode-speech"
-vscode "ms-vscode.vscode-speech-language-pack-ja-jp"
 vscode "ms-vsliveshare.vsliveshare"
-vscode "openai.chatgpt"
 vscode "oxc.oxc-vscode"
 vscode "prisma.prisma"
-vscode "redhat.java"
 vscode "redhat.vscode-yaml"
 vscode "richie5um2.vscode-sort-json"
 vscode "romanpeshkov.vscode-text-tables"
@@ -341,21 +346,13 @@ vscode "ryu1kn.partial-diff"
 vscode "satokaz.vscode-bs-ctrlchar-remover"
 vscode "shardulm94.trailing-spaces"
 vscode "simonsiefke.svg-preview"
-vscode "styled-components.vscode-styled-components"
 vscode "swiftlang.swift-vscode"
 vscode "tamasfe.even-better-toml"
 vscode "timonwong.shellcheck"
-vscode "tombonnike.vscode-status-bar-format-toggle"
 vscode "unifiedjs.vscode-mdx"
 vscode "vadimcn.vscode-lldb"
-vscode "vscjava.vscode-gradle"
-vscode "vscjava.vscode-java-debug"
-vscode "vscjava.vscode-java-dependency"
-vscode "vscjava.vscode-java-pack"
-vscode "vscjava.vscode-java-test"
-vscode "vscjava.vscode-maven"
 vscode "vscode-icons-team.vscode-icons"
-vscode "vue.volar"
+vscode "wasm-fmt.wasm-fmt"
 vscode "wesbos.theme-cobalt2"
 vscode "yzhang.markdown-all-in-one"
 go "cmd/go"
