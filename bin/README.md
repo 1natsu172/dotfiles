@@ -14,6 +14,7 @@ bin/
 ├── sample-script.sh               # gwte.sh 動作確認用サンプル
 ├── install-fnox-shell-wrappers    # fnox シェル関数ラッパーの生成（冪等）
 ├── fnox-wrappers.sh               # ↑の生成物。PM を `fnox exec` で包む POSIX 関数
+├── parallel-video-download.sh     # → video-utils/ への symlink
 ├── setup-scripts/
 │   └── subtree-manager.sh         # Git subtree の設定駆動管理
 ├── claude-utils/
@@ -27,6 +28,14 @@ bin/
     ├── parallel-video-download.sh # yt-dlp + aria2c で動画を並列ダウンロード
     └── urls.txt.example           # ↑の URL リスト雛形
 ```
+
+サブディレクトリは、直下がフラットで煩雑になるのを避けるためと、スクリプト付属の README や
+サンプルファイルを同居させるために切っている。
+
+PATH が通っているのは `bin/` 直下だけで、サブディレクトリは追加しない。コマンドとして直接
+叩きたいものは `bin/` 直下に相対 symlink を張る。PATH のエントリを増やさずにコマンド名だけを
+増やせる。サブディレクトリ内のスクリプトを設定ファイルから呼ぶ場合は絶対パスを使う
+（`.mcp.json` の `headersHelper` 等）。
 
 ## Git 管理ツール
 
