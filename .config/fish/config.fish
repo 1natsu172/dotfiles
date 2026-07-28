@@ -48,12 +48,10 @@ set -gx LSCOLORS gxfxcxdxbxegedabagacad
 
 # mise-en-place
 #-----------------------------------------------------------------------------
+# brew の mise formula が vendor conf.d で `mise activate fish`（hook-env）を
+# 済ませているので、ここでは IDE 向けに shims を足すだけにする。
 # IDE integration: https://mise.jdx.dev/ide-integration.html
-if test "$VSCODE_RESOLVING_ENVIRONMENT" = 1
-    mise activate fish --shims | source
-else if status is-interactive
-    mise activate fish | source
-else
+if test "$VSCODE_RESOLVING_ENVIRONMENT" = 1; or not status is-interactive
     mise activate fish --shims | source
 end
 
@@ -73,6 +71,11 @@ end
 # fisher jethrokuan/fzf
 #-----------------------------------------------------------------------------
 set -gx FZF_LEGACY_KEYBINDINGS 0
+
+# fisher americanhanko/fish-spin
+#-----------------------------------------------------------------------------
+# XDG cache（spin.fish が要求する。export しない＝現状の挙動を維持）
+set -g XDG_CACHE_HOME $HOME/.cache
 
 # alias
 #-----------------------------------------------------------------------------
@@ -124,19 +127,6 @@ end
 ## token 注入する。版解決は mise（package.json の packageManager を per-project）。
 ## ラッパーは bin/install-fnox-shell-wrappers が配布。詳細は
 ## docs/fnox-token-management.md「注入機構」。
-
-# set $BROWSER
-#-----------------------------------------------------------------------------
-set -gx BROWSER open
-
-# set $EDITOR
-#-----------------------------------------------------------------------------
-set -gx EDITOR code
-set -gx VISUAL code
-
-# Android
-#-----------------------------------------------------------------------------
-set -gx ANDROID_HOME $HOME/Library/Android/sdk
 
 # cargo
 #-----------------------------------------------------------------------------

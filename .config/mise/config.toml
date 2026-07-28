@@ -58,6 +58,12 @@ XDG_CONFIG_HOME = "{{env.HOME}}/.config"
 # Node tooling is mise-managed, so exclude only the npm type from dumps (go etc.
 # are still wanted). Set here so it's inherited the same way as XDG_CONFIG_HOME.
 HOMEBREW_BUNDLE_DUMP_NO_NPM = "1"
+# Shell-agnostic settings, kept here rather than in config.fish so zsh/bash see
+# them too (a fish-only EDITOR meant git in an agent's shell had no editor).
+ANDROID_HOME = "{{env.HOME}}/Library/Android/sdk"
+BROWSER = "open"
+EDITOR = "code"
+VISUAL = "code"
 # Shell-agnostic PATH additions, so one entry reaches fish/zsh/bash alike.
 # Not `fish_add_path`: it writes to the universal variable `fish_user_paths`
 # (~/.config/fish/fish_variables, untracked), so the effective PATH drifts from
@@ -66,8 +72,6 @@ HOMEBREW_BUNDLE_DUMP_NO_NPM = "1"
 # Earlier entries win, and all of them land ahead of mise's own tool paths, so
 # keep directories that would shadow a mise-managed tool out of this list
 # (~/.bun/bin holds `bun install -g` output, not bun itself, so it is safe).
-# Android/Go paths are spelled out rather than reusing $ANDROID_HOME / $GOPATH,
-# which config.fish sets and therefore only fish sees.
 _.path = [
   "{{env.HOME}}/dotfiles/bin",
   "{{env.HOME}}/.local/bin",
@@ -81,8 +85,8 @@ _.path = [
   # are managed through the `go:` backend in [tools] instead of `go install`.
   # Flipping `go.set_gobin = false` would send `go install` to ~/go/bin and make
   # this entry necessary again.
-  "{{env.HOME}}/Library/Android/sdk/platform-tools",
-  "{{env.HOME}}/Library/Android/sdk/emulator",
+  "{{env.ANDROID_HOME}}/platform-tools",
+  "{{env.ANDROID_HOME}}/emulator",
   # Ghostty.app/Contents/MacOS is deliberately absent: Ghostty puts it on PATH
   # itself, so listing it here only duplicated the entry.
   # Homebrew's bin/sbin are deliberately absent: `brew shellenv <shell>` supplies
