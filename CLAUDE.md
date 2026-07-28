@@ -13,6 +13,7 @@ macOS の個人 dotfiles。シェル・各種ツール・AI エージェント�
 - [docs/claude-code-security.md](./docs/claude-code-security.md) — Claude Code の sandbox / permission 設計、脅威モデル、公式 Docs から自明でない検証済み挙動（`D` 付きの delta 表）
 - [docs/supply-chain-defenses.md](./docs/supply-chain-defenses.md) — npm / bun / pnpm のサプライチェーン多層防御。保持期間・postinstall・proxy registry
 - [docs/fnox-token-management.md](./docs/fnox-token-management.md) — 秘匿情報を disk に置かず、実行時に消費プロセスへ注入する仕組み
+- [docs/herdr-session-lifecycle.md](./docs/herdr-session-lifecycle.md) — herdr の server が detach を跨いで生存するため、シェル設定の変更が反映されない問題と対処。**config.fish / PATH を触ったら読むこと**
 
 ## この repo を触るときの前提
 
