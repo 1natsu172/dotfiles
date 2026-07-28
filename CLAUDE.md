@@ -14,6 +14,7 @@ macOS の個人 dotfiles。シェル・各種ツール・AI エージェント�
 - [docs/supply-chain-defenses.md](./docs/supply-chain-defenses.md) — npm / bun / pnpm のサプライチェーン多層防御。保持期間・postinstall・proxy registry
 - [docs/fnox-token-management.md](./docs/fnox-token-management.md) — 秘匿情報を disk に置かず、実行時に消費プロセスへ注入する仕組み
 - [docs/herdr-session-lifecycle.md](./docs/herdr-session-lifecycle.md) — herdr の server が detach を跨いで生存するため、シェル設定の変更が反映されない問題と対処。**config.fish / PATH を触ったら読むこと**
+- [docs/shell-env-management.md](./docs/shell-env-management.md) — PATH / 環境変数を mise に集約する方針、`brew shellenv` と `mise activate` の順序制約、fish の二重 activate。**config.fish / .zshrc / .bashrc / mise の config.toml を触る前に読むこと**
 
 ## この repo を触るときの前提
 
