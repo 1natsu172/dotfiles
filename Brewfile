@@ -1,7 +1,7 @@
 tap "aquaproj/aqua", trusted: true
+tap "distroav/distroav", trusted: true
 tap "entireio/tap", trusted: true
 tap "github/gh", trusted: true
-tap "mobile-dev-inc/tap", trusted: true
 tap "modem-dev/tap"
 tap "rjyo/moshi", trusted: true
 tap "sikarugir-app/sikarugir", "https://github.com/Sikarugir-App/homebrew-sikarugir", trusted: true
@@ -9,26 +9,6 @@ tap "sikarugir-app/sikarugir", "https://github.com/Sikarugir-App/homebrew-sikaru
 brew "shellcheck"
 # Static checker for GitHub Actions workflow files
 brew "actionlint"
-# C parser in Python
-brew "pycparser"
-# C Foreign Function Interface for Python
-brew "cffi"
-# Cryptographic recipes and primitives for Python
-brew "cryptography"
-# Display directories as trees (with optional color/HTML output)
-brew "tree"
-# Automate deployment, configuration, and upgrading
-brew "ansible"
-# TIFF library and utilities
-brew "libtiff"
-# Image format providing lossless and lossy compression for web images
-brew "webp"
-# Color management engine supporting ICC profiles
-brew "little-cms2"
-# New file format for still image compression
-brew "jpeg-xl"
-# Codec library for encoding and decoding AV1 video streams
-brew "aom"
 # Declarative CLI Version manager
 brew "aqua"
 # Download with resuming and segmented downloading
@@ -37,30 +17,8 @@ brew "aria2"
 brew "awscli"
 # Clone of cat(1) with syntax highlighting and Git integration
 brew "bat"
-# Collection of portable C++ source libraries
-brew "boost"
 # Powerful, enterprise-ready, open source web server with automatic HTTPS
 brew "caddy"
-# Core application library for C
-brew "glib"
-# Vector graphics library with cross-device output support
-brew "cairo"
-# Decentralized dependency manager for Cocoa
-brew "carthage"
-# Text processing system for reStructuredText
-brew "docutils"
-# Collection of reusable C++ library artifacts developed at Facebook
-brew "folly"
-# C++14 implementation of the TLS-1.3 standard
-brew "fizz"
-# Modular, composable client/server abstractions framework
-brew "wangle"
-# Facebook's branch of Apache Thrift, including a new C++ server
-brew "fbthrift"
-# Thrift functions for querying information from a service
-brew "fb303"
-# Shared library for Watchman and Eden projects
-brew "edencommon"
 # Modern, maintained replacement for ls
 brew "eza"
 # Easiest way to build and release mobile apps
@@ -77,8 +35,6 @@ brew "fisher"
 brew "fresh-editor"
 # Command-line fuzzy finder written in Go
 brew "fzf"
-# GNU compiler collection
-brew "gcc"
 # GitHub command-line tool
 brew "gh"
 # Remote repository management made easy
@@ -91,62 +47,28 @@ brew "git"
 brew "git-delta"
 # Git extension for versioning large files
 brew "git-lfs"
-# Validating, recursive, caching DNS resolver
-brew "unbound", restart_service: :changed
-# GNU Transport Layer Security (TLS) Library
-brew "gnutls"
-# Generate introspection data for GObject libraries
-brew "gobject-introspection"
-# OpenType text shaping engine
-brew "harfbuzz"
 # Post-modern modal text editor
 brew "helix"
 # Agent multiplexer that lives in your terminal
 brew "herdr"
-# User-friendly cURL replacement (command-line HTTP client)
-brew "httpie"
-# Database of common MIME types
-brew "shared-mime-info"
-# ISO/IEC 23008-12:2017 HEIF file format decoder and encoder
-brew "libheif"
 # Tools and libraries to manipulate images in select formats
 brew "imagemagick"
 # Lightweight and flexible command-line JSON processor
 brew "jq"
 # Simple terminal UI for git commands
 brew "lazygit"
-# Library for JPEG-2000 image manipulation
-brew "openjpeg"
-# Image processing and image analysis library
-brew "leptonica"
 # Layer Four Traceroute (LFT), an advanced traceroute tool
 brew "lft"
-# Subtitle renderer for the ASS/SSA subtitle format
-brew "libass"
-# Provides library functionality for FIDO U2F & FIDO 2.0, including USB
-brew "libfido2"
-# C/C++ seam carving library
-brew "liblqr"
-# Library for reading RAW files from digital photo cameras
-brew "libraw"
 # Mac App Store command-line interface
 brew "mas"
 # Polyglot runtime manager (asdf rust clone)
 brew "mise"
-# Simple tool to make locally trusted development certificates
-brew "mkcert"
 # Remote terminal application
 brew "mosh"
 # Open source relational database management system
 brew "mysql"
 # NCurses Disk Usage
 brew "ncdu"
-# HTTP/2 C Library
-brew "nghttp2"
-# Port scanning utility for large networks
-brew "nmap"
-# Framework for layout and rendering of i18n text
-brew "pango"
 # Pinentry for GPG on Mac
 brew "pinentry-mac"
 # Search tool like grep and The Silver Searcher
@@ -155,20 +77,16 @@ brew "ripgrep"
 brew "shfmt"
 # Cross-shell prompt for astronauts
 brew "starship"
-# Tool Command Language
-brew "tcl-tk"
-# OCR (Optical Character Recognition) engine
-brew "tesseract"
 # Terminal multiplexer
 brew "tmux"
+# Display directories as trees (with optional color/HTML output)
+brew "tree"
 # Watch files and take action when they change
 brew "watchman"
 # Feature-rich command-line audio/video downloader
 brew "yt-dlp"
 # Shell extension to navigate your filesystem faster
 brew "zoxide"
-# The easiest way to automate UI testing for your mobile app
-brew "mobile-dev-inc/tap/maestro"
 # Desktop-inspired terminal diff viewer for agent-authored changesets
 brew "modem-dev/tap/hunk", trusted: true
 # Portable daemon + CLI that bridges AI coding agents to the Moshi mobile app
@@ -200,7 +118,7 @@ cask "dbngin"
 # Voice and text chat software
 cask "discord"
 # NDI integration for OBS Studio
-cask "distroav"
+cask "distroav/distroav/distroav", trusted: true
 # App to build and share containerised applications and microservices
 cask "docker-desktop"
 # Client for the Dropbox cloud storage service
@@ -278,7 +196,6 @@ cask "xcodes-app"
 cask "zoom"
 mas "1Password for Safari", id: 1569813296
 mas "Blackmagic Disk Speed Test", id: 425264550
-mas "Divvy", id: 413857545
 mas "Keynote", id: 409183694
 mas "Kindle", id: 302584613
 mas "Microsoft To Do", id: 1274495053
