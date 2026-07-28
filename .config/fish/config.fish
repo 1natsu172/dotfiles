@@ -42,14 +42,6 @@ set -g fish_key_bindings fish_default_key_bindings
 # Other settings
 set -gx LSCOLORS gxfxcxdxbxegedabagacad
 
-# sbin path (Homebrew's warning countermeasure)
-#-----------------------------------------------------------------------------
-fish_add_path /opt/homebrew/sbin
-
-# dotfiles bin utilities
-#-----------------------------------------------------------------------------
-fish_add_path $HOME/dotfiles/bin
-
 # mise-en-place
 #-----------------------------------------------------------------------------
 # IDE integration: https://mise.jdx.dev/ide-integration.html
@@ -63,10 +55,6 @@ end
 
 # Workaround for simple-git-hooks :\ https://github.com/toplenboren/simple-git-hooks/blob/0433a0485ea8f2c83e37b7cf7f2ec11e26921887/README.md#i-am-getting-npx-command-not-found-error-in-a-gui-git-client
 set -gx SIMPLE_GIT_HOOKS_RC "$HOME/.config/fish/functions/__my_scripts/.simple-git-hook.rc"
-
-# aqua
-#-----------------------------------------------------------------------------
-fish_add_path (aqua root-dir)/bin
 
 # GnuPG2 env
 #-----------------------------------------------------------------------------
@@ -133,10 +121,6 @@ end
 ## ラッパーは bin/install-fnox-shell-wrappers が配布。詳細は
 ## docs/fnox-token-management.md「注入機構」。
 
-## bun global
-#-----------------------------------------------------------------------------
-fish_add_path $HOME/.bun/bin
-
 # set $BROWSER
 #-----------------------------------------------------------------------------
 set -gx BROWSER open
@@ -149,10 +133,6 @@ set -gx VISUAL code
 # Android
 #-----------------------------------------------------------------------------
 set -gx ANDROID_HOME $HOME/Library/Android/sdk
-fish_add_path $ANDROID_HOME/emulator
-fish_add_path $ANDROID_HOME/tools
-fish_add_path $ANDROID_HOME/tools/bin
-fish_add_path $ANDROID_HOME/platform-tools
 
 # jdk
 #-----------------------------------------------------------------------------
@@ -165,14 +145,10 @@ set -gx JAVA_HOME (/usr/libexec/java_home)
 # go lang
 #-----------------------------------------------------------------------------
 set -gx GOPATH $HOME/go
-fish_add_path $GOPATH/bin
 
 # starship prompt
 #-----------------------------------------------------------------------------
 starship init fish | source
-# Added by OrbStack: command-line tools and integration
-# This won't be added again if you remove it.
-source ~/.orbstack/shell/init2.fish 2>/dev/null || :
 
 # 1password CLI
 #-----------------------------------------------------------------------------

@@ -58,3 +58,29 @@ XDG_CONFIG_HOME = "{{env.HOME}}/.config"
 # Node tooling is mise-managed, so exclude only the npm type from dumps (go etc.
 # are still wanted). Set here so it's inherited the same way as XDG_CONFIG_HOME.
 HOMEBREW_BUNDLE_DUMP_NO_NPM = "1"
+# Shell-agnostic PATH additions, so one entry reaches fish/zsh/bash alike.
+# Not `fish_add_path`: it writes to the universal variable `fish_user_paths`
+# (~/.config/fish/fish_variables, untracked), so the effective PATH drifts from
+# what config.fish shows, and it never reaches processes not started from fish
+# (an agent's zsh gets PATH only by inheritance, which depends on the launcher).
+# Earlier entries win, and all of them land ahead of mise's own tool paths, so
+# keep directories that would shadow a mise-managed tool out of this list
+# (~/.bun/bin holds `bun install -g` output, not bun itself, so it is safe).
+# Android/Go paths are spelled out rather than reusing $ANDROID_HOME / $GOPATH,
+# which config.fish sets and therefore only fish sees.
+_.path = [
+  "{{env.HOME}}/dotfiles/bin",
+  "{{env.HOME}}/.local/bin",
+  # aqua's documented fallback form, verbatim — mise expands `${VAR:-default}`
+  # (nesting included) in [env]. aqua wants its bin ahead of other version
+  # managers, which holds here since _.path precedes mise's tool paths.
+  "${AQUA_ROOT_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/aquaproj-aqua}/bin",
+  "{{env.HOME}}/.orbstack/bin",
+  "{{env.HOME}}/.bun/bin",
+  "{{env.HOME}}/go/bin",
+  "{{env.HOME}}/Library/Android/sdk/platform-tools",
+  "{{env.HOME}}/Library/Android/sdk/emulator",
+  "/Applications/Ghostty.app/Contents/MacOS",
+  # Empty directory, but `brew doctor` warns unless it is on PATH.
+  "/opt/homebrew/sbin",
+]

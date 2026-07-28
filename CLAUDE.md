@@ -20,3 +20,4 @@ macOS の個人 dotfiles。シェル・各種ツール・AI エージェント�
 - `.claude/settings.json`（permissions / sandbox）の変更は `.claude/rules/claude-code-settings.md` に従う。仕様は記憶や本 repo の doc でなく公式 Docs を一次情報にし、実機で検証してから確定する
 - 追跡対象は `.gitignore` の allowlist 方式。ツールの state / cache / 認証ファイルは追跡しない
 - セットアップ手順・macOS の手動設定・各ツールの運用方針は [README.md](./README.md)
+- `bin/` の自作スクリプトの一覧と役割は [bin/README.md](./bin/README.md)（PATH は mise の `_.path` で通している）
