@@ -9,9 +9,9 @@
 bin/
 ├── README.md
 ├── clean-old-branches.sh          # 古い Git ブランチの安全な削除
-├── difiti.sh                      # fzf で commit 範囲を選び difit で差分表示
-├── gwte.sh                        # Git Worktree 一括コマンド実行
-├── sample-script.sh               # gwte.sh 動作確認用サンプル
+├── difiti                         # fzf で commit 範囲を選び difit で差分表示
+├── gwte                           # Git Worktree 一括コマンド実行
+├── sample-script.sh               # gwte 動作確認用サンプル
 ├── install-fnox-shell-wrappers    # fnox シェル関数ラッパーの生成（冪等）
 ├── fnox-wrappers.sh               # ↑の生成物。PM を `fnox exec` で包む POSIX 関数
 ├── parallel-video-download.sh     # → video-utils/ への symlink
@@ -56,7 +56,7 @@ PATH が通っているのは `bin/` 直下だけで、サブディレクトリ�
 - `main`/`master`/`develop`/`dev`/`staging`/`production` は保護される
 - マージされていないブランチ・worktree でチェックアウト中のブランチは削除されない（安全機能）
 
-### difiti.sh - commit 範囲のインタラクティブ差分
+### difiti - commit 範囲のインタラクティブ差分
 
 `git log` から fzf で from / to の 2 commit を選び、外部ビューア `difit` で `<to>..<from>~1` の差分を開く。
 
@@ -65,20 +65,19 @@ difiti
 ```
 
 - `difit` コマンドが PATH 上に必要
-- 直接実行・関数 source（`difiti`）のどちらでも動く
 
-### gwte.sh - Git WorkTree Executor
+### gwte - Git WorkTree Executor
 
 複数の Git worktree に対して同じコマンドを一括実行する。
 
 ```bash
-./gwte.sh [OPTIONS]
+gwte [OPTIONS]
 ```
 
 ```bash
-./gwte.sh --interactive --command "git status"      # 対話的に worktree を選択して実行
-./gwte.sh --all --command "npm test" --dry-run      # 全 worktree でテスト（ドライラン）
-./gwte.sh --all --command "npm run build"           # 全 worktree でビルド
+gwte --interactive --command "git status"      # 対話的に worktree を選択して実行
+gwte --all --command "npm test" --dry-run      # 全 worktree でテスト（ドライラン）
+gwte --all --command "npm run build"           # 全 worktree でビルド
 ```
 
 - `--all` または `--interactive` のいずれかが必須
@@ -156,10 +155,10 @@ fnox の `mcp` profile から secret を 1 本だけ live fetch し `{"<header>"
 
 ## テスト・サンプル
 
-### sample-script.sh - gwte.sh の動作確認用
+### sample-script.sh - gwte の動作確認用
 
 現在のパス・日時・Git ブランチ・ディレクトリ内容を表示するだけのサンプル。
-gwte.sh が正しく動くかのテストや、worktree での動作確認に使う。
+gwte が正しく動くかのテストや、worktree での動作確認に使う。
 
 ```bash
 ./sample-script.sh
