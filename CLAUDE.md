@@ -23,3 +23,4 @@ macOS の個人 dotfiles。シェル・各種ツール・AI エージェント�
 - 追跡対象は `.gitignore` の allowlist 方式。ツールの state / cache / 認証ファイルは追跡しない
 - セットアップ手順・macOS の手動設定・各ツールの運用方針は [README.md](./README.md)
 - `bin/` の自作スクリプトの一覧と役割は [bin/README.md](./bin/README.md)（PATH は mise の `_.path` で通している）
+- shell script は要求 bash バージョンが 2 段に分かれている（対話起動 = 4.4+、PATH が不定な hook / helper と bootstrap 経路 = 3.2 互換）。**`bin/` を触る前に [bin/README.md の「bash のバージョン方針」](./bin/README.md#bash-のバージョン方針) を読むこと。** 検査は `mise run lint:shell`（実体は `mise-tasks/lint/shell`）で、`lefthook.yml` から pre-commit で走る

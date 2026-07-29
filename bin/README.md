@@ -37,6 +37,41 @@ PATH が通っているのは `bin/` 直下だけで、サブディレクトリ�
 増やせる。サブディレクトリ内のスクリプトを設定ファイルから呼ぶ場合は絶対パスを使う
 （`.mcp.json` の `headersHelper` 等）。
 
+## bash のバージョン方針
+
+macOS 同梱の `/bin/bash` は 3.2 固定なので、Brewfile で bash 5 を入れている。shebang は
+`#!/usr/bin/env bash` に揃えてあり、PATH 先頭が `/opt/homebrew/bin` なので通常はこちらが
+使われる。ただし **`env bash` の解決先は呼び出し元の PATH 次第**で、どちらが動くかは
+起動経路で変わる。そのため要求バージョンを一律にせず、呼ばれ方で 2 段に分けている。
+
+**bash 4.4+ を要求する（PATH が保証される経路）**
+
+`gwte` / `clean-old-branches` / `setup-scripts/subtree-manager.sh` /
+`video-utils/parallel-video-download`。人がシェルから叩くものなので mise を活性化した
+PATH が前提にできる。冒頭に `BASH_VERSINFO` を見るガードを置き、3.2 で起動されたときは
+途中で不可解に壊れるのではなく即座に終了させる。4.4 を下限にしたのは、`set -u` を有効に
+した状態での空配列の展開（`"${arr[@]}"`）が 4.3 以前では unbound variable で落ちるため。
+
+**bash 3.2 互換を維持する（PATH が不定、または bash 5 より前に走る経路）**
+
+- `claude-utils/` 配下 — Claude Code の hooks と `headersHelper`。`settings.json` /
+  `.mcp.json` から絶対パスで起動されるため、PATH は Claude Code のプロセス次第になる。
+  GUI から起動された場合は `/usr/bin:/bin` だけになり `/bin/bash` に落ちる
+- `credential-helper.sh` — git が呼ぶ。`#!/bin/sh` で POSIX の範囲に留める
+- `install-fnox-shell-wrappers` と repo ルートの `install.sh` — README のセットアップ手順で
+  `brew bundle` より前に走る。新規マシンではまだ bash 5 が存在しない
+- `sample-script.sh` — `gwte` の動作確認用。特別な機能を使わない
+
+`fnox-wrappers.sh` は fish / zsh / bash の rc から source される生成物なので POSIX 関数のみ。
+`difiti` は zsh。
+
+この方針は `mise run lint:shell`（実体は `mise-tasks/lint/shell`）が検査する。`lefthook.yml`
+から pre-commit で起動し、commit のたびに自動で走る。4.4+ のガードを持たないスクリプトに
+`/bin/bash -n` を掛け、加えて bash 4 以降でしか使えない機能を正規表現で弾く。`-n` は構文しか
+見ないので、`declare -A` や `mapfile` のように構文としては正しい builtin の呼び出しを捕まえる
+にはこの二つ目が要る。どちらも静的検査なので、実行時にしか現れない差は検出できない。
+最低限の網であって、3.2 で動くことの証明にはならない。
+
 ## Git 管理ツール
 
 ### clean-old-branches - 古いブランチの削除
