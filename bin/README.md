@@ -8,13 +8,13 @@
 ```
 bin/
 ├── README.md
-├── clean-old-branches.sh          # 古い Git ブランチの安全な削除
+├── clean-old-branches             # 古い Git ブランチの安全な削除
 ├── difiti                         # fzf で commit 範囲を選び difit で差分表示
 ├── gwte                           # Git Worktree 一括コマンド実行
 ├── sample-script.sh               # gwte 動作確認用サンプル
 ├── install-fnox-shell-wrappers    # fnox シェル関数ラッパーの生成（冪等）
 ├── fnox-wrappers.sh               # ↑の生成物。PM を `fnox exec` で包む POSIX 関数
-├── parallel-video-download.sh     # → video-utils/ への symlink
+├── parallel-video-download        # → video-utils/ への symlink
 ├── setup-scripts/
 │   └── subtree-manager.sh         # Git subtree の設定駆動管理
 ├── claude-utils/
@@ -25,7 +25,7 @@ bin/
 │       ├── agent-in-progress-hook.sh
 │       └── finished-responding-hook.sh
 └── video-utils/
-    ├── parallel-video-download.sh # yt-dlp + aria2c で動画を並列ダウンロード
+    ├── parallel-video-download    # yt-dlp + aria2c で動画を並列ダウンロード
     └── urls.txt.example           # ↑の URL リスト雛形
 ```
 
@@ -39,18 +39,18 @@ PATH が通っているのは `bin/` 直下だけで、サブディレクトリ�
 
 ## Git 管理ツール
 
-### clean-old-branches.sh - 古いブランチの削除
+### clean-old-branches - 古いブランチの削除
 
 指定日数より古いローカルブランチを安全に削除する。
 
 ```bash
-./clean-old-branches.sh [days] [--force]
+clean-old-branches [days] [--force]
 ```
 
 ```bash
-./clean-old-branches.sh        # 30 日より古いブランチを対話的に削除
-./clean-old-branches.sh 60     # 60 日より古いブランチを対話的に削除
-./clean-old-branches.sh 30 --force  # 確認なしで強制削除
+clean-old-branches        # 30 日より古いブランチを対話的に削除
+clean-old-branches 60     # 60 日より古いブランチを対話的に削除
+clean-old-branches 30 --force  # 確認なしで強制削除
 ```
 
 - `main`/`master`/`develop`/`dev`/`staging`/`production` は保護される
@@ -148,7 +148,7 @@ fnox の `mcp` profile から secret を 1 本だけ live fetch し `{"<header>"
 
 ## 動画ツール
 
-### video-utils/parallel-video-download.sh - 並列動画ダウンロード
+### video-utils/parallel-video-download - 並列動画ダウンロード
 
 `urls.txt`（雛形: `urls.txt.example`）の URL を yt-dlp + aria2c で並列ダウンロードする。
 進捗トラッキングと失敗 URL のリカバリ付き。依存: `yt-dlp`, `aria2c`。
