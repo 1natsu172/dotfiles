@@ -42,23 +42,46 @@ function __bobthefish_escape_regex -a str -d 'A backwards-compatible `string esc
     or echo "$str"
 end
 
+function __bobthefish_version_at_least -S -a required -a actual -d 'Compare dotted numeric versions'
+    set -l required_parts (string split . -- "$required")
+    set -l actual_parts (string split . -- "$actual")
+
+    for i in 1 2 3
+        set -l required_part $required_parts[$i]
+        set -l actual_part $actual_parts[$i]
+
+        [ -n "$required_part" ]
+        or set required_part 0
+        [ -n "$actual_part" ]
+        or set actual_part 0
+
+        if [ $actual_part -gt $required_part ]
+            return 0
+        else if [ $actual_part -lt $required_part ]
+            return 1
+        end
+    end
+
+    return 0
+end
+
 function __bobthefish_git_branch -S -d 'Get the current git branch (or commitish)'
     set -l tag (command git describe --tags --exact-match 2>/dev/null)
     and echo "$tag_glyph $tag "
 
-    set -l branch (command git symbolic-ref HEAD 2>/dev/null | string replace -r '^refs/heads/' '')
+    set -l branch (command git symbolic-ref --quiet --short HEAD 2>/dev/null)
     and begin
         [ -n "$theme_git_default_branches" ]
-        or set -l theme_git_default_branches master main (git config init.defaultBranch)
+        or set -l theme_git_default_branches master main (command git config init.defaultBranch 2>/dev/null)
 
-        [ "$theme_display_git_master_branch" != 'yes' -a "$theme_display_git_default_branch" != 'yes' ]
+        [ "$theme_display_git_master_branch" != yes -a "$theme_display_git_default_branch" != yes ]
         and contains $branch $theme_git_default_branches
         and echo $branch_glyph
         and return
 
         # truncate the middle of the branch name, but only if it's 25+ characters
         set -l truncname $branch
-        [ "$theme_use_abbreviated_branch_name" = 'yes' ]
+        [ "$theme_use_abbreviated_branch_name" = yes ]
         and set truncname (string replace -r '^(.{17}).{3,}(.{5})$' "\$1…\$2" $branch)
 
         echo $branch_glyph $truncname
@@ -67,7 +90,7 @@ function __bobthefish_git_branch -S -d 'Get the current git branch (or commitish
 
     # If we've already shown a tag we don't need to show a detached branch
     if [ -z "$tag" ]
-        set -l branch (command git show-ref --head -s --abbrev | head -n1 2>/dev/null)
+        set -l branch (command git rev-parse --short HEAD 2>/dev/null)
         echo "$detached_glyph $branch"
     end
 end
@@ -79,7 +102,7 @@ end
 
 function __bobthefish_hg_branch -S -d 'Get the current hg branch'
     set -l branch (command hg branch 2>/dev/null)
-    set -l book (command hg book | command grep \* | cut -d\  -f3)
+    set -l book (command hg book 2>/dev/null | string replace --filter -r '^\s*\*\s+(\S+).*' '$1')
     echo "$branch_glyph $branch @ $book"
 end
 
@@ -117,7 +140,7 @@ function __bobthefish_ignore_vcs_dir -a real_pwd -d 'Check whether the current d
 end
 
 function __bobthefish_git_project_dir -S -a real_pwd -d 'Print the current git project base directory'
-    [ "$theme_display_git" = 'no' ]
+    [ "$theme_display_git" = no ]
     and return
 
     command -q git
@@ -127,7 +150,7 @@ function __bobthefish_git_project_dir -S -a real_pwd -d 'Print the current git p
     and [ (__bobthefish_ignore_vcs_dir $real_pwd) ]
     and return
 
-    if [ "$theme_git_worktree_support" != 'yes' ]
+    if [ "$theme_git_worktree_support" != yes ]
         set -l git_toplevel (command git rev-parse --show-toplevel 2>/dev/null)
 
         [ -z "$git_toplevel" ]
@@ -152,7 +175,7 @@ function __bobthefish_git_project_dir -S -a real_pwd -d 'Print the current git p
                 return
             end
 
-            [ "$d" = '/' ]
+            [ "$d" = / ]
             and return
 
             set d (__bobthefish_dirname $d)
@@ -199,9 +222,9 @@ function __bobthefish_git_project_dir -S -a real_pwd -d 'Print the current git p
 end
 
 function __bobthefish_fossil_project_dir -S -a real_pwd -d 'Print the current fossil project base directory'
-    [ "$theme_display_fossil" = 'yes' ]
+    [ "$theme_display_fossil" = yes ]
     and command -q fossil
-    and set -f dir (command fossil json status 2>/dev/null | grep localRoot | string split ':' -f2 | string trim --chars='"/,')
+    and set -f dir (command fossil json status 2>/dev/null | string replace --filter -r '^\s*"localRoot"\s*:\s*"([^"]*)".*' '$1' | string trim --chars=/)
     or return
 
     set -q theme_vcs_ignore_paths
@@ -212,7 +235,7 @@ function __bobthefish_fossil_project_dir -S -a real_pwd -d 'Print the current fo
 end
 
 function __bobthefish_hg_project_dir -S -a real_pwd -d 'Print the current hg project base directory'
-    [ "$theme_display_hg" = 'yes' ]
+    [ "$theme_display_hg" = yes ]
     and command -q hg
     or return
 
@@ -227,7 +250,7 @@ function __bobthefish_hg_project_dir -S -a real_pwd -d 'Print the current hg pro
             return
         end
 
-        [ "$d" = '/' ]
+        [ "$d" = / ]
         and return
 
         set d (__bobthefish_dirname $d)
@@ -249,7 +272,7 @@ function __bobthefish_project_pwd -S -a project_root_dir -a real_pwd -d 'Print t
 end
 
 function __bobthefish_git_ahead -S -d 'Print the ahead/behind state for the current branch'
-    if [ "$theme_display_git_ahead_verbose" = 'yes' ]
+    if [ "$theme_display_git_ahead_verbose" = yes ]
         __bobthefish_git_ahead_verbose
         return
     end
@@ -284,8 +307,16 @@ function __bobthefish_git_ahead_verbose -S -d 'Print a more verbose ahead/behind
     set -l commits (command git rev-list --left-right '@{upstream}...HEAD' 2>/dev/null)
     or return
 
-    set -l behind (count (for arg in $commits; echo $arg; end | command grep '^<'))
-    set -l ahead (count (for arg in $commits; echo $arg; end | command grep -v '^<'))
+    set -l behind 0
+    set -l ahead 0
+    for commit in $commits
+        switch "$commit"
+            case '<*'
+                set behind (math $behind + 1)
+            case '>*'
+                set ahead (math $ahead + 1)
+        end
+    end
 
     switch "$ahead $behind"
         case '' # no upstream
@@ -301,14 +332,25 @@ function __bobthefish_git_ahead_verbose -S -d 'Print a more verbose ahead/behind
 end
 
 function __bobthefish_git_dirty_verbose -S -d 'Print a more verbose dirty state for the current working tree'
-    set -l changes (command git diff --numstat | awk '{ added += $1; removed += $2 } END { print "+" added "/-" removed }')
+    set -l diff_stats (command git diff --numstat)
     or return
 
+    set -l added 0
+    set -l removed 0
+    for line in $diff_stats
+        set -l fields (string split \t -- $line)
+        string match -rq '^\d+$' -- $fields[1]
+        and set added (math $added + $fields[1])
+        string match -rq '^\d+$' -- $fields[2]
+        and set removed (math $removed + $fields[2])
+    end
+
+    set -l changes "+$added/-$removed"
     echo "$changes " | string replace -r '(\+0/(-0)?|/-0)' ''
 end
 
 function __bobthefish_git_stashed -S -d 'Print the stashed state for the current branch'
-    if [ "$theme_display_git_stashed_verbose" = 'yes' ]
+    if [ "$theme_display_git_stashed_verbose" = yes ]
         set -l stashed (command git rev-list --walk-reflogs --count refs/stash 2>/dev/null)
         or return
 
@@ -318,7 +360,6 @@ function __bobthefish_git_stashed -S -d 'Print the stashed state for the current
         and echo -n "$git_stashed_glyph"
     end
 end
-
 
 # ==============================
 # Segment functions
@@ -366,7 +407,7 @@ function __bobthefish_path_segment -S -a segment_dir -a path_type -d 'Display a 
 
     switch "$segment_dir"
         case /
-            set directory '/'
+            set directory /
         case "$HOME"
             set directory '~'
         case '*'
@@ -374,7 +415,7 @@ function __bobthefish_path_segment -S -a segment_dir -a path_type -d 'Display a 
             set directory (__bobthefish_basename "$segment_dir")
     end
 
-    [ "$theme_show_project_parent" != "no" -o "$path_type" != "project" ]
+    [ "$theme_show_project_parent" != no -o "$path_type" != project ]
     and echo -n $parent
 
     set_color -b $segment_basename_color
@@ -388,25 +429,24 @@ function __bobthefish_finish_segments -S -d 'Close open prompt segments'
         echo -ns $right_black_arrow_glyph ' '
     end
 
-    if [ "$theme_newline_cursor" = 'yes' ]
+    if [ "$theme_newline_cursor" = yes ]
         echo -ens "\n"
         set_color $fish_color_autosuggestion
 
         if set -q theme_newline_prompt
             echo -ens "$theme_newline_prompt"
-        else if [ "$theme_powerline_fonts" = 'no' -a "$theme_nerd_fonts" != 'yes' ]
+        else if [ "$theme_powerline_fonts" = no -a "$theme_nerd_fonts" != yes ]
             echo -ns '> '
         else
             echo -ns "$right_arrow_glyph "
         end
-    else if [ "$theme_newline_cursor" = 'clean' ]
+    else if [ "$theme_newline_cursor" = clean ]
         echo -ens "\n"
     end
 
     set_color normal
     set __bobthefish_current_bg
 end
-
 
 # ==============================
 # Status segment
@@ -435,12 +475,12 @@ function __bobthefish_prompt_status -S -a last_status -d 'Display flags for a no
     if set -q AUTOJUMP_SOURCED
         # Autojump special case: check if there are jobs besides the `autojump`
         # job, since that one is (briefly) backgrounded every time we `cd`
-        set bg_jobs (jobs -c | string match -v --regex '(Command|autojump)' | wc -l)
+        set bg_jobs (count (jobs -c | string match -v --regex '(Command|autojump)'))
         [ "$bg_jobs" -eq 0 ]
         and set bg_jobs # clear it out so it doesn't show when `0`
     else
-        if [ "$theme_display_jobs_verbose" = 'yes' ]
-            set bg_jobs (jobs -p | wc -l)
+        if [ "$theme_display_jobs_verbose" = yes ]
+            set bg_jobs (count (jobs -p))
             [ "$bg_jobs" -eq 0 ]
             and set bg_jobs # clear it out so it doesn't show when `0`
         else
@@ -457,7 +497,7 @@ function __bobthefish_prompt_status -S -a last_status -d 'Display flags for a no
         if [ "$nonzero" ]
             set_color normal
             set_color -b $color_initial_segment_exit
-            if [ "$theme_show_exit_status" = 'yes' ]
+            if [ "$theme_show_exit_status" = yes ]
                 echo -ns $last_status ' '
             else
                 echo -n $nonzero_exit_glyph
@@ -484,7 +524,7 @@ function __bobthefish_prompt_status -S -a last_status -d 'Display flags for a no
         if [ "$bg_jobs" ]
             set_color normal
             set_color -b $color_initial_segment_jobs
-            if [ "$theme_display_jobs_verbose" = 'yes' ]
+            if [ "$theme_display_jobs_verbose" = yes ]
                 echo -ns $bg_job_glyph $bg_jobs ' '
             else
                 echo -n $bg_job_glyph
@@ -493,13 +533,12 @@ function __bobthefish_prompt_status -S -a last_status -d 'Display flags for a no
     end
 end
 
-
 # ==============================
 # Container and VM segments
 # ==============================
 
 function __bobthefish_prompt_vagrant -S -d 'Display Vagrant status'
-    [ "$theme_display_vagrant" = 'yes' -a -f Vagrantfile ]
+    [ "$theme_display_vagrant" = yes -a -f Vagrantfile ]
     or return
 
     # .vagrant/machines/$machine/$provider/id
@@ -521,18 +560,18 @@ end
 
 function __bobthefish_prompt_vagrant_vbox -S -a id -d 'Display VirtualBox Vagrant status'
     set -l vagrant_status
-    set -l vm_status (VBoxManage showvminfo --machinereadable $id 2>/dev/null | command grep 'VMState=' | tr -d '"' | cut -d '=' -f 2)
+    set -l vm_status (VBoxManage showvminfo --machinereadable $id 2>/dev/null | string replace --filter -r '^VMState="(.*)"$' '$1')
 
     switch "$vm_status"
-        case 'running'
+        case running
             set vagrant_status "$vagrant_status$vagrant_running_glyph"
-        case 'poweroff'
+        case poweroff
             set vagrant_status "$vagrant_status$vagrant_poweroff_glyph"
-        case 'aborted'
+        case aborted
             set vagrant_status "$vagrant_status$vagrant_aborted_glyph"
-        case 'saved'
+        case saved
             set vagrant_status "$vagrant_status$vagrant_saved_glyph"
-        case 'stopping'
+        case stopping
             set vagrant_status "$vagrant_status$vagrant_stopping_glyph"
         case ''
             set vagrant_status "$vagrant_status$vagrant_unknown_glyph"
@@ -562,18 +601,19 @@ end
 
 function __bobthefish_prompt_vagrant_parallels -S -d 'Display Parallels Vagrant status'
     set -l vagrant_status
-    set -l vm_status (prlctl list $id -o status 2>/dev/null | command tail -1)
+    set -l vm_status (prlctl list $id -o status 2>/dev/null)
+    set vm_status $vm_status[-1]
 
     switch "$vm_status"
-        case 'running'
+        case running
             set vagrant_status "$vagrant_status$vagrant_running_glyph"
-        case 'stopped'
+        case stopped
             set vagrant_status "$vagrant_status$vagrant_poweroff_glyph"
-        case 'paused'
+        case paused
             set vagrant_status "$vagrant_status$vagrant_saved_glyph"
-        case 'suspended'
+        case suspended
             set vagrant_status "$vagrant_status$vagrant_saved_glyph"
-        case 'stopping'
+        case stopping
             set vagrant_status "$vagrant_status$vagrant_stopping_glyph"
         case ''
             set vagrant_status "$vagrant_status$vagrant_unknown_glyph"
@@ -587,7 +627,7 @@ function __bobthefish_prompt_vagrant_parallels -S -d 'Display Parallels Vagrant 
 end
 
 function __bobthefish_prompt_docker -S -d 'Display Docker machine name'
-    [ "$theme_display_docker_machine" = 'no' -o -z "$DOCKER_MACHINE_NAME" ]
+    [ "$theme_display_docker_machine" = no -o -z "$DOCKER_MACHINE_NAME" ]
     and return
 
     __bobthefish_start_segment $color_vagrant
@@ -623,36 +663,35 @@ function __bobthefish_k8s_namespace -S -d 'Get the current k8s namespace'
 end
 
 function __bobthefish_prompt_k8s_context -S -d 'Show current Kubernetes context'
-    [ "$theme_display_k8s_context" = 'yes' ]
+    [ "$theme_display_k8s_context" = yes ]
     or return
 
     set -l context (__bobthefish_k8s_context)
     or return
 
-    [ "$theme_display_k8s_namespace" = 'yes' ]
+    [ "$theme_display_k8s_namespace" = yes ]
     and set -l namespace (__bobthefish_k8s_namespace)
 
-    [ -z "$context" -o "$context" = 'default' ]
-    and [ -z "$namespace" -o "$namespace" = 'default' ]
+    [ -z "$context" -o "$context" = default ]
+    and [ -z "$namespace" -o "$namespace" = default ]
     and return
 
     set -l segment $k8s_glyph ' '
-    [ "$context" != 'default' ]
+    [ "$context" != default ]
     and set segment $segment $context
-    [ "$namespace" != 'default' ]
+    [ "$namespace" != default ]
     and set segment $segment ':' $namespace
 
     __bobthefish_start_segment $color_k8s
     echo -ns $segment ' '
 end
 
-
 # ==============================
 # Cloud Tools
 # ==============================
 
 function __bobthefish_prompt_aws_vault_profile -S -d 'Show AWS Vault profile'
-    [ "$theme_display_aws_vault_profile" = 'yes' ]
+    [ "$theme_display_aws_vault_profile" = yes ]
     or return
 
     [ -n "$AWS_VAULT" -a -n "$AWS_CREDENTIAL_EXPIRATION" ]
@@ -666,7 +705,7 @@ function __bobthefish_prompt_aws_vault_profile -S -d 'Show AWS Vault profile'
 
     set -l diff_time $diff_mins"m"
     [ $diff_mins -le 0 ]
-    and set -l diff_time '0m'
+    and set -l diff_time 0m
     [ $diff_mins -ge 60 ]
     and set -l diff_time (math "floor($diff_mins / 60)")"h"(math "$diff_mins % 60")"m"
 
@@ -678,7 +717,6 @@ function __bobthefish_prompt_aws_vault_profile -S -d 'Show AWS Vault profile'
     __bobthefish_start_segment $status_color
     echo -ns $segment ' '
 end
-
 
 # ==============================
 # User / hostname info segments
@@ -696,18 +734,20 @@ if not type -q prompt_hostname
 end
 
 function __bobthefish_prompt_user -S -d 'Display current user and hostname'
-    [ "$theme_display_user" = 'yes' -o \( "$theme_display_user" != 'no' -a -n "$SSH_CLIENT" \) -o \( -n "$default_user" -a "$USER" != "$default_user" \) ]
+    [ "$theme_display_user" = yes -o \( "$theme_display_user" != no -a -n "$SSH_CLIENT" \) -o \( -n "$default_user" -a "$USER" != "$default_user" \) ]
     and set -l display_user
 
-    [ "$theme_display_sudo_user" = 'yes' -a -n "$SUDO_USER" ]
+    [ "$theme_display_sudo_user" = yes -a -n "$SUDO_USER" ]
     and set -l display_sudo_user
 
-    [ "$theme_display_hostname" = 'yes' -o \( "$theme_display_hostname" != 'no' -a -n "$SSH_CLIENT" \) ]
+    [ "$theme_display_hostname" = yes -o \( "$theme_display_hostname" != no -a -n "$SSH_CLIENT" \) ]
     and set -l display_hostname
 
     if set -q display_user
         __bobthefish_start_segment $color_username
-        echo -ns (whoami)
+        [ -n "$USER" ]
+        and echo -ns $USER
+        or echo -ns (whoami)
     end
 
     if set -q display_sudo_user
@@ -739,7 +779,6 @@ function __bobthefish_prompt_user -S -d 'Display current user and hostname'
     and echo -ns ' '
 end
 
-
 # ==============================
 # Virtual environment segments
 # ==============================
@@ -748,12 +787,12 @@ function __bobthefish_rvm_parse_ruby -S -a ruby_string -a scope -d 'Parse RVM Ru
     # Function arguments:
     # - 'ruby-2.2.3@rails', 'jruby-1.7.19'...
     # - 'default' or 'current'
-    set -l IFS @
-    echo "$ruby_string" | read __ruby __rvm_{$scope}_ruby_gemset __
-    set IFS -
-    echo "$__ruby" | read __rvm_{$scope}_ruby_interpreter __rvm_{$scope}_ruby_version __
-    set -e __ruby
-    set -e __
+    set -l ruby_parts (string split @ -- "$ruby_string")
+    set __rvm_{$scope}_ruby_gemset $ruby_parts[2]
+
+    set -l ruby_version_parts (string split - -- $ruby_parts[1])
+    set __rvm_{$scope}_ruby_interpreter $ruby_version_parts[1]
+    set __rvm_{$scope}_ruby_version $ruby_version_parts[2]
 end
 
 function __bobthefish_rvm_info -S -d 'Current Ruby information from RVM'
@@ -761,8 +800,17 @@ function __bobthefish_rvm_info -S -d 'Current Ruby information from RVM'
     set -q rvm_path
     or set -l rvm_path ~/.rvm /usr/local/rvm
 
-    # More `sed`/`grep`/`cut` magic...
-    set -l __rvm_default_ruby (grep GEM_HOME $rvm_path/environments/default 2>/dev/null | sed -e"s/'//g" | sed -e's/.*\///')
+    set -l __rvm_default_ruby
+    for env_file in $rvm_path/environments/default
+        [ -e "$env_file" ]
+        or continue
+
+        set -l gem_home (string replace --filter -r "^.*GEM_HOME='?([^']*)'?.*" '$1' <"$env_file")
+        [ "$gem_home" ]
+        and set __rvm_default_ruby (__bobthefish_basename "$gem_home")
+        and break
+    end
+
     set -l __rvm_current_ruby (rvm-prompt i v g)
 
     [ "$__rvm_default_ruby" = "$__rvm_current_ruby" ]
@@ -782,14 +830,14 @@ function __bobthefish_rvm_info -S -d 'Current Ruby information from RVM'
 
     # If interpreter differs form default interpreter, show everything:
     if [ "$__rvm_default_ruby_interpreter" != "$__rvm_current_ruby_interpreter" ]
-        if [ "$__rvm_current_ruby_gemset" = 'global' ]
+        if [ "$__rvm_current_ruby_gemset" = global ]
             rvm-prompt i v
         else
             rvm-prompt i v g
         end
         # If version differs form default version
     else if [ "$__rvm_default_ruby_version" != "$__rvm_current_ruby_version" ]
-        if [ "$__rvm_current_ruby_gemset" = 'global' ]
+        if [ "$__rvm_current_ruby_gemset" = global ]
             rvm-prompt v
         else
             rvm-prompt v g
@@ -801,7 +849,7 @@ function __bobthefish_rvm_info -S -d 'Current Ruby information from RVM'
 end
 
 function __bobthefish_prompt_rubies -S -d 'Display current Ruby information'
-    [ "$theme_display_ruby" = 'no' ]
+    [ "$theme_display_ruby" = no ]
     and return
 
     set -l ruby_version
@@ -845,43 +893,43 @@ end
 
 function __bobthefish_prompt_golang -S -a real_pwd -d 'Display current Go information'
     # setting is 'no', don't display the prompt
-    [ "$theme_display_go" = 'no' ]
+    [ "$theme_display_go" = no ]
     and return
 
     # find the closest go.mod
-    set -l gomod_version "0"
+    set -l gomod_version 0
     set -l d $real_pwd
     while not [ -z "$d" ]
         if [ -e $d/go.mod ]
-            grep "^go " "$d/go.mod" | read __ gomod_version
+            string match -rq '^go\s(?<gomod_version>\S+)' <"$d/go.mod"
             break
         end
 
-        [ "$d" = "/" ]
+        [ "$d" = / ]
         and return
 
         set d (__bobthefish_dirname $d)
     end
 
     # no go.mod, not in a go project, don't display the prompt
-    if [ "$gomod_version" = "0" ]
+    if [ "$gomod_version" = 0 ]
         return
     end
 
     # check if there's a Go executable
-    set -l no_go_installed "0"
-    set -l actual_go_version "0"
-    set -l high_enough_version "0"
+    set -l no_go_installed 0
+    set -l actual_go_version 0
+    set -l high_enough_version 0
     if command -q go
         set actual_go_version (go version | string replace --filter -r 'go version go(\\d+\\.\\d+(?:\\.\\d+)?).*' '$1')
-        if printf "%s\n%s"  "$gomod_version" "$actual_go_version" | sort --check=silent --version-sort
-            set high_enough_version "1"
+        if __bobthefish_version_at_least "$gomod_version" "$actual_go_version"
+            set high_enough_version 1
         end
     else
-        set no_go_installed "1"
+        set no_go_installed 1
     end
 
-    if [ "$high_enough_version" = "1" ]
+    if [ "$high_enough_version" = 1 ]
         __bobthefish_start_segment $color_virtualgo
     else
         __bobthefish_start_segment $color_rvm
@@ -891,8 +939,8 @@ function __bobthefish_prompt_golang -S -a real_pwd -d 'Display current Go inform
     echo -ns "$gomod_version "
 
     # showing the prompt -- but plain ( for 'yes' ) or verbose?
-    if  [ "$theme_display_go" = "verbose" ]
-        if [ "$actual_go_version" != "0" ]
+    if [ "$theme_display_go" = verbose ]
+        if [ "$actual_go_version" != 0 ]
             # show the prompt with the required version AND the currently available
             # version; same color rules as above
             echo -ns " ($actual_go_version)"
@@ -901,7 +949,7 @@ function __bobthefish_prompt_golang -S -a real_pwd -d 'Display current Go inform
 end
 
 function __bobthefish_virtualenv_python_version -S -d 'Get current Python version'
-    switch (python --version 2>&1 | tr '\n' ' ')
+    switch (python --version 2>&1 | string join ' ')
         case 'Python 2*PyPy*'
             echo $pypy_glyph
         case 'Python 3*PyPy*'
@@ -917,21 +965,21 @@ function __bobthefish_prompt_virtualfish -S -d "Display current Python virtual e
     command -q python
     or return
 
-    [ "$theme_display_virtualenv" = 'no' -o -z "$VIRTUAL_ENV" -a -z "$CONDA_DEFAULT_ENV" ]
+    [ "$theme_display_virtualenv" = no -o -z "$VIRTUAL_ENV" -a -z "$CONDA_DEFAULT_ENV" ]
     and return
 
     set -l version_glyph (__bobthefish_virtualenv_python_version)
-    set -l prompt_style 'default'
+    set -l prompt_style default
 
     if [ "$version_glyph" ]
         __bobthefish_start_segment $color_virtualfish
         if string match -q "Python 2*" (python --version 2>&1 | string trim)
-            set prompt_style 'verbose'
-        else if [ "$theme_display_virtualenv" = 'verbose' ]
-            set prompt_style 'verbose'
+            set prompt_style verbose
+        else if [ "$theme_display_virtualenv" = verbose ]
+            set prompt_style verbose
         end
 
-        if [ "$prompt_style" = 'verbose' ]
+        if [ "$prompt_style" = verbose ]
             echo -ns $virtualenv_glyph $version_glyph ' '
         else
             echo -ns $virtualenv_glyph
@@ -940,27 +988,27 @@ function __bobthefish_prompt_virtualfish -S -d "Display current Python virtual e
     end
 
     if [ "$VIRTUAL_ENV" ]
-        echo -ns (basename "$VIRTUAL_ENV") ' '
+        echo -ns (__bobthefish_basename "$VIRTUAL_ENV") ' '
     else if [ "$CONDA_DEFAULT_ENV" ]
-        echo -ns (basename "$CONDA_DEFAULT_ENV") ' '
+        echo -ns (__bobthefish_basename "$CONDA_DEFAULT_ENV") ' '
     end
 end
 
 function __bobthefish_prompt_virtualgo -S -d 'Display current Go virtual environment'
-    [ "$theme_display_virtualgo" = 'no' -o -z "$VIRTUALGO" ]
+    [ "$theme_display_virtualgo" = no -o -z "$VIRTUALGO" ]
     and return
 
     __bobthefish_start_segment $color_virtualgo
-    echo -ns $go_glyph ' ' (basename "$VIRTUALGO") ' '
+    echo -ns $go_glyph ' ' (__bobthefish_basename "$VIRTUALGO") ' '
     set_color normal
 end
 
 function __bobthefish_prompt_desk -S -d 'Display current desk environment'
-    [ "$theme_display_desk" = 'no' -o -z "$DESK_ENV" ]
+    [ "$theme_display_desk" = no -o -z "$DESK_ENV" ]
     and return
 
     __bobthefish_start_segment $color_desk
-    echo -ns $desk_glyph ' ' (basename -a -s '.fish' "$DESK_ENV") ' '
+    echo -ns $desk_glyph ' ' (string replace -r '\.fish$' '' (__bobthefish_basename "$DESK_ENV")) ' '
     set_color normal
 end
 
@@ -980,7 +1028,7 @@ function __bobthefish_prompt_find_file_up -S -d 'Find file(s), going up the pare
             end
         end
 
-        [ "$dir" = '/' ]
+        [ "$dir" = / ]
         and return 1
 
         set dir (__bobthefish_dirname "$dir")
@@ -991,9 +1039,9 @@ end
 function __bobthefish_prompt_node -S -d 'Display current node version'
     set -l should_show
 
-    if [ "$theme_display_node" = 'always' -o "$theme_display_nvm" = 'yes' ]
+    if [ "$theme_display_node" = always -o "$theme_display_nvm" = yes ]
         set should_show 1
-    else if [ "$theme_display_node" = 'yes' ]
+    else if [ "$theme_display_node" = yes ]
         __bobthefish_prompt_find_file_up "$PWD" package.json .nvmrc .node-version
         and set should_show 1
     end
@@ -1005,10 +1053,10 @@ function __bobthefish_prompt_node -S -d 'Display current node version'
     set -l node_manager_dir
 
     if type -q nvm
-        set node_manager 'nvm'
+        set node_manager nvm
         set node_manager_dir $NVM_DIR
     else if command -q fnm
-        set node_manager 'fnm'
+        set node_manager fnm
         set node_manager_dir $FNM_DIR
     end
 
@@ -1017,7 +1065,7 @@ function __bobthefish_prompt_node -S -d 'Display current node version'
 
     set -l node_version ("$node_manager" current 2> /dev/null)
 
-    [ -z $node_version -o "$node_version" = 'none' -o "$node_version" = 'system' ]
+    [ -z $node_version -o "$node_version" = none -o "$node_version" = system ]
     and return
 
     [ -n "$color_nvm" ]
@@ -1029,7 +1077,7 @@ function __bobthefish_prompt_node -S -d 'Display current node version'
 end
 
 function __bobthefish_prompt_nix -S -d 'Display current nix environment'
-    [ "$theme_display_nix" = 'no' -o -z "$IN_NIX_SHELL" ]
+    [ "$theme_display_nix" = no -o -z "$IN_NIX_SHELL" ]
     and return
 
     __bobthefish_start_segment $color_nix
@@ -1043,7 +1091,7 @@ end
 # ==============================
 
 function __bobthefish_prompt_fossil -S -a fossil_root_dir -a real_pwd -d 'Display the actual fossil state'
-    set -f fossil_statuses (command fossil changes --differ 2>/dev/null | cut -d' ' -f1 | sort -u)
+    set -f fossil_statuses (command fossil changes --differ 2>/dev/null | string replace --filter -r '^(\S+).*' '$1')
 
     # Fossil doesn't really stage changes; untracked files are ignored, tracked files are committed by default
     # It also syncs by default when you commit, and monitors for conflicts (which will be reported here)
@@ -1123,7 +1171,7 @@ function __bobthefish_prompt_hg -S -a hg_root_dir -a real_pwd -d 'Display the ac
 end
 
 function __bobthefish_prompt_screen -S -d 'Display the screen name'
-    [ "$theme_display_screen" = 'no' -o -z "$STY" ]
+    [ "$theme_display_screen" = no -o -z "$STY" ]
     and return
 
     __bobthefish_start_segment $color_screen
@@ -1133,11 +1181,11 @@ end
 
 function __bobthefish_prompt_git -S -a git_root_dir -a real_pwd -d 'Display the actual git state'
     set -l dirty ''
-    if [ "$theme_display_git_dirty" != 'no' ]
+    if [ "$theme_display_git_dirty" != no ]
         set -l show_dirty (command git config --bool bash.showDirtyState 2>/dev/null)
-        if [ "$show_dirty" != 'false' ]
+        if [ "$show_dirty" != false ]
             set dirty (command git diff --no-ext-diff --quiet --exit-code 2>/dev/null; or echo -n "$git_dirty_glyph")
-            if [ "$dirty" -a "$theme_display_git_dirty_verbose" = 'yes' ]
+            if [ "$dirty" -a "$theme_display_git_dirty_verbose" = yes ]
                 set dirty "$dirty"(__bobthefish_git_dirty_verbose)
             end
         end
@@ -1148,9 +1196,9 @@ function __bobthefish_prompt_git -S -a git_root_dir -a real_pwd -d 'Display the 
     set -l ahead (__bobthefish_git_ahead)
 
     set -l new ''
-    if [ "$theme_display_git_untracked" != 'no' ]
+    if [ "$theme_display_git_untracked" != no ]
         set -l show_untracked (command git config --bool bash.showUntrackedFiles 2>/dev/null)
-        if [ "$show_untracked" != 'false' ]
+        if [ "$show_untracked" != false ]
             set new (command git ls-files --other --exclude-standard --directory --no-empty-directory "$git_root_dir" 2>/dev/null)
             if [ "$new" ]
                 set new "$git_untracked_glyph"
@@ -1176,7 +1224,7 @@ function __bobthefish_prompt_git -S -a git_root_dir -a real_pwd -d 'Display the 
     echo -ns (__bobthefish_git_branch) $flags ' '
     set_color normal
 
-    if [ "$theme_git_worktree_support" != 'yes' ]
+    if [ "$theme_git_worktree_support" != yes ]
         set -l project_pwd (__bobthefish_project_pwd $git_root_dir $real_pwd)
         if [ "$project_pwd" ]
             if [ -w "$real_pwd" ]
@@ -1226,7 +1274,7 @@ function __bobthefish_prompt_git -S -a git_root_dir -a real_pwd -d 'Display the 
             set_color normal
             set_color -b $colors
             [ "$project_pwd" ]
-            and echo -n '/'
+            and echo -n /
         end
 
         echo -ns $project_pwd ' '
@@ -1260,10 +1308,18 @@ function __bobthefish_closest_parent -S
     if builtin -q path
         echo (path sort -r $argv)[1]
     else
-        string join \n $argv | awk '{ print length, $0 }' | sort -nsr | head -1 | cut -d" " -f2-
+        set -l closest
+        for candidate in $argv
+            [ -z "$candidate" ]
+            and continue
+
+            if [ -z "$closest" -o (string length -- "$candidate") -gt (string length -- "$closest") ]
+                set closest $candidate
+            end
+        end
+        echo $closest
     end
 end
-
 
 # ==============================
 # Apply theme
@@ -1274,7 +1330,7 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
     set -l last_status $status
 
     # Use a simple prompt on dumb terminals.
-    if [ "$TERM" = 'dumb' ]
+    if [ "$TERM" = dumb ]
         echo '> '
         return
     end
@@ -1315,7 +1371,6 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
     __bobthefish_prompt_virtualfish
     __bobthefish_prompt_virtualgo
     __bobthefish_prompt_node
-
 
     # VCS
     set -l git_root_dir (__bobthefish_git_project_dir $real_pwd)

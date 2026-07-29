@@ -5,7 +5,6 @@ brgmnn/fish-docker-compose
 decors/fish-docker-machine
 decors/fish-ghq
 danhper/fish-ssh-agent
-jethrokuan/fzf
 jorgebucaran/getopts.fish
 americanhanko/fish-spin
 jorgebucaran/fisher
