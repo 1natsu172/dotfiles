@@ -73,5 +73,6 @@ for p in $PATH; test -d $p; or echo "missing: $p"; end
 
 - **設定を消したのに残る場合は herdr を疑ってください。** [herdr-session-lifecycle.md](./herdr-session-lifecycle.md) の手順を踏むまで反映されません
 - **Claude Code は起動時の shell snapshot を使います。** 設定を変えたら Claude Code の再起動が要ります
+- **`/usr/libexec/java_home` は sandbox 内では JVM を1つも検出できません。** `Unable to locate a Java Runtime` を返すため、JVM の確認は sandbox 外で実行してください
 - **`fish_add_path` は存在しないディレクトリを黙って無視します。** 行が残っていても効いていないことがあります
 - **universal variable は config.fish から記述を消しても残ります。** `set -U --erase <name>` で個別に消してください
