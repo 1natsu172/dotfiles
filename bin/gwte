@@ -68,10 +68,9 @@ get_worktrees() {
 # Function to get worktree branch names
 get_worktree_info() {
   local worktree_path="$1"
-  local branch=""
-  local commit=""
 
   # Get branch name and commit for this worktree
+  # （branch / commit は下の awk スクリプト内のローカル変数。shell 側の宣言は不要）
   local info
   info=$(git worktree list --porcelain | awk -v path="$worktree_path" '
         /^worktree / { current_path = substr($0, 10) }

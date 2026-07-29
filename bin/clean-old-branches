@@ -83,7 +83,7 @@ fi
 # 確認プロンプト
 if [[ "$FORCE_DELETE" != "--force" ]]; then
   echo ""
-  read -p "⚠️  これらのブランチを削除しますか？ (y/N): " confirm
+  read -r -p "⚠️  これらのブランチを削除しますか？ (y/N): " confirm
   if [[ ! "$confirm" =~ ^[Yy]$ ]]; then
     echo "❌ キャンセルされました"
     exit 0

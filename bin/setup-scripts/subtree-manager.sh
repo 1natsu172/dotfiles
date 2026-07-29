@@ -52,7 +52,7 @@ list_subtrees() {
     } | sort | {
         local current_category=""
         while IFS='|' read -r category entry; do
-            read -r cat config_key git_url branch target_path <<< "$entry"
+            read -r _ config_key git_url branch target_path <<< "$entry"
             
             # Show category header if changed
             if [[ "$category" != "$current_category" ]]; then

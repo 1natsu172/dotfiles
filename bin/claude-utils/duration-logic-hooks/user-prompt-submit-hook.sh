@@ -24,7 +24,8 @@ check_interrupt_in_transcript() {
     fi
     
     # 空行を除外してJSONLファイルの最後のJSON行を取得
-    local last_line=$(grep -v '^$' "$transcript_path" | tail -n 1)
+    local last_line
+    last_line=$(grep -v '^$' "$transcript_path" | tail -n 1)
     
     if [ -z "$last_line" ]; then
         return 1  # interruptなし
@@ -32,7 +33,8 @@ check_interrupt_in_transcript() {
     
     # JSON解析してmessage.contentをチェック
     # 配列形式とstring形式の両方をサポート
-    local content=$(echo "$last_line" | jq -r '.message.content[0].text // .message.content // empty' 2>/dev/null)
+    local content
+    content=$(echo "$last_line" | jq -r '.message.content[0].text // .message.content // empty' 2>/dev/null)
     
     if [ "$content" = "[Request interrupted by user]" ]; then
         return 0  # interruptあり
