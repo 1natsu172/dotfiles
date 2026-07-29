@@ -47,10 +47,10 @@ macOS 同梱の `/bin/bash` は 3.2 固定なので、Brewfile で bash 5 を入
 **bash 4.4+ を要求する（PATH が保証される経路）**
 
 `gwte` / `clean-old-branches` / `setup-scripts/subtree-manager.sh` /
-`video-utils/parallel-video-download`。人がシェルから叩くものなので mise を活性化した
-PATH が前提にできる。冒頭に `BASH_VERSINFO` を見るガードを置き、3.2 で起動されたときは
-途中で不可解に壊れるのではなく即座に終了させる。4.4 を下限にしたのは、`set -u` を有効に
-した状態での空配列の展開（`"${arr[@]}"`）が 4.3 以前では unbound variable で落ちるため。
+`video-utils/parallel-video-download`。人がシェルから叩くので mise を活性化した PATH を
+前提にできる。冒頭に `BASH_VERSINFO` を見るガードを置き、3.2 で起動されたら実行前に終了
+させる（途中で壊れると原因が分かりにくいため）。4.4 を下限にしたのは、`set -u` 下での空配列
+の展開（`"${arr[@]}"`）が 4.3 以前では unbound variable で落ちるため。
 
 **bash 3.2 互換を維持する（PATH が不定、または bash 5 より前に走る経路）**
 
@@ -64,26 +64,17 @@ PATH が前提にできる。冒頭に `BASH_VERSINFO` を見るガードを置�
 
 `fnox-wrappers.sh` は fish / zsh / bash の rc から source される生成物なので POSIX 関数のみ。
 
-なお **shellcheck は zsh を扱えない**（`SC1071` で拒否。0.11.0 が最新なので当面は変わらない）。
-shfmt は 3.13.0 で zsh に対応したため整形はできるが、静的検査が効かないことに変わりはない。
-そのため **zsh 固有の機能が要らないなら bash で書く**。difiti は元々 zsh だったが zsh 固有の
-構文が無かったので bash に寄せた（移した直後に SC2086 が出た）。
-
-zsh を禁止はしておらず、必要なら置ける。lint は shebang を見て理由付きで対象外にする。zsh の
-スクリプトを置いたうえで整形だけは掛けたくなったら、`mise-tasks/lint/shell` の振り分けを
-「shellcheck に渡すもの」と「shfmt に渡すもの」に分ければよい。現状は zsh のファイルが 1 本も
-無いので分けていない。
+**shellcheck は zsh を扱えない**（`SC1071` で拒否）。zsh で書くと静的検査が効かなくなるので、
+**zsh 固有の機能が要らないなら bash で書く**。禁止はしておらず必要なら置ける（lint は shebang
+を見て理由付きで対象外にする）。shfmt は zsh を扱えるので、zsh のスクリプトに整形だけ掛けたく
+なったら `mise-tasks/lint/shell` の振り分けを shellcheck 用と shfmt 用に分ける。
 
 整形は shfmt のデフォルト（タブ）に揃える。shfmt はコマンドラインに整形フラグを 1 つでも
 渡すと EditorConfig の設定を全て無視する仕様なので、フラグは意図的に渡さない。
 
-この方針は `mise run lint:shell`（実体は `mise-tasks/lint/shell`）が検査する。`lefthook.yml`
-から pre-commit で起動し、commit のたびに自動で走る。整形のずれは不一致のファイルと
-`shfmt -w` の修正コマンドを出して落ちる。4.4+ のガードを持たないスクリプトに
-`/bin/bash -n` を掛け、加えて bash 4 以降でしか使えない機能を正規表現で弾く。`-n` は構文しか
-見ないので、`declare -A` や `mapfile` のように構文としては正しい builtin の呼び出しを捕まえる
-にはこの二つ目が要る。どちらも静的検査なので、実行時にしか現れない差は検出できない。
-最低限の網であって、3.2 で動くことの証明にはならない。
+この方針は `mise run lint:shell`（実体は `mise-tasks/lint/shell`）が検査し、`lefthook.yml` から
+pre-commit で走る。整形のずれは不一致のファイルと修正コマンドを出して落ちる。3.2 互換の検査は
+静的解析なので実行時にしか現れない差は取りこぼす。3.2 で動くことの保証ではない。
 
 ## Git 管理ツール
 

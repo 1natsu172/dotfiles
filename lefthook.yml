@@ -9,8 +9,8 @@ no_auto_install: true
 #
 # lefthook 本体は `lefthook install` が生成する .git/hooks/pre-commit が mise の install
 # パスを直接フォールバックに持つので、mise が未活性でも起動する。ただし下の `mise run` は
-# PATH 上の mise を要求するため、PATH が痩せた GUI の git クライアントからの commit では
-# 失敗する（黙って素通りするのではなく落ちるので、そのときは terminal から commit する）。
+# PATH 上の mise を要求するため、PATH が最小限しか通っていない GUI の git クライアントからの
+# commit では失敗する（素通りせず落ちるので、そのときは terminal から commit する）。
 #
 # glob のパターンは末尾を `**` にしてある。lefthook の既定の matcher（gobwas）では
 # `bin/**/*.sh` と書くと `**` が「1 階層以上」を要求するため、bin/ 直下のファイルが
