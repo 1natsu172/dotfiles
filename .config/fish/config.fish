@@ -68,10 +68,6 @@ if status is-interactive
     end
 end
 
-# fisher jethrokuan/fzf
-#-----------------------------------------------------------------------------
-set -gx FZF_LEGACY_KEYBINDINGS 0
-
 # fisher americanhanko/fish-spin
 #-----------------------------------------------------------------------------
 # XDG cache（spin.fish が要求する。export しない＝現状の挙動を維持）
@@ -131,6 +127,10 @@ end
 # cargo
 #-----------------------------------------------------------------------------
 # NOTE: rustup.fish で設定している
+
+# fzf key bindings & completions https://github.com/junegunn/fzf/tree/b66153825fa5186ade46a743e1418253482262bd/shell
+#-----------------------------------------------------------------------------
+fzf --fish | source
 
 # starship prompt
 #-----------------------------------------------------------------------------
