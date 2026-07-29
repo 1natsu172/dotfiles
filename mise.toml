@@ -1,0 +1,19 @@
+# dotfiles repo 専用の mise 設定。global の ~/.config/mise/config.toml にマージされる。
+# ここに置くのは「この repo で作業するときだけ要るもの」に限る（tool の常用セットは global 側）。
+# ファイル名に先頭ドットを付けないこと: install.sh は `.??*` を $HOME へ symlink するため、
+# `.mise.toml` にすると設定ファイル自体がホームに配られてしまう。
+#
+# 個々の lint / fmt は mise-tasks/ 以下のファイルタスク。中身をシェルスクリプトとして
+# 独立させてあるので、タスク自身も shellcheck に掛かる。
+
+[tools]
+# pre-commit の lint 用（lefthook.yml）。shellcheck / shfmt 本体は Brewfile 側。
+lefthook = "latest"
+
+[tasks.lint]
+description = "lint をまとめて実行する"
+depends = ["lint:*"]
+
+[tasks."fmt:shell"]
+description = "shfmt との差分を表示する（既存のスタイルが混在しているため強制はしない）"
+run = "git ls-files -- bin install.sh mise-tasks | xargs shfmt -d 2>/dev/null || true"

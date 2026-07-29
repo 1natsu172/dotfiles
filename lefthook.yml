@@ -1,0 +1,24 @@
+# pre-commit の lint。実体は mise のファイルタスク（mise-tasks/lint/shell）で、
+# ここは起動と対象の絞り込みだけを担う。
+#
+# lefthook 本体は `lefthook install` が生成する .git/hooks/pre-commit が mise の install
+# パスを直接フォールバックに持つので、mise が未活性でも起動する。ただし下の `mise run` は
+# PATH 上の mise を要求するため、PATH が痩せた GUI の git クライアントからの commit では
+# 失敗する（黙って素通りするのではなく落ちるので、そのときは terminal から commit する）。
+#
+# glob のパターンは末尾を `**` にしてある。lefthook の既定の matcher（gobwas）では
+# `bin/**/*.sh` と書くと `**` が「1 階層以上」を要求するため、bin/ 直下のファイルが
+# 対象から漏れる。`bin/**` なら直下も深い階層も拾う（公式 Docs の glob / glob_matcher と
+# 実機で確認済み）。標準的な挙動が要るなら glob_matcher: doublestar を指定する。
+#
+# 拡張子ではなくディレクトリで絞っているので、mise-tasks/ に shell 以外のタスクが
+# 増えると job には流れる。振り分けは mise-tasks/lint/shell 側の shebang 判定で行う。
+pre-commit:
+  parallel: false
+  jobs:
+    - name: shell-lint
+      glob:
+        - "bin/**"
+        - "install.sh"
+        - "mise-tasks/**"
+      run: mise run lint:shell {staged_files}

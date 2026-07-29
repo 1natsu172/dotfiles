@@ -1,0 +1,108 @@
+#!/usr/bin/env bash
+#MISE description="shell script を shellcheck と bash 3.2 互換チェックに掛ける"
+
+set -euo pipefail
+
+# このファイル自体は下の 3.2 互換チェックの対象外（理由は後述）だが、書き方は 3.2 の範囲に
+# 収めてある。配列を使わないのはそのため。
+
+# 引数があればそれだけを見る（lefthook の pre-commit は staged files を渡してくる）。
+# 無ければ repo 全体の対象範囲を見る。
+if [ "$#" -gt 0 ]; then
+  candidates=$(printf '%s\n' "$@")
+else
+  candidates=$(git ls-files -- bin install.sh mise-tasks)
+fi
+
+# 渡されたファイルを、shell script とそれ以外に振り分ける。lefthook の glob は拡張子では
+# なくディレクトリで絞っているので、mise-tasks/ に shell 以外のタスクが増えたときは
+# ここで落ちる。zsh で書かれた difiti と、shebang を持たない生成物の fnox-wrappers.sh も
+# 同じく対象外になる。
+targets=""
+skipped=""
+symlinks=""
+while IFS= read -r f; do
+  [ -n "$f" ] || continue
+
+  # staged された削除は working tree に無いので黙って飛ばす。
+  [ -e "$f" ] || continue
+
+  # symlink は実体の側で一度見れば足りる。
+  if [ -L "$f" ]; then
+    symlinks="${symlinks}${f}
+"
+    continue
+  fi
+
+  if head -n 1 "$f" | grep -qE '^#!(/usr/bin/env +|.*/)(bash|sh)( |$)'; then
+    targets="${targets}${f}
+"
+  else
+    skipped="${skipped}${f}
+"
+  fi
+done <<EOF
+$candidates
+EOF
+
+if [ -n "$symlinks" ]; then
+  echo "symlink なので対象外にしました（実体の側で検査します）:"
+  printf '%s' "$symlinks" | sed 's/^/  - /'
+fi
+
+if [ -n "$skipped" ]; then
+  echo "shell script ではないので対象外にしました（shebang が bash / sh ではありません）:"
+  printf '%s' "$skipped" | sed 's/^/  - /'
+fi
+
+if [ -z "$targets" ]; then
+  echo "検査する shell script はありませんでした"
+  exit 0
+fi
+
+printf '%s' "$targets" | xargs shellcheck -f gcc
+
+# ここから bash 3.2 互換チェック。
+#
+# bash 4.4+ のガードを持たない script は macOS 同梱の bash 3.2 でも動く必要がある
+# （PATH が保証されない hook / helper と、bash 5 の導入より前に走る bootstrap 経路）。
+# 方針そのものは bin/README.md に書いてある。
+#
+# 検査は 2 通り。`/bin/bash -n` は 3.2 がパースできない構文を捕まえるが、`declare -A` や
+# `mapfile` は構文としては正しい builtin の呼び出しなので素通りする。そこで bash 4 以降で
+# しか使えない機能を正規表現でも弾く。どちらも静的検査なので、実行時にしか現れない差
+# （`set -u` での空配列展開や、`((n++))` が 0 のとき終了ステータス 1 を返すこと）は
+# 取りこぼす。
+#
+# 対象を bin/ と install.sh に絞っているのは、mise-tasks/ 配下（このファイル自身を含む）が
+# 開発者の手元でしか動かないため。加えて、下の正規表現の定義行そのものが正規表現に一致して
+# しまうのも避けられる。
+bash4_only='(declare|local|typeset)[[:space:]]+-[a-zA-Z]*A|\bmapfile\b|\breadarray\b|\bcoproc\b|\$\{[A-Za-z_][A-Za-z0-9_]*[^}]*(\^\^|,,)|wait[[:space:]]+-n\b|&>>'
+
+status=0
+while IFS= read -r f; do
+  case "$f" in
+  bin/* | install.sh) ;;
+  *) continue ;;
+  esac
+
+  if grep -q 'BASH_VERSINFO' "$f"; then
+    continue
+  fi
+
+  /bin/bash -n "$f" || status=1
+
+  if grep -nE "$bash4_only" "$f"; then
+    echo "$f: bash 4 以降でしか使えない機能があります。4.4+ のガードを足すか、3.2 の書き方に直してください" >&2
+    status=1
+  fi
+done <<EOF
+$targets
+EOF
+
+if [ "$status" -ne 0 ]; then
+  echo "bash 3.2 互換チェックに失敗しました" >&2
+  exit 1
+fi
+
+echo "lint OK"
