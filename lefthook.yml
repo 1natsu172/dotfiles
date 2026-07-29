@@ -13,6 +13,18 @@
 #
 # 拡張子ではなくディレクトリで絞っているので、mise-tasks/ に shell 以外のタスクが
 # 増えると job には流れる。振り分けは mise-tasks/lint/shell 側の shebang 判定で行う。
+# lefthook は既定で、設定が変わっていると `lefthook run` のたびに hook を再生成する。
+# その再生成は .git/hooks/pre-commit の削除を伴うが、このディレクトリは Claude Code の
+# harness が組み込みで write-deny にしているため、sandbox 内の commit では毎回
+# `sync hooks: ❌ operation not permitted` が出る（commit 自体は通るので紛らわしい）。
+#
+# .git/hooks/ への書き込みを許すのは git 操作での任意コード実行を開く話なので、deny は
+# 維持したまま自動同期の側を止める。生成される hook は `lefthook run pre-commit` を呼ぶ
+# だけのランチャで、この設定ファイルは実行時に読まれるので、ここの変更は同期なしで
+# 反映される。同期が要るのは pre-push など新しい hook 種別を足したときだけで、そのときは
+# `lefthook install` を手で叩く（README.md に記載）。
+no_auto_install: true
+
 pre-commit:
   parallel: false
   jobs:
