@@ -23,7 +23,7 @@ export PATH="${HOME}/.local/share/mise/shims:/opt/homebrew/bin:/usr/bin:/bin"
 
 secret="${1:?usage: mcp-auth-header.sh <SECRET_NAME> [header] [scheme]}"
 header="${2:-Authorization}"
-scheme="${3-Bearer }"   # 既定は 'Bearer '。明示的に '' を渡せば scheme 無し（生 token）
+scheme="${3-Bearer }" # 既定は 'Bearer '。明示的に '' を渡せば scheme 無し（生 token）
 
 # mcp profile から単一 secret を解決する。
 #   --profile mcp: MCP 用 token は mcp profile に置き、npm 等の default `fnox exec` の解決スコープから隔離。

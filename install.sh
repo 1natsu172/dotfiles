@@ -5,34 +5,34 @@ SPECIFY_FILES="Brewfile Brewfile.lock.json"
 
 # ドットファイルとドットファイル以外の特定ファイルを回す
 for f in .??* ${SPECIFY_FILES}; do
-  # ルートにシンボリックリンクは貼りたくない無視したいファイルやディレクトリはこんな風に追加してね
-  [[ ${f} = ".git" ]] && continue
-  [[ ${f} = ".github" ]] && continue
-  [[ ${f} = ".gitignore" ]] && continue
-  [[ ${f} = ".gitmodules" ]] && continue
-  [[ ${f} = ".DS_Store" ]] && continue
-  [[ ${f} = ".travis.yml" ]] && continue
-  [[ ${f} = ".direnv" ]] && continue
-  [[ ${f} = ".envrc" ]] && continue
-  ln -snfv "${DOT_DIRECTORY}/${f}" "${HOME}/${f}"
+	# ルートにシンボリックリンクは貼りたくない無視したいファイルやディレクトリはこんな風に追加してね
+	[[ ${f} = ".git" ]] && continue
+	[[ ${f} = ".github" ]] && continue
+	[[ ${f} = ".gitignore" ]] && continue
+	[[ ${f} = ".gitmodules" ]] && continue
+	[[ ${f} = ".DS_Store" ]] && continue
+	[[ ${f} = ".travis.yml" ]] && continue
+	[[ ${f} = ".direnv" ]] && continue
+	[[ ${f} = ".envrc" ]] && continue
+	ln -snfv "${DOT_DIRECTORY}/${f}" "${HOME}/${f}"
 done
 
 # Make bin scripts (files starting with a shebang) executable
 if [[ -d "${DOT_DIRECTORY}/bin" ]]; then
-  while IFS= read -r -d '' f; do
-    [[ "$(head -c 2 -- "${f}")" == "#!" ]] && chmod +x "${f}"
-  done < <(find "${DOT_DIRECTORY}/bin" -type f -print0)
-  echo "$(tput setaf 3)Made bin scripts executable$(tput sgr0)"
+	while IFS= read -r -d '' f; do
+		[[ "$(head -c 2 -- "${f}")" == "#!" ]] && chmod +x "${f}"
+	done < <(find "${DOT_DIRECTORY}/bin" -type f -print0)
+	echo "$(tput setaf 3)Made bin scripts executable$(tput sgr0)"
 fi
 
 # Deploy fnox shell wrappers (npm/yarn/bun/... -> `fnox exec` functions in each rc). Idempotent.
 if [[ -x "${DOT_DIRECTORY}/bin/install-fnox-shell-wrappers" ]]; then
-  if "${DOT_DIRECTORY}/bin/install-fnox-shell-wrappers"; then
-    echo "$(tput setaf 3)Deployed fnox shell wrappers$(tput sgr0)"
-  else
-    echo "$(tput setaf 1)Failed to deploy fnox shell wrappers$(tput sgr0)" >&2
-    exit 1
-  fi
+	if "${DOT_DIRECTORY}/bin/install-fnox-shell-wrappers"; then
+		echo "$(tput setaf 3)Deployed fnox shell wrappers$(tput sgr0)"
+	else
+		echo "$(tput setaf 1)Failed to deploy fnox shell wrappers$(tput sgr0)" >&2
+		exit 1
+	fi
 fi
 
 echo "$(tput setaf 2)Deploy dotfiles complete!. ✔︎$(tput sgr0)"

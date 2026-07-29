@@ -9,9 +9,9 @@ set -euo pipefail
 # 引数があればそれだけを見る（lefthook の pre-commit は staged files を渡してくる）。
 # 無ければ repo 全体の対象範囲を見る。
 if [ "$#" -gt 0 ]; then
-  candidates=$(printf '%s\n' "$@")
+	candidates=$(printf '%s\n' "$@")
 else
-  candidates=$(git ls-files -- bin install.sh mise-tasks)
+	candidates=$(git ls-files -- bin install.sh mise-tasks)
 fi
 
 # 渡されたファイルを、shell script とそれ以外に振り分ける。lefthook の glob は拡張子では
@@ -22,42 +22,42 @@ targets=""
 skipped=""
 symlinks=""
 while IFS= read -r f; do
-  [ -n "$f" ] || continue
+	[ -n "$f" ] || continue
 
-  # staged された削除は working tree に無いので黙って飛ばす。
-  [ -e "$f" ] || continue
+	# staged された削除は working tree に無いので黙って飛ばす。
+	[ -e "$f" ] || continue
 
-  # symlink は実体の側で一度見れば足りる。
-  if [ -L "$f" ]; then
-    symlinks="${symlinks}${f}
+	# symlink は実体の側で一度見れば足りる。
+	if [ -L "$f" ]; then
+		symlinks="${symlinks}${f}
 "
-    continue
-  fi
+		continue
+	fi
 
-  if head -n 1 "$f" | grep -qE '^#!(/usr/bin/env +|.*/)(bash|sh)( |$)'; then
-    targets="${targets}${f}
+	if head -n 1 "$f" | grep -qE '^#!(/usr/bin/env +|.*/)(bash|sh)( |$)'; then
+		targets="${targets}${f}
 "
-  else
-    skipped="${skipped}${f}
+	else
+		skipped="${skipped}${f}
 "
-  fi
+	fi
 done <<EOF
 $candidates
 EOF
 
 if [ -n "$symlinks" ]; then
-  echo "symlink なので対象外にしました（実体の側で検査します）:"
-  printf '%s' "$symlinks" | sed 's/^/  - /'
+	echo "symlink なので対象外にしました（実体の側で検査します）:"
+	printf '%s' "$symlinks" | sed 's/^/  - /'
 fi
 
 if [ -n "$skipped" ]; then
-  echo "shell script ではないので対象外にしました（shebang が bash / sh ではありません）:"
-  printf '%s' "$skipped" | sed 's/^/  - /'
+	echo "shell script ではないので対象外にしました（shebang が bash / sh ではありません）:"
+	printf '%s' "$skipped" | sed 's/^/  - /'
 fi
 
 if [ -z "$targets" ]; then
-  echo "検査する shell script はありませんでした"
-  exit 0
+	echo "検査する shell script はありませんでした"
+	exit 0
 fi
 
 printf '%s' "$targets" | xargs shellcheck -f gcc
@@ -81,28 +81,28 @@ bash4_only='(declare|local|typeset)[[:space:]]+-[a-zA-Z]*A|\bmapfile\b|\breadarr
 
 status=0
 while IFS= read -r f; do
-  case "$f" in
-  bin/* | install.sh) ;;
-  *) continue ;;
-  esac
+	case "$f" in
+	bin/* | install.sh) ;;
+	*) continue ;;
+	esac
 
-  if grep -q 'BASH_VERSINFO' "$f"; then
-    continue
-  fi
+	if grep -q 'BASH_VERSINFO' "$f"; then
+		continue
+	fi
 
-  /bin/bash -n "$f" || status=1
+	/bin/bash -n "$f" || status=1
 
-  if grep -nE "$bash4_only" "$f"; then
-    echo "$f: bash 4 以降でしか使えない機能があります。4.4+ のガードを足すか、3.2 の書き方に直してください" >&2
-    status=1
-  fi
+	if grep -nE "$bash4_only" "$f"; then
+		echo "$f: bash 4 以降でしか使えない機能があります。4.4+ のガードを足すか、3.2 の書き方に直してください" >&2
+		status=1
+	fi
 done <<EOF
 $targets
 EOF
 
 if [ "$status" -ne 0 ]; then
-  echo "bash 3.2 互換チェックに失敗しました" >&2
-  exit 1
+	echo "bash 3.2 互換チェックに失敗しました" >&2
+	exit 1
 fi
 
 echo "lint OK"

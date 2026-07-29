@@ -8,7 +8,7 @@ session_data=$(cat)
 session_id=$(echo "$session_data" | jq -r '.session_id // empty')
 
 if [ -z "$session_id" ]; then
-    exit 0
+	exit 0
 fi
 
 # tmpファイルのパス
@@ -16,7 +16,7 @@ tmp_file="${TMPDIR:-/tmp}/claude-code-duration-${session_id}.json"
 
 # ファイルが存在しない場合は何もしない
 if [ ! -f "$tmp_file" ]; then
-    exit 0
+	exit 0
 fi
 
 # 既存データを読み込み
@@ -24,7 +24,7 @@ existing_data=$(cat "$tmp_file")
 start_timestamp=$(echo "$existing_data" | jq -r '.startTimestamp')
 
 if [ -z "$start_timestamp" ] || [ "$start_timestamp" = "null" ]; then
-    exit 0
+	exit 0
 fi
 
 # 現在のタイムスタンプとdurationを計算
@@ -40,13 +40,13 @@ start_epoch=$(date -j -f "%Y-%m-%dT%H:%M:%SZ" "$start_timestamp" +%s 2>/dev/null
 current_epoch=$(date -j -f "%Y-%m-%dT%H:%M:%SZ" "$current_timestamp" +%s 2>/dev/null || date -d "$current_timestamp" +%s 2>/dev/null)
 
 # 経過時間を計算してミリ秒単位に変換 (例: (1755767069 - 1755767058) * 1000 = 11000)
-duration=$(( (current_epoch - start_epoch) * 1000 ))
+duration=$(((current_epoch - start_epoch) * 1000))
 
 # データを更新
 echo "$existing_data" | jq \
-  --arg current_timestamp "$current_timestamp" \
-  --argjson duration "$duration" \
-  '.lastUpdate = $current_timestamp | .duration = $duration | .status = "active"' \
-  > "$tmp_file"
+	--arg current_timestamp "$current_timestamp" \
+	--argjson duration "$duration" \
+	'.lastUpdate = $current_timestamp | .duration = $duration | .status = "active"' \
+	>"$tmp_file"
 
 exit 0

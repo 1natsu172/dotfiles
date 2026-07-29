@@ -21,13 +21,13 @@ enhanced_input=$(echo "$input" | jq --arg timestamp "$timestamp" '. + {debug_tim
 
 # Append to the debug file (create if it doesn't exist)
 if [[ -f "$output_file" ]]; then
-    # File exists, append as array element
-    tmp_file=$(mktemp)
-    jq --argjson new_entry "$enhanced_input" '. + [$new_entry]' "$output_file" > "$tmp_file"
-    mv "$tmp_file" "$output_file"
+	# File exists, append as array element
+	tmp_file=$(mktemp)
+	jq --argjson new_entry "$enhanced_input" '. + [$new_entry]' "$output_file" >"$tmp_file"
+	mv "$tmp_file" "$output_file"
 else
-    # File doesn't exist, create new array
-    echo "[$enhanced_input]" > "$output_file"
+	# File doesn't exist, create new array
+	echo "[$enhanced_input]" >"$output_file"
 fi
 
 # Optional: Log to stderr for debugging

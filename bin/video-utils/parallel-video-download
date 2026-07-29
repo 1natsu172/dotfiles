@@ -280,7 +280,7 @@ show_configuration() {
 
 	local mode_prefix=""
 	[[ "$DRY_RUN" == "true" ]] && mode_prefix="[DRY RUN] "
-	
+
 	log_info "${mode_prefix}=== 設定情報 ==="
 	log_info "${mode_prefix}出力ディレクトリ: $OUTPUT_DIR"
 	log_info "${mode_prefix}同時ダウンロード数: $MAX_CONCURRENT"
@@ -302,7 +302,7 @@ show_configuration() {
 execute_parallel_downloads() {
 	if [[ "$DRY_RUN" == "true" ]]; then
 		log_info "[DRY RUN] 実行内容の確認を開始します..."
-		
+
 		# Export functions and variables for xargs subprocesses
 		export -f download_video record_failed_url log_info log_error log_success log_warning
 		export OUTPUT_DIR ARIA2_CONNECTIONS FAILED_URLS_FILE DRY_RUN
@@ -310,7 +310,7 @@ execute_parallel_downloads() {
 		# Execute dry-run checks using xargs
 		grep "^[^#[:space:]]" "$URL_FILE" |
 			xargs -n 1 -P "$MAX_CONCURRENT" -I {} bash -c 'download_video "$@"' _ {}
-		
+
 		log_info "[DRY RUN] 実行内容の確認が完了しました"
 		return 0
 	fi

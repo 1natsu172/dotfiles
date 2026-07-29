@@ -42,31 +42,31 @@ HEADER="\
 
 # Render a wrapper file body. $1 = printf template for one tool (takes the name twice).
 emit() {
-    printf '%s\n' "$HEADER"
-    local t
-    for t in "${TOOLS[@]}"; do
-        # shellcheck disable=SC2059  # $1 is a trusted in-script format, not user input.
-        printf "$1" "$t" "$t"
-    done
+	printf '%s\n' "$HEADER"
+	local t
+	for t in "${TOOLS[@]}"; do
+		# shellcheck disable=SC2059  # $1 is a trusted in-script format, not user input.
+		printf "$1" "$t" "$t"
+	done
 }
 
 # Write a generated file, skipping the write (and mtime churn) when unchanged. Idempotent.
 write_file() {
-    local dest="$1" content="$2"
-    mkdir -p "$(dirname "$dest")"
-    if [ -e "$dest" ] && [ "$content" = "$(<"$dest")" ]; then
-        printf 'unchanged: %s\n' "$dest"
-    else
-        printf '%s\n' "$content" >"$dest"
-        printf 'updated:   %s\n' "$dest"
-    fi
+	local dest="$1" content="$2"
+	mkdir -p "$(dirname "$dest")"
+	if [ -e "$dest" ] && [ "$content" = "$(<"$dest")" ]; then
+		printf 'unchanged: %s\n' "$dest"
+	else
+		printf '%s\n' "$content" >"$dest"
+		printf 'updated:   %s\n' "$dest"
+	fi
 }
 
 # The single-quoted templates intentionally contain literal `"$@"` / `$argv` — they are
 # printf formats written verbatim into the generated wrapper files, not expanded here.
 # shellcheck disable=SC2016
 write_file "${DOT_DIRECTORY}/bin/fnox-wrappers.sh" \
-    "$(emit '%s() { fnox exec -- %s "$@"; }\n')"
+	"$(emit '%s() { fnox exec -- %s "$@"; }\n')"
 # shellcheck disable=SC2016
 write_file "${DOT_DIRECTORY}/.config/fish/conf.d/fnox-wrappers.fish" \
-    "$(emit 'function %s; fnox exec -- %s $argv; end\n')"
+	"$(emit 'function %s; fnox exec -- %s $argv; end\n')"
