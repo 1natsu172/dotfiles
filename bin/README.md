@@ -64,10 +64,15 @@ PATH が前提にできる。冒頭に `BASH_VERSINFO` を見るガードを置�
 
 `fnox-wrappers.sh` は fish / zsh / bash の rc から source される生成物なので POSIX 関数のみ。
 
-なお shellcheck も shfmt も zsh を扱えない（shellcheck は `SC1071` で拒否、shfmt が受けるのは
-`bash/posix/mksh/bats`）。zsh で書くと検査の対象外になるので、**zsh 固有の機能が要らないなら
-bash で書く**。difiti は元々 zsh だったが zsh 固有の構文が無かったので bash に寄せた。zsh を
-禁止はしておらず、必要なら置ける（lint は shebang を見て理由付きで対象外にする）。
+なお **shellcheck は zsh を扱えない**（`SC1071` で拒否。0.11.0 が最新なので当面は変わらない）。
+shfmt は 3.13.0 で zsh に対応したため整形はできるが、静的検査が効かないことに変わりはない。
+そのため **zsh 固有の機能が要らないなら bash で書く**。difiti は元々 zsh だったが zsh 固有の
+構文が無かったので bash に寄せた（移した直後に SC2086 が出た）。
+
+zsh を禁止はしておらず、必要なら置ける。lint は shebang を見て理由付きで対象外にする。zsh の
+スクリプトを置いたうえで整形だけは掛けたくなったら、`mise-tasks/lint/shell` の振り分けを
+「shellcheck に渡すもの」と「shfmt に渡すもの」に分ければよい。現状は zsh のファイルが 1 本も
+無いので分けていない。
 
 整形は shfmt のデフォルト（タブ）に揃える。shfmt はコマンドラインに整形フラグを 1 つでも
 渡すと EditorConfig の設定を全て無視する仕様なので、フラグは意図的に渡さない。
