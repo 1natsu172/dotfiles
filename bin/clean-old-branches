@@ -111,7 +111,9 @@ while IFS= read -r branch; do
 
   if git branch -d "$branch" 2>/dev/null; then
     echo "  ✅ $branch"
-    ((DELETED_COUNT++))
+    # `((n++))` は後置なので式の値がインクリメント前の値になる。0 のとき (( )) は
+    # 終了ステータス 1 を返し、set -e がそこでスクリプトを止めてしまう。
+    DELETED_COUNT=$((DELETED_COUNT + 1))
   else
     echo "  ⚠️  $branch (マージされていません)"
     FAILED_BRANCHES="$FAILED_BRANCHES$branch\n"

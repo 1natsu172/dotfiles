@@ -252,7 +252,9 @@ fi
 failed_count=0
 for worktree in "${SELECTED_WORKTREES[@]}"; do
   if ! execute_on_worktree "$worktree" "$COMMAND"; then
-    ((failed_count++))
+    # `((n++))` は後置なので式の値がインクリメント前の値になる。0 のとき (( )) は
+    # 終了ステータス 1 を返し、set -e がそこでスクリプトを止めてしまう。
+    failed_count=$((failed_count + 1))
   fi
 done
 

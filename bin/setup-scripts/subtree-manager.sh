@@ -193,12 +193,14 @@ add_all_subtrees() {
         
         if subtree_exists "$target_path"; then
             echo "$(tput setaf 2)✓ $config_key already exists, skipping$(tput sgr0)"
-            ((skipped_count++))
+            # `((n++))` は後置なので式の値がインクリメント前の値になる。0 のとき (( )) は
+            # 終了ステータス 1 を返し、set -e がそこでスクリプトを止めてしまう。
+            skipped_count=$((skipped_count + 1))
         else
             if add_configured_subtree "$config_key"; then
-                ((added_count++))
+                added_count=$((added_count + 1))
             else
-                ((error_count++))
+                error_count=$((error_count + 1))
             fi
         fi
         echo "----------------------------------------"
@@ -228,9 +230,11 @@ update_all_subtrees() {
         read -r _ config_key _ _ _ <<< "$entry"
         
         if update_subtree "$config_key"; then
-            ((updated_count++))
+            # `((n++))` は後置なので式の値がインクリメント前の値になる。0 のとき (( )) は
+            # 終了ステータス 1 を返し、set -e がそこでスクリプトを止めてしまう。
+            updated_count=$((updated_count + 1))
         else
-            ((error_count++))
+            error_count=$((error_count + 1))
         fi
         echo "----------------------------------------"
     done
