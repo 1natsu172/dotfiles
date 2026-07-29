@@ -15,6 +15,10 @@ brew "aqua"
 brew "aria2"
 # Official Amazon AWS command-line interface
 brew "awscli"
+# Bourne-Again SHell, a UNIX command interpreter
+# macOS 同梱の bash は 3.2 固定。bin/ の対話起動 script はこちら（`#!/usr/bin/env bash`
+# が PATH 先頭の /opt/homebrew/bin を拾う）を前提に bash 4.4+ を要求する。
+brew "bash"
 # Clone of cat(1) with syntax highlighting and Git integration
 brew "bat"
 # Powerful, enterprise-ready, open source web server with automatic HTTPS

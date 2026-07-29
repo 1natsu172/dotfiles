@@ -10,6 +10,12 @@
 # Author: Generated with Claude Code
 #
 
+# 対話起動の script なので bash 4.4+ を要求する（使い分けの理由は bin/README.md）。
+if ((BASH_VERSINFO[0] * 100 + BASH_VERSINFO[1] < 404)); then
+	echo "bash 4.4+ が必要です（現在 ${BASH_VERSION}）。brew install bash で導入してください。" >&2
+	exit 1
+fi
+
 set -euo pipefail
 
 # =============================================================================
