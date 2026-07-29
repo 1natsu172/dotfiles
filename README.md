@@ -91,10 +91,10 @@ mise install        # lefthook を入れる
 lefthook install    # .git/hooks/pre-commit を生成
 ```
 
-`lefthook.yml` で `no_auto_install: true` を指定しているため、hook の自動同期は走らない
-（理由は `lefthook.yml` のコメント）。生成される hook は `lefthook run pre-commit` を呼ぶ
-だけのランチャで設定は実行時に読まれるので、既存 hook の中身を変えるだけなら再同期は
-不要。`pre-push` など**新しい hook 種別を足したときだけ** `lefthook install` を叩き直す。
+`lefthook.yml` で `no_auto_install: true` を指定しているため、hook の自動同期は走らない。
+生成される hook は `lefthook run pre-commit` を呼ぶだけのランチャで設定は実行時に読まれる
+ので、既存 hook の中身を変えるだけなら再同期は不要。`pre-push` など**新しい hook 種別を
+足したときだけ** `lefthook install` を叩き直す。
 
 ### MacOSXの設定
 
