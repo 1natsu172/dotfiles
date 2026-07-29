@@ -60,10 +60,14 @@ PATH が前提にできる。冒頭に `BASH_VERSINFO` を見るガードを置�
 - `credential-helper.sh` — git が呼ぶ。`#!/bin/sh` で POSIX の範囲に留める
 - `install-fnox-shell-wrappers` と repo ルートの `install.sh` — README のセットアップ手順で
   `brew bundle` より前に走る。新規マシンではまだ bash 5 が存在しない
-- `sample-script.sh` — `gwte` の動作確認用。特別な機能を使わない
+- `sample-script.sh` と `difiti` — bash 4 以降の機能を使わないので、要求を上げる理由がない
 
 `fnox-wrappers.sh` は fish / zsh / bash の rc から source される生成物なので POSIX 関数のみ。
-`difiti` は zsh。
+
+なお shellcheck も shfmt も zsh を扱えない（shellcheck は `SC1071` で拒否、shfmt が受けるのは
+`bash/posix/mksh/bats`）。zsh で書くと検査の対象外になるので、**zsh 固有の機能が要らないなら
+bash で書く**。difiti は元々 zsh だったが zsh 固有の構文が無かったので bash に寄せた。zsh を
+禁止はしておらず、必要なら置ける（lint は shebang を見て理由付きで対象外にする）。
 
 整形は shfmt のデフォルト（タブ）に揃える。shfmt はコマンドラインに整形フラグを 1 つでも
 渡すと EditorConfig の設定を全て無視する仕様なので、フラグは意図的に渡さない。

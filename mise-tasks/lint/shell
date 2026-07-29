@@ -16,8 +16,9 @@ fi
 
 # 渡されたファイルを、shell script とそれ以外に振り分ける。lefthook の glob は拡張子では
 # なくディレクトリで絞っているので、mise-tasks/ に shell 以外のタスクが増えたときは
-# ここで落ちる。zsh で書かれた difiti と、shebang を持たない生成物の fnox-wrappers.sh も
-# 同じく対象外になる。
+# ここで落ちる。shebang を持たない生成物の fnox-wrappers.sh も同じく対象外になる。
+# zsh を弾いているのは shellcheck が扱えないため（SC1071）。shfmt も bash/posix/mksh/bats
+# しか受けないので、zsh で書いた時点で検査できるものが無くなる。
 targets=""
 skipped=""
 symlinks=""
