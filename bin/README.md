@@ -65,8 +65,12 @@ PATH が前提にできる。冒頭に `BASH_VERSINFO` を見るガードを置�
 `fnox-wrappers.sh` は fish / zsh / bash の rc から source される生成物なので POSIX 関数のみ。
 `difiti` は zsh。
 
+整形は shfmt のデフォルト（タブ）に揃える。shfmt はコマンドラインに整形フラグを 1 つでも
+渡すと EditorConfig の設定を全て無視する仕様なので、フラグは意図的に渡さない。
+
 この方針は `mise run lint:shell`（実体は `mise-tasks/lint/shell`）が検査する。`lefthook.yml`
-から pre-commit で起動し、commit のたびに自動で走る。4.4+ のガードを持たないスクリプトに
+から pre-commit で起動し、commit のたびに自動で走る。整形のずれは不一致のファイルと
+`shfmt -w` の修正コマンドを出して落ちる。4.4+ のガードを持たないスクリプトに
 `/bin/bash -n` を掛け、加えて bash 4 以降でしか使えない機能を正規表現で弾く。`-n` は構文しか
 見ないので、`declare -A` や `mapfile` のように構文としては正しい builtin の呼び出しを捕まえる
 にはこの二つ目が要る。どちらも静的検査なので、実行時にしか現れない差は検出できない。

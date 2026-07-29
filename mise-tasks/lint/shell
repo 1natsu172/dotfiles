@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-#MISE description="shell script を shellcheck と bash 3.2 互換チェックに掛ける"
+#MISE description="shell script を shellcheck / shfmt / bash 3.2 互換チェックに掛ける"
 
 set -euo pipefail
 
@@ -60,7 +60,20 @@ if [ -z "$targets" ]; then
 	exit 0
 fi
 
-printf '%s' "$targets" | xargs shellcheck -f gcc
+status=0
+
+printf '%s' "$targets" | xargs shellcheck -f gcc || status=1
+
+# 整形は shfmt のデフォルト（タブ）に揃える。フラグを渡すと EditorConfig の設定が
+# 全て無効になる仕様なので、意図的に何も渡さない（man: "If any parser or printer flags
+# are given to the tool, no EditorConfig formatting options will be used"）。
+unformatted=$({ printf '%s' "$targets" | xargs shfmt -l; } || true)
+if [ -n "$unformatted" ]; then
+	echo "整形が shfmt と一致しません:" >&2
+	printf '%s\n' "$unformatted" | sed 's/^/  - /' >&2
+	echo "  直すには: shfmt -w $(printf '%s' "$unformatted" | tr '\n' ' ')" >&2
+	status=1
+fi
 
 # ここから bash 3.2 互換チェック。
 #
@@ -79,7 +92,6 @@ printf '%s' "$targets" | xargs shellcheck -f gcc
 # しまうのも避けられる。
 bash4_only='(declare|local|typeset)[[:space:]]+-[a-zA-Z]*A|\bmapfile\b|\breadarray\b|\bcoproc\b|\$\{[A-Za-z_][A-Za-z0-9_]*[^}]*(\^\^|,,)|wait[[:space:]]+-n\b|&>>'
 
-status=0
 while IFS= read -r f; do
 	case "$f" in
 	bin/* | install.sh) ;;
@@ -101,7 +113,6 @@ $targets
 EOF
 
 if [ "$status" -ne 0 ]; then
-	echo "bash 3.2 互換チェックに失敗しました" >&2
 	exit 1
 fi
 

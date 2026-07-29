@@ -84,7 +84,7 @@ brew bundle
 ### git hooks (lefthook)
 
 `.git/hooks/` は追跡できないので、clone 後に一度だけ有効化する。commit 時に
-`mise run lint:shell`（shell script の shellcheck と bash 3.2 互換チェック）が走るようになる。
+`mise run lint:shell`（shellcheck・shfmt・bash 3.2 互換チェック）が走るようになる。
 
 ```
 mise install        # lefthook を入れる
