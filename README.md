@@ -290,6 +290,7 @@ Authorization ヘッダへの注入（Claude Code の headersHelper 経由）も
 |---|---|---|
 | Claude Code | `~/.claude/CLAUDE.md` | `dotfiles/CLAUDE.md` |
 | Codex | `~/.codex/AGENTS.md` | `dotfiles/AGENTS.md`（実態はsymlink） |
+| Gemini CLI | `~/.gemini/GEMINI.md` | （repo 用は持たない） |
 
 - 作業ルールの本体は `.claude/CLAUDE.md` の1箇所だけ。Codex と Gemini の global はそこを参照するだけの薄いファイルにしてある
 - Claude Code は `AGENTS.md` を読まず、AGENTS.md 系のツールは `CLAUDE.md` を読まない。そのため `AGENTS.md` を `CLAUDE.md` への symlink にして、どちらのツールにも同じ index が渡るようにしている
@@ -313,6 +314,8 @@ vercel/skillsで管理されており、`.agents/.skill-lock.json` でグロー�
 marketplaceからuser scopeでグローバル有効にしたものは、 `~/.claude/settings.json` に書き込まれる。
 プロジェクトごとにproject scopeで有効にしたものは `<project_dir>/.claude/settings.json` に書き込まれる。
 プロジェクトごとにlocal scopeで有効にしたものは `<project_dir>/.claude/settings.local.json` に書き込まれる。
+
+marketplace 自体の**宣言の source of truth は `settings.json` の `extraKnownMarketplaces`**（`source` だけを持つマシン非依存の記述）。これがあれば手動の `/plugin marketplace add` なしで起動時に自動登録される。対して `~/.claude/plugins/known_marketplaces.json` は `installLocation` の絶対パスと `lastUpdated` を持つ per-user のランタイム state で、Claude Code が起動時に再生成するため**追跡しない**（`installed_plugins.json` 等 plugins 配下の他の state も同様）。
 
 #### セキュリティ運用（Sandbox / Permission の二層モデル）
 
