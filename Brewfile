@@ -2,7 +2,6 @@ tap "aquaproj/aqua", trusted: true
 tap "distroav/distroav", trusted: true
 tap "entireio/tap", trusted: true
 tap "github/gh", trusted: true
-tap "modem-dev/tap"
 tap "rjyo/moshi", trusted: true
 tap "sikarugir-app/sikarugir", "https://github.com/Sikarugir-App/homebrew-sikarugir", trusted: true
 # Static analysis and lint tool, for (ba)sh scripts
@@ -53,6 +52,8 @@ brew "git-lfs"
 brew "helix"
 # Agent multiplexer that lives in your terminal
 brew "herdr"
+# Review-first terminal diff viewer for agent-authored changesets
+brew "hunk"
 # Tools and libraries to manipulate images in select formats
 brew "imagemagick"
 # Lightweight and flexible command-line JSON processor
@@ -89,8 +90,6 @@ brew "watchman"
 brew "yt-dlp"
 # Shell extension to navigate your filesystem faster
 brew "zoxide"
-# Desktop-inspired terminal diff viewer for agent-authored changesets
-brew "modem-dev/tap/hunk", trusted: true
 # Portable daemon + CLI that bridges AI coding agents to the Moshi mobile app
 brew "rjyo/moshi/moshi-hook"
 # Password manager that keeps all passwords secure behind one password
