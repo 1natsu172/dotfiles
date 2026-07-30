@@ -335,10 +335,6 @@ vercel/skillsで管理されており、`.agents/.skill-lock.json` でグロー�
 
 プロジェクト固有のMCPは、プロジェクトごとに `.mcp.json` を用意して、プロジェクトの `.claude/settings.json` で管理する。またプロジェクトの都合でマシンWidenなMCPをdisableにしたい場合は、個別に `~/.claude.json` のリポジトリスコープの設定でコントロールする（ `/mcp` で操作すると自動で記述される）。
 
-##### context7
-
-例外的にsetupを `bunx ctx7 setup --oauth` でセットアップしている。このコマンドはmcpの設定＋各AIツールのSKILL最適化したものを展開するので純粋なSKILL配置ではないのであえて `bunx skills add` で他のSKILLSと同じように展開していない。
-
 #### plugins
 
 marketplaceからuser scopeでグローバル有効にしたものは、 `~/.claude/settings.json` に書き込まれる。
