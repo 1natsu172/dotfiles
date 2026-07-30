@@ -7,4 +7,5 @@ font-size = 28
 quick-terminal-animation-duration = 0
 keybind = shift+enter=text:\n
 keybind = global:ctrl+escape=toggle_quick_terminal
+# kitty keyboard protocol 非対応の TUI 用(例: Claude Code の option+p)。代償に IME の option+x が死ぬので変換中は F7 で代替
 macos-option-as-alt = true
