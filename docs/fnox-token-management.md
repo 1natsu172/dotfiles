@@ -42,7 +42,10 @@
 - **provider 認証専用の token**（例: op provider の SA token `OP_SA_…`）。注入は不要で、むしろ注入すると
   消費プロセス（npm の子・postinstall 等）に vault 全体を引ける SA token（root 資格情報）が漏れる。
   `env = false` で default `[secrets]` に 1 度だけ宣言すれば、各 provider/profile から認証に使えて env には
-  載らない。
+  載らない。**この token を `[secrets]` から消して keychain から直接引く形にはできない**（op provider の
+  `token` フィールドの型が `"literal"` か `{ secret = "NAME" }` の 2 択で、age の
+  `identity = { provider = "keychain", … }` のような provider 参照を受け付けない）。SA token は
+  `[secrets]` エントリにせざるを得ず、**漏れ対策は `env = false` 一択**。
 - **`fnox get` でだけ取りたい secret**（例: headersHelper が引く MCP token）。
 
 注意: `env = false` は**注入を止めるだけで解決（provider fetch）は止めない**。`fnox exec` は対象 profile の
@@ -195,6 +198,12 @@ remote MCP では client ごと env 注入が要り IDE で穴になる）。承
    その値を使うツールがラッパー関数経由（npm/yarn/pnpm/bun 等）なら、追加設定なしで env に入る（**read 解放したファイルに平文を書かない**）。
 4. 別 vault / 別 SA が要るなら provider を追加（命名規約に従う）。SA token の Keychain 登録は
    `echo "<ops token>" | fnox set <参照名> --provider keychain --global`（stdin で history 非露出、初回ダイアログで「Always Allow」）。
+
+> **`fnox set` の副作用に注意**: `fnox set <NAME> --provider <p>` は keychain への格納と**同時に default
+> `[secrets]` へ `<NAME>` のエントリ（`env` 既定 true）も書く**。provider の `identity`/`token` 用に鍵を
+> 入れる目的で叩いただけでも、その鍵が以後すべての `fnox exec` で子プロセスの env に載る（age 私有鍵
+> `AGE_IDENTITY` で実際に発生した）。**provider が keychain を直接引く用途なら、書かれた `[secrets]` 行は
+> 手で削除する**（keychain の実体は残るので機能は落ちない）。残す必要がある場合は `env = false` を付ける。
 5. op を介さず **commit する暗号文**で持ちたい secret は age provider を使う：
    `fnox set <SECRET_NAME> "<値>" --provider age`（→ `{ provider="age", value="..." }` が config に書かれ commit 可。詳細は上述「age provider」）。
 
@@ -219,6 +228,7 @@ deny する。詳細・根拠は [docs/claude-code-security.md](./claude-code-se
 |---|---|---|
 | (a) fnox / op の障害・upstream 破壊 | `fnox exec` が動かず token 注入が落ちる | `command <tool>` で実体を直接起動 |
 | (b) ラッパー関数自体のバグ | 関数経路が壊れる | `fnox-wrappers.sh` の source 行 / conf.d ファイルを外す |
+| (c) 注入方式そのものの運用破綻 | (a)(b) の単発回避では収まらず、日常的に打てない状態が続く | `fnox activate` へ倒す（下記） |
 
 ### (a) `command <tool>`（per-command）
 
@@ -236,6 +246,19 @@ command npm ci        # その 1 コマンドだけ素通し（fnox 非経由）
 関数定義そのものが壊れている場合は、`~/.zshrc`/`~/.bashrc` の `fnox-wrappers.sh` を source する 1 行を
 コメントアウトし、fish は `~/.config/fish/conf.d/fnox-wrappers.fish` を退避して、シェルを再読込する。以後
 npm/bun は素の実体が動く（fnox 非経由）。生成物の復旧は `bin/install-fnox-shell-wrappers`（冪等に再生成）。
+
+### (c) `fnox activate` へ倒す（セキュリティモデルを緩める退避策）
+
+注入専念（`fnox exec` / `fnox get`）の運用が回らなくなったときの最終退避先は、**`fnox activate` で親シェルに
+env を展開する**方向へ倒すこと。**平常時は採らない**。
+
+- **なぜ平常時は採らないか**: activate するとシェル配下のどの子プロセスからでも `env` で token が読める。
+  「必要なプロセスにだけ注入する」という粒度が丸ごと失われ、この基盤の主目的（Shai-Hulud 型の postinstall や
+  プロンプトインジェクション経由の env 漁りに対する blast radius の縮小）が薄まる。毎回 `fnox exec` を挟む
+  不自由さは、その粒度と引き換えに受け入れているコスト。
+- **なぜそれでも妥当な退避先か**: activate に倒しても **平文を disk に置かない**という一段目の利点は残る。
+  漏れる範囲がシェル配下に広がるだけで、disk 上の平文 token より悪化はしない。
+- **緩める判断をするときも「平文を disk に置かない」線は守る**。ここを割ると基盤ごと意味を失う。
 
 ## 平常時の意図的 bypass（秘匿不要・レイテンシ敏感）
 
