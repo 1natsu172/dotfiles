@@ -48,27 +48,27 @@
 
 ## ファイル別の保護方針
 
-新しい機密パスを足すときは、まず**保護クラス**を決め、レシピを**丸ごと**適用する。層ごとに場当たりで一部だけ書くとドリフトして片方の層に穴が残る（過去の 1Password write 無防備・認証 dir の Claude-tool write 開放がこれ）。**write 防御は必ず `Edit(...)` を書く**（組み込み file tool 全経路をカバー。`Write(...)` は無機能なので書かない＝`D3`）。Bash subprocess 経路は sandbox `denyWrite` が担う。
+新しい機密パスを足すときは、まず**保護クラス**を決め、レシピを**丸ごと**適用する。層ごとに場当たりで一部だけ書くとドリフトして片方の層に穴が残る（過去の 1Password write 無防備・認証 dir の Claude-tool write 開放がこれ）。**write 防御は必ず `Edit(...)` を書く**（組み込み file tool 全経路をカバーし、`D9` により sandbox 境界へマージされて Bash subprocess も塞ぐ。`Write(...)` は無機能なので書かない＝`D3`）。sandbox `denyWrite` が**実効として要る**のは、パターンで表現しない／Edit deny を掛けたくない対象だけ（`D9`）。それ以外の列挙は明示性のための意図的な冗長（→「帰結」）。
 
 | クラス | 例 | レシピ |
 |--------|-----|--------|
 | **A. 全遮断ディレクトリ**（read も write も不可） | `~/.ssh` `~/.aws` `~/.kube` `~/.gnupg/private-keys-v1.d`、および dotfiles 管理下は実体パスで `~/dotfiles/.config/{gh,op,1Password}`（`D10`） | Permission `Read(~/dir/**)` + `Edit(~/dir/**)`（read 自動マージで subprocess も。write は Edit で新規作成も止まる）。＋明示性で sandbox `denyRead`/`denyWrite` も列挙 |
-| **B. 公開 dotfile**（read 可・write 不可） | `~/.gitconfig` `~/.npmrc`（home） | Permission `Edit(~/file)`。Read deny は**書かない**。＋ sandbox `denyWrite` |
-| **C. 解放だが改ざん防止**（read 可・write 不可） | shell rc（`~/.bashrc` `~/.zshrc` `~/.config/fish`）、gpg conf | exact-file または `~/dir/**` で Permission `Edit`。＋ sandbox `denyWrite`（allow 内例外はここが実効） |
-| **D. FS 全体対称 deny**（`//**`） | 秘密鍵 `*.pem` `*.key` `id_rsa` 等 | Permission `Read(//**/X)` + `Edit(//**/X)`（read は sandbox マージで subprocess も遮断。unsandbox は `D1` の viewer 漏れが残る。**Bash subprocess の write は sandbox `denyWrite` 未列挙のため OS 遮断されない**＝Claude file tool 経路のみ Edit で塞ぐ限界を許容） |
+| **B. 公開 dotfile**（read 可・write 不可） | `~/dotfiles/.gitconfig` `~/dotfiles/.npmrc` | Permission `Edit(~/dotfiles/file)`。Read deny は**書かない**。＋ sandbox `denyWrite` |
+| **C. 解放だが改ざん防止**（read 可・write 不可） | shell rc（`~/dotfiles/.bashrc` `~/dotfiles/.zshrc` `~/dotfiles/.config/fish`）、gpg conf | exact-file または `~/dir/**` で Permission `Edit`。＋ sandbox `denyWrite`（allow 内例外はここが実効） |
+| **D. FS 全体対称 deny**（`//**`） | 秘密鍵 `*.pem` `*.key` `id_rsa` 等 | Permission `Read(//**/X)` + `Edit(//**/X)`（read は sandbox マージで subprocess も遮断。unsandbox は `D1` の viewer 漏れが残る。write は `D9` により Edit deny が sandbox 境界へマージされ **file tool と Bash subprocess の両経路**を塞ぐ＝sandbox `denyWrite` への列挙は不要） |
 | **E. secret / 認証ファイル名**（read 可・write 不可） | `.env` `.env.*` `secrets/**` `*secret*` `*credential*` `*auth*.{json,toml,yaml,yml}` | Permission `Edit(//**/X)` を **FS 全体アンカー**で書く。`D9` により file tool と Bash subprocess の**両経路**が塞がる（sandbox `denyWrite` への列挙は不要） |
 | **F. ツールの認証ファイル・ディレクトリ**（read も不可） | `~/dotfiles/.codex/auth.json`・`~/dotfiles/.config/{gh,op}` | クラスE の write 防御に加えて `Read(...)` deny を書く。パスは**実体のある側**で書く（`D10`）。`sandbox.credentials.files` は使わない（`Read()` で足りる） |
 
 | パス | Read | Write | 区分 |
 |------|------|-------|------|
-| `~/.gitconfig` | 解放 | sandbox `denyWrite` + Permission `Edit` deny | 公開 dotfile |
-| `~/.npmrc` | 解放 | sandbox `denyWrite` + Permission `Edit` deny | 公開 dotfile |
-| `.env` 等（プロジェクト内 secret） | 解放 | Permission `Edit(**/X)` deny（組み込み file tool のみ。Bash subprocess は sandbox 未列挙で非遮断） | read 解放・write 防止（tool 経路のみ） |
-| 秘密鍵 `*.pem` `*.key` `id_rsa` `id_ed25519` `id_ecdsa` `id_dsa` | Permission `Read(//**/...)` で FS 全体遮断 | Permission `Edit(//**/...)` で FS 全体遮断（改ざん・偽鍵設置防止。組み込み file tool 経路） | 明示 deny（read は対称遮断、write は tool 経路のみ） |
-| `~/.ssh` `~/.aws` `~/.config/gh` `~/.config/op` `~/.config/1Password` `~/.kube` `~/.gnupg/private-keys-v1.d` | sandbox `denyRead` + Permission `Read(~/dir/**)` deny | sandbox `denyWrite` + Permission `Edit(~/dir/**)` deny | ディレクトリ全遮断（read/write とも subprocess + Claude tool） |
+| `~/dotfiles/.gitconfig` | 解放 | sandbox `denyWrite` + Permission `Edit` deny | 公開 dotfile |
+| `~/dotfiles/.npmrc` | 解放 | sandbox `denyWrite` + Permission `Edit(//**/.npmrc)` deny | 公開 dotfile |
+| `.env` 等（プロジェクト内 secret） | 解放 | Permission `Edit(//**/X)` deny（`D9` により file tool と Bash subprocess の両経路） | read 解放・write 防止 |
+| 秘密鍵 `*.pem` `*.key` `id_rsa` `id_ed25519` `id_ecdsa` `id_dsa` | Permission `Read(//**/...)` で FS 全体遮断 | Permission `Edit(//**/...)` で FS 全体遮断（改ざん・偽鍵設置防止。`D9` により両経路） | 明示 deny（read/write とも対称遮断） |
+| `~/.ssh` `~/.aws` `~/.kube` `~/.gnupg/private-keys-v1.d`、`~/dotfiles/.config/{gh,op,1Password}` | sandbox `denyRead` + Permission `Read(~/dir/**)` deny | sandbox `denyWrite` + Permission `Edit(~/dir/**)` deny | ディレクトリ全遮断（read/write とも subprocess + Claude tool）。dotfiles 実体側は `~/dotfiles/...` 綴り（`D10`） |
 | `~/.docker` | dir 全体: sandbox `denyRead`／config.json: Permission `Read` deny | dir 全体: sandbox `denyWrite`／config.json: Permission `Edit` deny | 認証実体 config.json を全経路遮断（他ファイルは Claude tool から読める） |
 | `~/.netrc` | sandbox `denyRead` + Permission `Read` deny | sandbox `denyWrite` + Permission `Edit` deny | 認証情報遮断 |
-| `~/.bashrc` `~/.zshrc` `~/.config/fish` | 解放 | sandbox `denyWrite` + Permission `Edit` deny | rc 改ざん（ログイン時コード実行）防止 |
+| `~/dotfiles/.bashrc` `~/dotfiles/.zshrc` `~/dotfiles/.config/fish` | 解放 | sandbox `denyWrite` + Permission `Edit` deny | rc 改ざん（ログイン時コード実行）防止 |
 | `~/.gnupg`（conf 以外） | 解放（agent 通信・署名検証に必要） | sandbox `allowWrite` で許可。ただし `gpg-agent.conf`/`gpg.conf`/`dirmngr.conf` は sandbox `denyWrite` + Permission `Edit` deny | 署名運用・設定改ざん防止 |
 
 ### 公開 dotfile（`~/.gitconfig` / `~/.npmrc`）
@@ -81,7 +81,7 @@ read を解放し、write のみ防御する。
 
 ### 秘密鍵・シークレット系
 
-- 秘密鍵は `*.pem` `*.key` `id_rsa` `id_ed25519` `id_ecdsa` `id_dsa` の各パターンを **`Read` は `//**/...`（FS 全体）で対称遮断**（read=exfil 防止。sandbox マージで subprocess も OS レベル遮断）し、**`Edit(//**/...)` で改ざん・偽鍵設置を防止**（組み込み file tool 経路。`Write(...)` は無機能なので書かない＝`D3`）。`Read(//**/*.key)`/`Read(//**/*.pem)` は秘密鍵以外の `.key`（i18n キー等）や**公開 CA バンドル（`cert.pem`）**も巻き込む。CA バンドルを巻き込むと sandbox 内 TLS が壊れる（`D4`）→「sandbox 内で TLS を通す」で read だけ個別解放（write は `Edit` ルールのまま遮断）。
+- 秘密鍵は `*.pem` `*.key` `id_rsa` `id_ed25519` `id_ecdsa` `id_dsa` の各パターンを **`Read` は `//**/...`（FS 全体）で対称遮断**（read=exfil 防止。sandbox マージで subprocess も OS レベル遮断）し、**`Edit(//**/...)` で改ざん・偽鍵設置を防止**（`D9` により file tool と Bash subprocess の両経路。`Write(...)` は無機能なので書かない＝`D3`）。`Read(//**/*.key)`/`Read(//**/*.pem)` は秘密鍵以外の `.key`（i18n キー等）や**公開 CA バンドル（`cert.pem`）**も巻き込む。CA バンドルを巻き込むと sandbox 内 TLS が壊れる（`D4`）→「sandbox 内で TLS を通す」で read だけ個別解放（write は `Edit` ルールのまま遮断）。
 - `.env`（プロジェクト内）は開発上の正当な read 用途があるため read 解放。書き換えは `Edit` で防止する。`D9` により Edit deny は sandbox 境界へマージされるので、**組み込み file tool と Bash subprocess の両方**がこれ 1 本で止まる。
 
 ### 認証ファイルは名前のパターンで塞ぐ
