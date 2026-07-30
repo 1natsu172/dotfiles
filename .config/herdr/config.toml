@@ -6,9 +6,28 @@ open_worktree = "prefix+alt+g"
 agent_panel_sort = "priority"
 
 show_agent_labels_on_pane_borders = true
+
+# agent 行の 2 段目 (agent 名) は overlay0 + DIM で描かれ、DIM が実効コントラストを半減させる。
+# 既定の rows をそのまま並べ、agent トークンの DIM だけ外す。
+[ui.sidebar.agents]
+rows = [
+  ["state_icon", "workspace", "tab"],
+  [{ token = "agent", dim = false }, { token = "state_text", dim = false }],
+]
+
 [theme]
 name = "nord"
 auto_switch = false
+
+# nord の overlay 系は panel_bg (#2E3440) に対して overlay0 = 1.69:1、overlay1 = 2.43:1 しかなく、
+# sidebar の見出し (spaces/agents)・操作ラベル (new/menu/priority)・branch 名が判読できない。
+# WCAG AA (4.5:1) を満たす明度へ引き上げる。コメントの比率は panel_bg に対する値。
+[theme.custom]
+overlay0 = "#9aa5ba" # 5.0:1  見出し・new/menu/priority・branch・非フォーカス pane 枠線
+overlay1 = "#b8c1d1" # 6.9:1
+mauve = "#c8a2c0"    # 5.6:1  選択中 space の branch 名 (nord の #B48EAD は 4.4:1)
+red = "#e08a93"      # 4.9:1  blocked (nord の #BF616A は 3.1:1)
+peach = "#dfa08a"    # 5.7:1  0.7.5 の UI では未参照だが、将来使われたとき用に揃えておく
 
 [ui.toast]
 delivery = "herdr"
