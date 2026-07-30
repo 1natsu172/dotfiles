@@ -15,6 +15,7 @@ macOS の個人 dotfiles。シェル・各種ツール・AI エージェント�
 - [docs/fnox-token-management.md](./docs/fnox-token-management.md) — 秘匿情報を disk に置かず、実行時に消費プロセスへ注入する仕組み
 - [docs/herdr-session-lifecycle.md](./docs/herdr-session-lifecycle.md) — herdr の server が detach を跨いで生存するため、シェル設定の変更が反映されない問題と対処。**config.fish / PATH を触ったら読むこと**
 - [docs/shell-env-management.md](./docs/shell-env-management.md) — PATH / 環境変数を mise に集約する方針、`brew shellenv` と `mise activate` の順序制約、fish の二重 activate。**config.fish / .zshrc / .bashrc / mise の config.toml を触る前に読むこと**
+- [docs/homebrew-maintenance-ops.md](./docs/homebrew-maintenance-ops.md) — Brewfile は生成物で状態の実体はレシート側にある。剪定・棚卸しの手順。**Brewfile を編集する前に読むこと**
 
 ## この repo を触るときの前提
 
@@ -22,6 +23,6 @@ macOS の個人 dotfiles。シェル・各種ツール・AI エージェント�
 - `.claude/settings.json`（permissions / sandbox）の変更は `.claude/rules/claude-code-settings.md` に従う。仕様は記憶や本 repo の doc でなく公式 Docs を一次情報にし、実機で検証してから確定する
 - 追跡対象は `.gitignore` の allowlist 方式。ツールの state / cache / 認証ファイルは追跡しない
 - セットアップ手順・macOS の手動設定・各ツールの運用方針は [README.md](./README.md)
+- AI が読む文章（このファイル・`.claude/rules/`・`docs/claude-code-security.md` の delta 表）は毎回コンテキストに載る。判断に効く事実だけ残し、実証手順や経緯は git 履歴に委ねる。ただし**参照先のポインタは削らない**（dead reference は辿り直しでかえって高くつく）。人間向けの運用説明は README.md や設定ファイルのコメント側へ置く
 - `bin/` の自作スクリプトの一覧と役割は [bin/README.md](./bin/README.md)（PATH は mise の `_.path` で通している）
 - shell script は要求 bash バージョンが 2 段（対話起動 = 4.4+、PATH 不定な hook / helper と bootstrap = 3.2 互換）。整形は shfmt、検査は `mise run lint:shell` が pre-commit で走る。**`bin/` を触る前に [bin/README.md の「bash のバージョン方針」](./bin/README.md#bash-のバージョン方針) を読むこと**
-- lefthook が sandbox で `sync hooks: ❌ operation not permitted` を出しても commit は成功している（[docs/claude-code-security.md](./docs/claude-code-security.md) の `D16`）
