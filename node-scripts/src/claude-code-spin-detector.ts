@@ -2,7 +2,7 @@
 /**
  * Claude Code Stop hook: モデルの「thinking 空転」（reasoning 非収束）を transcript から検出する。
  *
- * シグネチャ（Opus 4.8 で観測。kestrel の a9d84fa0 / b205add0 セッション参照）:
+ * シグネチャ:
  *   - A型: stop_reason === "max_tokens" なのに可視出力（thinking/text/tool入力）がほぼゼロ
  *          → 出力トークン予算を使い切っても収束しなかった完全空振りターン
  *   - B型: output_tokens が巨大（>= 30k）なのに可視出力がほぼゼロ
