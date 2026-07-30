@@ -102,7 +102,6 @@
       "Bash(curl *)",
       "Bash(wget *)",
       "Bash(rm *)",
-      "Bash(gh api *)",
       "Bash(gh workflow run *)",
       "Bash(gh run rerun *)",
       "Bash(* publish *)",
@@ -389,7 +388,8 @@
       "gh *",
       "fnox *",
       "git push -u origin *",
-      "git push --set-upstream origin *"
+      "git push --set-upstream origin *",
+      "hunk *"
     ]
   },
   "effortLevel": "high",
