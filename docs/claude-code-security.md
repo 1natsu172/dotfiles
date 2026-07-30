@@ -44,6 +44,7 @@
 | `D14` | 2026-07-28 | 2.1.220 | **hook の `if` フィルタは symlink を解決しない**。`if: "Edit(//Users/<user>/dotfiles/.claude/settings*.json)"`（実体パス）は、**同じファイルを `~/.claude/settings.json`（symlink 綴り）で編集した tool call にマッチせず hook が発火しなかった**。permission の deny rule は実体パスで書けば symlink 綴りのアクセスも捕まえる（`D10`）のに対し、`if` は tool の引数文字列に対する素のマッチという非対称。**対処は suffix アンカー**（`if: "Edit(//**/.claude/settings*.json)"`）で、実体パス・symlink 綴り・他プロジェクトの `.claude/settings.json` の 3 者とも発火を実測（非マッチのファイルではプロセスも起きない）。綴りごとに `if` を並べる必要はない |
 | `D15` | 2026-07-28 | 2.1.220 | **user へ出る hook 通知は 200 文字で打ち切られる（末尾 `…`）。しかも `[<hook の command>]: ` の接頭辞がその 200 文字に含まれる**。実測: SessionStart（exit 2）の表示が `[bun <スクリプトの絶対パス>]: ` 80 文字＋本文 120 文字＝ちょうど 200 文字＋`…`。**モデルへ返る PostToolUse の stderr は全文**（複数行そのまま）なので、切り詰めは「表示側の通知」だけ。**含意**: user 向けの hook は (1) 1 行目に結論を詰める、(2) 後ろから消えるので derive しやすい情報を末尾へ、(3) **command 文字列を短く書くほど本文の予算が増える**（`bun ~/dotfiles/…` と書けば絶対パスより 12 文字得。`~` はシェル経由で展開されるので動作は同じ＝実測）。接頭辞が出ること自体は upstream `#41226` で報告済み（closed）だが、**200 文字打ち切りの issue は検索した範囲では見つからなかった** |
 | `D16` | 2026-07-29 | 2.1.220 | **lefthook の hook 自動同期が `.git/hooks/` write-deny（`D5`）に当たる**。同期が hook ファイルの削除を伴うため commit のたびに `sync hooks: ❌ … remove … operation not permitted`。**commit は成功する**ので失敗と誤読しない。対策は deny を緩めず（git 操作での任意コード実行を開く）`lefthook.yml` に `no_auto_install: true`。生成 hook は `lefthook run <hook>` を呼ぶだけのランチャで設定は実行時読み＝既存 hook の変更に同期は不要、手動 `lefthook install` は hook 種別の追加時のみ。実証: `.git/info/lefthook.checksum` 削除で同期を踏ませ、設定の有無だけで再現・解消。発火条件は未特定だが `no_auto_install` は条件に依らず効く。lefthook `#1392`（sandbox の `setsid()` で `run:` 全滅）は `#1393` 修正済みの別問題 |
+| `D17` | 2026-06-26 | 未記録 | **macOS `security` CLI の書き込み系は sandbox 下で exit 0 のままサイレント no-op**（`list-keychains -s`・`default-keychain -s`・`delete-keychain` 等）。securityd への Mach/XPC IPC と `~/Library/Preferences/com.apple.security.plist`（write allowlist 外）への書き込みが Seatbelt で黙って弾かれる。読み取り系（引数なしの `list-keychains`・`find-*`）は通るので**成功したと誤読しやすい**。検出: 実行後も同 plist の mtime が変わらない／`pgrep` が `Cannot get process list` で落ちる。対処はそのコマンドだけ `dangerouslyDisableSandbox` で再実行（gh/op の Go×Seatbelt TLS 失敗＝`fnox` 節とは別系統で、こちらは IPC ＋ prefs 書き込み経路）。実適用例: `eas build` のローカル iOS ビルドが残す `eas-build-*.keychain` の死んだ参照を `security list-keychains -d user -s ~/Library/Keychains/login.keychain-db` で掃除（Keychain Access は起動時にサーチリストをキャッシュするので表示は再起動で消える） |
 | `D7` | 2026-07-22 | 2.1.216 | **sandbox は keychain 書き込み（osxkeychain の store）を遮断**。git の credential helper `osxkeychain` は認証成功後に資格情報を keychain へ store するが、sandbox 下では keychain write が拒否され `fatal: failed to store: <数字>`（実測 `100001`）を毎回吐く（`get`＝認証は通るので **cosmetic・exit 0**）。helper が system(`/opt/homebrew/etc/gitconfig`)＋global(`~/.gitconfig`)の**二重設定＝多値リストで2件連結**なので2行出る（行数＝helper 件数）。対策は §git の CLAUDECODE 条件 helper。keychain を sandbox allowlist に足す方向は不採用（機微）。`.git/config` 書き込み(D5)とは別系統の write-deny |
 
 ## ファイル別の保護方針
@@ -94,6 +95,7 @@ Edit(//**/*auth*.json)  Edit(//**/*auth*.toml)  Edit(//**/*auth*.yaml)  Edit(//*
 ```
 
 - **`*auth*` に拡張子の制約を付ける**のが要点。無制約の `*auth*` はソースコード（`useAuth.tsx`・`authors.md`・`src/auth/`）まで巻き込んで日常の編集を壊す。設定・データ形式に限れば、実質すべての認証ファイルを捕まえつつ誤爆がほぼ無い。`oauth-*.yaml` のような派生も `*auth*` が拾う。
+- **拡張子を絞れない `*secret*` / `*credential*` はドキュメント名にも当たる**。`secret`/`credential` を含む名前の markdown（docs・メモ・設計メモ）は file tool での作成・編集が deny される。誤爆と分かっていて許容している範囲なので、**ファイル名側を避ける**（内容で名付ける）。
 - アンカーは `**/`（cwd 相対）ではなく **`//**/`**（FS 全体）にする。前者は home 側の `~/.<tool>/auth.json` を取りこぼす。
 - 遮断範囲（`D9`・`D11` で検証済み）: `service-auth.json` / `app.auth.toml` / `oauth-cache.yaml` / `my-credential.txt` / `api-secret.env` は Bash・組み込み file tool の双方で拒否。非マッチの `plain.json` / `mytoken.txt` は通常どおり編集できる。
 
@@ -289,7 +291,8 @@ permission の効き方は cwd と設定の置き場に依存する。dotfiles �
 
 permission は挙動が直感に反するため、**推測せず公式 Docs ＋実機で検証する**（`.claude/rules/claude-code-settings.md`）。
 
-- ダミーファイルを `$TMPDIR/<test>/` または cwd（`./<test>/`）に作り、Bash と Read/Edit tool で deny されるか確認する（どちらも sandbox 書込可）。
+- ダミーファイルを `$TMPDIR/<test>/` または cwd（`./<test>/`）に作り、Bash と Read/Edit tool で deny されるか確認する（どちらも sandbox 書込可）。**sandbox 内の `$TMPDIR` は macOS 本来の `/var/folders/<random>/T/` ではなく `/tmp/claude-<uid>` にリマップされる**ので、`/var/folders/...` 側で再現したいときは絶対パスで書く。
+- **`ask` ルールを削除した直後の 1〜数コマンドは旧ルールが発火することがある**。これを「未反映＝要再起動」と早合点しない（実体は反映のラグ）。裏取りは `/permissions` でライブのリストを目視するか、少し置いて再実行する。判定を「prompt が出た/出ない」だけに依存させない。
 - 設定は live reload で同セッション内に反映される（Bash deny・sandbox filesystem・Read/Edit/Write tool deny いずれも実機確認）。**tool の write 防御は必ず `Edit(...)` deny で試す**。`Write(...)` は組み込み Write tool に効かないため、`Write` だけで試すと「効かない」と誤認する（`D3`）。
 - built-in deny の有無を確認する時は、sandbox `denyRead` と Permission `Read(...)` deny の**両方**を外してから確認する（Permission deny が sandbox にマージされ `denyOnly` に出るため、片方だけ外すと出自を誤認する）。
 - 一時編集した settings.json は完全復元する。Bash の `cp` 復元は sandbox 自己保護（`denyWithinAllow` に settings.json 実体）で拒否されるため、Edit/Write tool で戻す。
