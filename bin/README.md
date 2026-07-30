@@ -116,59 +116,23 @@ difiti
 gwte [OPTIONS]
 ```
 
+| オプション | 用途 |
+| --- | --- |
+| `-c, --command COMMAND` | 実行するコマンドを指定 |
+| `-a, --all` | 全てのワークツリーを対象にする |
+| `-i, --interactive` | 対話的にワークツリーを選択する |
+| `-d, --dry-run` | 実行せず、何が実行されるかを表示する |
+| `-h, --help` | ヘルプを表示 |
+
 ```bash
-gwte --interactive --command "git status"      # 対話的に worktree を選択して実行
-gwte --all --command "npm test" --dry-run      # 全 worktree でテスト（ドライラン）
-gwte --all --command "npm run build"           # 全 worktree でビルド
+gwte -c "git status" -a -d            # 全 worktree のステータス（ドライラン）
+gwte -c "git pull" -i                 # 対話的に選択して実行
+gwte -c "npm test" -i                 # 選択した worktree でテスト
+gwte -c "./scripts/build.sh" -a       # 全 worktree でシェルスクリプトを実行
 ```
 
 - `--all` または `--interactive` のいずれかが必須
 - `--dry-run` で事前確認を推奨
-
-#### gwte (Git WorkTree Executor)
-
-Git WorkTreeの複数ワークツリーに対してコマンドを一括実行するためのユーティリティです。
-
-##### 基本的な使い方
-
-```bash
-# 全てのワークツリーでコマンドを実行（ドライラン）
-gwte --command "git status" --all --dry-run
-
-# インタラクティブモードでワークツリーを選択
-gwte --command "git pull" --interactive
-
-# 全てのワークツリーでシェルスクリプトを実行
-gwte --command "./scripts/build.sh" --all
-
-# 全ワークツリーのステータス確認
-gwte -c "git status" -a
-
-# 選択したワークツリーでテスト実行
-gwte -c "npm test" -i
-
-# 全ワークツリーで最新のコミットを確認
-gwte -c "git log --oneline -1" -a -d
-```
-
-- repo ルートの `.subtree-testing/` は、このスクリプトの動作確認用に置いてある取り込み先のサンプル
-
-### credential-helper.sh - git の credential helper
-
-Claude Code 配下でのみ osxkeychain の `store`/`erase` を no-op にし、`get`（認証）は常に委譲する。sandbox が
-keychain 書き込みを拒否して `fatal: failed to store:` を毎回吐くのを黙らせるためのもので、通常ターミナルでは
-全操作を委譲するので資格情報キャッシュは壊れない。`~/.gitconfig` の `[credential]` から `!` 形式で呼ばれる。
-
-- **実行権が必須**。`!` 形式は `sh -c` で exec するため、非実行権だと `get` が資格情報を返せず git が対話
-  プロンプトにフォールバックして**ハングする**
-- 判断の背景は [docs/claude-code-security.md](../docs/claude-code-security.md) の「git」節（`D7`）
-##### オプション
-
-- `-c, --command COMMAND`: 実行するコマンドを指定
-- `-d, --dry-run`: 実際に実行せずに何が実行されるかを表示
-- `-a, --all`: 全てのワークツリーを対象にする
-- `-i, --interactive`: インタラクティブモードでワークツリーを選択
-- `-h, --help`: ヘルプメッセージを表示
 
 ### subtree-manager.sh - Git Subtree 管理
 
@@ -187,6 +151,17 @@ Git subtree を設定ファイル駆動で管理する。
 ```
 
 - スクリプト内の `SUBTREE_CONFIGS` 配列での事前設定が必要（設定済みのみ操作可能）
+- repo ルートの `.subtree-testing/` は、このスクリプトの動作確認用に置いてある取り込み先のサンプル
+
+### credential-helper.sh - git の credential helper
+
+Claude Code 配下でのみ osxkeychain の `store`/`erase` を no-op にし、`get`（認証）は常に委譲する。sandbox が
+keychain 書き込みを拒否して `fatal: failed to store:` を毎回吐くのを黙らせるためのもので、通常ターミナルでは
+全操作を委譲するので資格情報キャッシュは壊れない。`~/.gitconfig` の `[credential]` から `!` 形式で呼ばれる。
+
+- **実行権が必須**。`!` 形式は `sh -c` で exec するため、非実行権だと `get` が資格情報を返せず git が対話
+  プロンプトにフォールバックして**ハングする**
+- 判断の背景は [docs/claude-code-security.md](../docs/claude-code-security.md) の「git」節（`D7`）
 
 ## fnox（秘匿情報の注入）
 
@@ -201,13 +176,6 @@ Git subtree を設定ファイル駆動で管理する。
 
 設計判断（なぜ PATH shim をやめたか・版解決・トレードオフ・無効化手順）は
 [docs/fnox-token-management.md](../docs/fnox-token-management.md) を参照。
-### model-spin-detector/ - thinking 空転の検出
-
-`Stop` フックに配線する薄いアダプタ（`stop-hook.sh`）。検出ロジックの本体は
-`node-scripts/src/claude-code-spin-detector.ts` にあり、transcript から reasoning 非収束のターンを見つけて
-`~/.claude/spin-incidents.jsonl` に追記し、stderr で警告する。検出シグネチャと赤旗が出たときの対処フローは
-本体スクリプト冒頭のコメントにある。
-
 
 ## Claude Code 関連ツール
 
@@ -232,6 +200,13 @@ Claude Code セッションの開始〜終了の時間を計測・記録し、st
 フック実行時の入力データを JSON（`debug-claude-hook-{sessionId}.json`）に出力してデバッグする。
 確認したいイベント（例 `UserPromptSubmit`）の下に `settings.json` の `hooks` で command hook として
 一時登録して使う。実行ディレクトリにセッションごとの履歴が配列で蓄積される。
+
+### model-spin-detector/ - thinking 空転の検出
+
+`Stop` フックに配線する薄いアダプタ（`stop-hook.sh`）。検出ロジックの本体は
+`node-scripts/src/claude-code-spin-detector.ts` にあり、transcript から reasoning 非収束のターンを見つけて
+`~/.claude/spin-incidents.jsonl` に追記し、stderr で警告する。検出シグネチャと赤旗が出たときの対処フローは
+本体スクリプト冒頭のコメントにある。
 
 ### mcp-auth-header.sh - remote MCP 認証ヘッダ生成
 
