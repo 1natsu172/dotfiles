@@ -12,6 +12,7 @@ bin/
 ├── difiti                         # fzf で commit 範囲を選び difit で差分表示
 ├── gwte                           # Git Worktree 一括コマンド実行
 ├── sample-script.sh               # gwte 動作確認用サンプル
+├── credential-helper.sh           # git の credential helper（sandbox 下の store を no-op 化）
 ├── install-fnox-shell-wrappers    # fnox シェル関数ラッパーの生成（冪等）
 ├── fnox-wrappers.sh               # ↑の生成物。PM を `fnox exec` で包む POSIX 関数
 ├── parallel-video-download        # → video-utils/ への symlink
@@ -20,6 +21,8 @@ bin/
 ├── claude-utils/
 │   ├── debug-hook.sh              # Claude Code フックのデバッグ
 │   ├── mcp-auth-header.sh         # remote(HTTP) MCP の認証ヘッダ生成（headersHelper）
+│   ├── model-spin-detector/       # thinking 空転の検出（Stop フック）
+│   │   └── stop-hook.sh
 │   └── duration-logic-hooks/      # Claude Code セッション時間計測
 │       ├── user-prompt-submit-hook.sh
 │       ├── agent-in-progress-hook.sh
@@ -148,6 +151,17 @@ gwte -c "npm test" -i
 gwte -c "git log --oneline -1" -a -d
 ```
 
+- repo ルートの `.subtree-testing/` は、このスクリプトの動作確認用に置いてある取り込み先のサンプル
+
+### credential-helper.sh - git の credential helper
+
+Claude Code 配下でのみ osxkeychain の `store`/`erase` を no-op にし、`get`（認証）は常に委譲する。sandbox が
+keychain 書き込みを拒否して `fatal: failed to store:` を毎回吐くのを黙らせるためのもので、通常ターミナルでは
+全操作を委譲するので資格情報キャッシュは壊れない。`~/.gitconfig` の `[credential]` から `!` 形式で呼ばれる。
+
+- **実行権が必須**。`!` 形式は `sh -c` で exec するため、非実行権だと `get` が資格情報を返せず git が対話
+  プロンプトにフォールバックして**ハングする**
+- 判断の背景は [docs/claude-code-security.md](../docs/claude-code-security.md) の「git」節（`D7`）
 ##### オプション
 
 - `-c, --command COMMAND`: 実行するコマンドを指定
@@ -187,6 +201,13 @@ Git subtree を設定ファイル駆動で管理する。
 
 設計判断（なぜ PATH shim をやめたか・版解決・トレードオフ・無効化手順）は
 [docs/fnox-token-management.md](../docs/fnox-token-management.md) を参照。
+### model-spin-detector/ - thinking 空転の検出
+
+`Stop` フックに配線する薄いアダプタ（`stop-hook.sh`）。検出ロジックの本体は
+`node-scripts/src/claude-code-spin-detector.ts` にあり、transcript から reasoning 非収束のターンを見つけて
+`~/.claude/spin-incidents.jsonl` に追記し、stderr で警告する。検出シグネチャと赤旗が出たときの対処フローは
+本体スクリプト冒頭のコメントにある。
+
 
 ## Claude Code 関連ツール
 

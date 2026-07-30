@@ -23,6 +23,10 @@ bun run test        # テスト（bun test）
   ccstatusline の custom-command から呼ばれる。
 - **claude-code-debug-statusline.ts** — statusline に渡る入力 JSON を `_debug_statusline.json` に記録して
   デバッグする。
+- **claude-code-spin-detector.ts** — transcript から「thinking 空転」（reasoning 非収束のターン）を検出し、
+  `~/.claude/spin-incidents.jsonl` に追記して stderr で警告する。`Stop` フックから
+  `bin/claude-utils/model-spin-detector/stop-hook.sh` 経由で呼ばれる。検出シグネチャ・閾値・赤旗時の対処
+  フローは同ファイル冒頭のコメントにある。
 - **claude-settings-symlink-guard.ts** — `settings.json` の deny / sandbox のパスが symlink を経由して
   いないか検査する。hook（PostToolUse / SessionStart）から呼ばれるほか、引数に
   settings ファイルを渡せば手動でも回せる。設計と実測は
