@@ -6,46 +6,6 @@
 
 *git で管理したくないファイル*は`.gitignore`で指定します。
 
-### Utilities
-
-#### gwte (Git WorkTree Executor)
-
-Git WorkTreeの複数ワークツリーに対してコマンドを一括実行するためのユーティリティです。
-
-##### 基本的な使い方
-
-```bash
-# 全てのワークツリーでコマンドを実行（ドライラン）
-gwte --command "git status" --all --dry-run
-
-# インタラクティブモードでワークツリーを選択
-gwte --command "git pull" --interactive
-
-# 全てのワークツリーでシェルスクリプトを実行
-gwte --command "./scripts/build.sh" --all
-```
-
-##### オプション
-
-- `-c, --command COMMAND`: 実行するコマンドを指定
-- `-d, --dry-run`: 実際に実行せずに何が実行されるかを表示
-- `-a, --all`: 全てのワークツリーを対象にする
-- `-i, --interactive`: インタラクティブモードでワークツリーを選択
-- `-h, --help`: ヘルプメッセージを表示
-
-##### 使用例
-
-```bash
-# 全ワークツリーのステータス確認
-gwte -c "git status" -a
-
-# 選択したワークツリーでテスト実行
-gwte -c "npm test" -i
-
-# 全ワークツリーで最新のコミットを確認
-gwte -c "git log --oneline -1" -a -d
-```
-
 ## Usage
 
 ### シンボリックリンクをルートに張る
@@ -222,6 +182,13 @@ fish configがrustupの生成するenvで詰まるので先にしておく方が
 
 ref: https://www.rust-lang.org/ja/tools/install
 
+あるいはmise経由でrustup通す方がいいかも
+
+```sh
+mise use -g rust
+cargo build
+```
+
 #### fisher のセットアップ
 
 ref: https://github.com/jorgebucaran/fisher#using-your-fish_plugins-file
@@ -295,9 +262,15 @@ export GIT_AUTHOR_EMAIL="mail@example.com"
 
 これで`~/dev_folder/sub_ccount`以下での作業はサブアカウントでの作業になる
 
-### 参考
+### moshi
 
-- [Mac の環境構築自動化 2016 年 10 月版](http://jnst.hateblo.jp/entry/2016/09/30/051636)
+tailscaleのsetup後に必要
+
+```sh
+moshi-hook host setup
+```
+
+## 構成情報のメモ
 
 ### fnox（秘匿情報の live fetch 管理）
 

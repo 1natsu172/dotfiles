@@ -122,6 +122,40 @@ gwte --all --command "npm run build"           # 全 worktree でビルド
 - `--all` または `--interactive` のいずれかが必須
 - `--dry-run` で事前確認を推奨
 
+#### gwte (Git WorkTree Executor)
+
+Git WorkTreeの複数ワークツリーに対してコマンドを一括実行するためのユーティリティです。
+
+##### 基本的な使い方
+
+```bash
+# 全てのワークツリーでコマンドを実行（ドライラン）
+gwte --command "git status" --all --dry-run
+
+# インタラクティブモードでワークツリーを選択
+gwte --command "git pull" --interactive
+
+# 全てのワークツリーでシェルスクリプトを実行
+gwte --command "./scripts/build.sh" --all
+
+# 全ワークツリーのステータス確認
+gwte -c "git status" -a
+
+# 選択したワークツリーでテスト実行
+gwte -c "npm test" -i
+
+# 全ワークツリーで最新のコミットを確認
+gwte -c "git log --oneline -1" -a -d
+```
+
+##### オプション
+
+- `-c, --command COMMAND`: 実行するコマンドを指定
+- `-d, --dry-run`: 実際に実行せずに何が実行されるかを表示
+- `-a, --all`: 全てのワークツリーを対象にする
+- `-i, --interactive`: インタラクティブモードでワークツリーを選択
+- `-h, --help`: ヘルプメッセージを表示
+
 ### subtree-manager.sh - Git Subtree 管理
 
 Git subtree を設定ファイル駆動で管理する。
