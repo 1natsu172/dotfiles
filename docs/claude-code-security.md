@@ -210,6 +210,13 @@ fnox（秘匿情報の live fetch。詳細は [docs/fnox-token-management.md](./
 - 余波と運用: ラッパー関数経由の素の `npm install` 等は Claude が submit する文字列が `npm ...`（関数展開後に `fnox exec` を spawn）で `fnox *` に当たらず sandbox 内に残り、子 op が TLS 失敗で token 未解決＝401。**token を要する registry 操作は AI も含め `fnox exec -- <pm> …` の形で明示的に打つ**＝`fnox *` に当たり sandbox 外で解決される（その install のみ unsandbox。`npm */yarn *` の全除外より狭く、token 不要の install は sandbox 内に留めて postinstall のサプライチェーン防御を維持）。AI 向け呼び出し規則は `.claude/rules/fnox-sandbox-invocation.md`。
 - 切り分け（実機確認・誤対処の回避）: 原因は **Go/Seatbelt の TLS 検証**であって egress ではない。`my.1password.com` への egress 自体は sandbox 内でも到達する（curl で 405 が返り TLS も通過）ため、`allowedDomains` への追加は効かない。`SSL_CERT_FILE` も op には効かない（Go は `RootCAs=nil` で `trustd` 経由のプラットフォーム検証器を使い、Seatbelt がそれを遮断する。curl=LibreSSL のファイル CA とは経路が違う）。
 
+### hunk
+
+hunk（差分ビューア TUI）は**ローカルデーモン経由で通信する**。sandbox の network は allowlist なので **localhost が塞がれ**、TUI 自体は起動しているのに**セッションが存在しないように見える**（接続失敗が「セッション無し」として表れるので、原因が分かりにくい）。`sandbox.excludedCommands: ["hunk *"]` で sandbox 外実行にして解決している。
+
+- gh / op の Go×Seatbelt TLS 失敗とは**別系統**。あちらは TLS 検証器の遮断で、こちらは localhost への到達そのものが無い。`allowedDomains` は外向きのホスト名 allowlist なので、ここに何を足しても効かない。
+- permission flow には乗るが `allow` を書いていないため、default mode では都度 `ask` に落ちる（gh のような read/write の allow 列挙はしていない）。
+
 ### 破壊系コマンドの deny（床であって境界ではない）
 
 `sudo`/`su`/`rm -rf /`・`~`/`dd`/`defaults` 等の deny は **blocklist で原理的に airtight にできない**（matcher は別パス・`sh -c` 包みを取りこぼす＝`D2`）。実効を持つのは **sandbox ON か人間が `ask` を捌くとき**だけで、**unsandboxed × bypassPermissions × 注入入力**では床が抜ける。よって deny は「うっかり承認を防ぐ床」と位置づけ、変種網羅は狙わない（境界は sandbox）。
