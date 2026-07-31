@@ -22,7 +22,6 @@ macOS の個人 dotfiles。シェル・各種ツール・AI エージェント�
 - `~/.claude` は `dotfiles/.claude` への symlink。したがって `.claude/rules/` は **user-level rules ＝全プロジェクトでロードされる**。dotfiles 固有の内容をそこに置かない（置き場はこのファイル）
 - `.claude/settings.json`（permissions / sandbox）の変更は `.claude/rules/claude-code-settings.md` に従う。仕様は記憶や本 repo の doc でなく公式 Docs を一次情報にし、実機で検証してから確定する
 - 追跡対象は `.gitignore` の allowlist 方式。ツールの state / cache / 認証ファイルは追跡しない
-- セットアップ手順・macOS の手動設定・各ツールの運用方針は [README.md](./README.md)
-- AI が読む文章（このファイル・`.claude/rules/`・`docs/claude-code-security.md` の delta 表）は毎回コンテキストに載る。判断に効く事実だけ残し、実証手順や経緯は git 履歴に委ねる。ただし**参照先のポインタは削らない**（dead reference は辿り直しでかえって高くつく）。人間向けの運用説明は README.md や設定ファイルのコメント側へ置く
+- dotfiles自体のセットアップ手順・macOS の手動設定・各ツールの運用方針などは [README.md](./README.md)
 - `bin/` の自作スクリプトの一覧と役割は [bin/README.md](./bin/README.md)（PATH は mise の `_.path` で通している）
 - shell script は要求 bash バージョンが 2 段（対話起動 = 4.4+、PATH 不定な hook / helper と bootstrap = 3.2 互換）。整形は shfmt、検査は `mise run lint:shell` が pre-commit で走る。**`bin/` を触る前に [bin/README.md の「bash のバージョン方針」](./bin/README.md#bash-のバージョン方針) を読むこと**
