@@ -46,6 +46,9 @@ idiomatic_version_file_enable_tools = [
   "rust",
 ]
 
+# enable lock file: https://mise.jdx.dev/dev-tools/mise-lock.html#overview
+lockfile = true
+
 [env]
 # Make XDG-aware tools (e.g. pnpm 11+ -> ~/.config/pnpm/config.yaml) use ~/.config
 # instead of the macOS default ~/Library/Preferences. Set here (not per-shell) so

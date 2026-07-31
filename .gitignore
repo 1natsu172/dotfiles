@@ -15,6 +15,7 @@
 !.config/mise
 .config/mise/*
 !.config/mise/config.toml
+!.config/mise/mise.lock
 !.config/pnpm
 .config/pnpm/*
 !.config/pnpm/config.yaml
