@@ -33,7 +33,7 @@
 	line-numbers-minus-style = 124
 	line-numbers-plus-style = 28
 [merge]
-	conflictstyle = zdiff3
+	conflictStyle = zdiff3
 [diff]
 	tool = default-difftool
 [difftool "default-difftool"]
