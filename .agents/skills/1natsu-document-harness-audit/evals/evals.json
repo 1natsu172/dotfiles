@@ -7,7 +7,7 @@
       "name": "audit-distill-and-verify",
       "fixture": "eval-fixtures/document-harness/fixture-c-audit",
       "prompt": "このリポジトリのハーネスドキュメント、しばらく見直していないので実装と乖離していたり、書き方が古かったり、コードに寄りすぎている箇所がありそう。docs/ と .claude/rules/ を監査して問題と改善案を出してほしい。注: 現セッションでは私はまだ何も実装変更していません。既存ドキュメント全体の検査をお願いします。",
-      "expected_output": "audit として処理し（harness sync へリダイレクトしない）、9カテゴリで検査する。検出すべき主な問題: (1) コード乖離 = docs/auth-design.md が src/services/AuthService.ts を参照しているが実体は src/auth/service.ts。修正案の正しいパスはコードで裏取りする。(2) 実装結合 = docs/cache.md が内部変数名（_cache, _ttl）・メソッドシグネチャ・採用ライブラリ（node-cache）をそのまま転記している。swap test に基づき、契約と理由へ再蒸留する提案を出す。(3) 表現の陳腐化 = rules/auth.md の MUST/NEVER 連発を、意図を変えず短く理由ベースへ。過剰検出しないこと: env var 名 PASSWORD_RESET_TOKEN_TTL_MIN は外部契約面なので実装結合として槍玉に挙げない。提案→確認→実行のフローを取り、自動修正しない。",
+      "expected_output": "audit として処理し（harness sync へリダイレクトしない）、10カテゴリで検査する。検出すべき主な問題: (1) コード乖離 = docs/auth-design.md が src/services/AuthService.ts を参照しているが実体は src/auth/service.ts。修正案の正しいパスはコードで裏取りする。(2) 実装結合 = docs/cache.md が内部変数名（_cache, _ttl）・メソッドシグネチャ・採用ライブラリ（node-cache）をそのまま転記している。swap test に基づき、契約と理由へ再蒸留する提案を出す。(3) 表現の陳腐化 = rules/auth.md の MUST/NEVER 連発を、意図を変えず短く理由ベースへ。過剰検出しないこと: env var 名 PASSWORD_RESET_TOKEN_TTL_MIN は外部契約面なので実装結合として槍玉に挙げない。提案→確認→実行のフローを取り、自動修正しない。",
       "files": [],
       "assertions": [
         "audit として処理し、harness sync へリダイレクトしない",
@@ -15,6 +15,7 @@
         "実装結合（蒸留不足）を検出する: docs/cache.md が内部変数名（_cache/_ttl）・メソッドシグネチャ・採用ライブラリ名（node-cache）を仕様として転記している",
         "実装結合の是正方針が『再蒸留』である（記述を消すだけでなく、契約＋理由へ書き直す。機構名は rationale 側へ）",
         "表現の陳腐化を検出する: rules/auth.md の MUST/NEVER 連発を、意図を変えず短く理由ベースに書き直す提案を出す",
+        "用語・文体の規約違反を検出する: docs/cache.md:7,8,9 の日本語本文中の em dash 3件。9カテゴリのスキルはこの観点を持たないため1件も挙がらない",
         "過剰検出しない: 外部契約面の env var 名（PASSWORD_RESET_TOKEN_TTL_MIN）を実装結合・蒸留不足として誤って槍玉に挙げない",
         "提案→確認のフローを取り、自動修正しない"
       ]
@@ -24,7 +25,7 @@
       "name": "audit-memory-canonicality",
       "fixture": "eval-fixtures/document-harness/fixture-d-memory-audit",
       "prompt": "Claude Code のメモリにこのプロジェクトの知識がいろいろ溜まってきたんだけど、メモリにしかない知識や docs とズレてる内容がありそう。ドキュメントとメモリをまとめて監査して、整理の提案をしてほしい。（注: テスト環境のため、auto-memory のディレクトリは本来の ~/.claude/projects/... ではなく <fixture>/memory にあるものとして扱ってください。リポジトリは <fixture>/repo です。現セッションで実装変更はしていません）",
-      "expected_output": "ドキュメント9カテゴリ検査に加えてメモリ監査（M1〜M4）を実行する。M1 = デプロイリージョン制約（恒久チーム知識がメモリ限定）→ docs/rules へ蒸留＋メモリ削除の提案。M2/M3 = APIレスポンス形式（メモリ: camelCase、docs: snake_case）→ src/api/handlers.ts のレスポンスキーで裏取りし camelCase が実態と確認、docs 修正＋メモリ削除を提案（『リポジトリが正本だから docs の内容が正しい』と裏取りなしで判定しない）。M5 = エラーレスポンス形式（メモリ: project_error_response_format と docs/api-design.md の内容が一致する重複）→ docs は変更せず、メモリ削除のみを提案（蒸留不要。M2 と混同して裏取り騒ぎにしない）。content-over-type = feedback_commit_convention はチーム規約なので蒸留候補。個人系（user_preferences）は蒸留対象外。進行中の作業状態（project_wip_retry_pr）は削除・蒸留しない。project_migration_script（参照先 scripts/migrate.sh がリポジトリに不在）は、削除提案（M4）／実在確認付き要検証で保留／要検証注記付きで手順知識として蒸留（M1）のいずれも可（黙って放置・実在の推測断定・注記なし蒸留は不可）。削除提案には MEMORY.md インデックスの連動更新を含む。提案→確認のフローで自動修正しない。",
+      "expected_output": "ドキュメント10カテゴリ検査に加えてメモリ監査（M1〜M4）を実行する。M1 = デプロイリージョン制約（恒久チーム知識がメモリ限定）→ docs/rules へ蒸留＋メモリ削除の提案。M2/M3 = APIレスポンス形式（メモリ: camelCase、docs: snake_case）→ src/api/handlers.ts のレスポンスキーで裏取りし camelCase が実態と確認、docs 修正＋メモリ削除を提案（『リポジトリが正本だから docs の内容が正しい』と裏取りなしで判定しない）。M5 = エラーレスポンス形式（メモリ: project_error_response_format と docs/api-design.md の内容が一致する重複）→ docs は変更せず、メモリ削除のみを提案（蒸留不要。M2 と混同して裏取り騒ぎにしない）。content-over-type = feedback_commit_convention はチーム規約なので蒸留候補。個人系（user_preferences）は蒸留対象外。進行中の作業状態（project_wip_retry_pr）は削除・蒸留しない。project_migration_script（参照先 scripts/migrate.sh がリポジトリに不在）は、削除提案（M4）／実在確認付き要検証で保留／要検証注記付きで手順知識として蒸留（M1）のいずれも可（黙って放置・実在の推測断定・注記なし蒸留は不可）。削除提案には MEMORY.md インデックスの連動更新を含む。提案→確認のフローで自動修正しない。",
       "files": [],
       "assertions": [
         "メモリ監査を実行し、Claude Code auto-memory の構造（frontmatter の type、MEMORY.md インデックス）を踏まえて処理する",
@@ -35,6 +36,9 @@
         "content-over-type: type: feedback の commit convention をチーム規約として蒸留候補にする",
         "進行中の作業状態（project_wip_retry_pr）を削除・蒸留の対象にしない",
         "project_migration_script が参照する scripts/migrate.sh がリポジトリに存在しないことを明示的に扱う。正解は複数ある: 陳腐化（M4）として削除提案／実在確認の手順を添えた要検証で保留／手順知識（M1）として要検証注記付きで docs か skill へ蒸留。不合格は、黙って放置する・実在を推測で断定する・注記なしで蒸留する、のいずれか",
+        "用語・文体の規約違反を検出する: repo/CLAUDE.md:11 の日本語本文中の em dash。ドキュメントの文体に問題がないと結論しない",
+        "過剰検出しない: memory/MEMORY.md の索引行 7件のダッシュを違反として挙げない（メモリ本体の文体は監査対象外で、かつ Claude Code の規定書式）",
+        "コード内コメントを検査する: repo/src/api/handlers.ts:19 の「2026-03-11 に佐藤さんの依頼で…その後1回直している」を規範に混ざった作業記録として検出し、他カテゴリと節を分けて報告する",
         "メモリ削除の提案に MEMORY.md インデックスの連動更新が含まれる",
         "提案→確認のフローを取り、自動修正しない"
       ]
@@ -53,7 +57,59 @@
         "最終報告にバックアップのパスが明記されている",
         "最終報告にバックアップを不要と確認した後の削除コマンド（rm -rf <バックアップパス> 等）が含まれている",
         "最終報告でリポジトリ側とメモリ側の変更を分けて示している",
-        "バックアップの案内（パス・復元・削除コマンド）が独立セクションではなく、メモリ側の変更報告に注釈として付随している"
+        "バックアップの案内（パス・復元・削除コマンド）が独立セクションではなく、メモリ側の変更報告に注釈として付随している",
+        "自分が新規に作成・更新したファイルに日本語のダッシュを持ち込んでいない。eager 意図マーカーを書く場合もラベルと値の区切りは `:` にする（`<!-- scope:global (eager): ... -->`）",
+        "削除したメモリの主要な事実がリポジトリ側に残っている: ap-northeast-1 への限定・Conventional Commits の型がいずれかのファイルに存在する（削除だけで蒸留していない状態にしない）"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "audit-style-violations",
+      "fixture": "eval-fixtures/document-harness/fixture-e-style",
+      "prompt": "このリポジトリのドキュメント、書き手がばらついていて用語や文体がちぐはぐな気がします。監査して、問題と直し方を出してください。注: 現セッションで私はまだ何も実装変更していません。",
+      "expected_output": "audit として処理し、用語・文体の規約違反（カテゴリ10）を検出する。検出すべき違反: (1) 比喩ジャーゴン = rules/release.md の『ステージングのゲート』『本番のアンカー』、docs/queue-design.md の『キューのホーム』『バックプレッシャの底』。実体で書き直す提案を出す。(2) 規範に混ざった作業記録 = rules/release.md の『2025-11-04 に佐藤さんの依頼で追加。その後2回改訂している』。(3a) 用語ゆれ = 同じ概念が docs/queue-design.md では「再投入」、docs/api-contract.md では「リトライ」。ヘッダ名 x-retry-count は外部契約なので統一対象に含めない。(3b) ナラティブ = docs/queue-design.md 冒頭の時系列の語り。(4) ダッシュ = 日本語文章中の em dash 5箇所（rules/release.md 1、docs/queue-design.md 2、docs/ops-runbook.txt 1、src/queue/worker.ts の日本語コメント 1）を、拡張子を .md に絞らない検索で網羅し、接続詞と読点・:・文分割へ書き換える提案を出す。過剰検出しないこと: docs/api-contract.md の表の空セルの — と数値範囲 18–21 は規約上の対象外、src/queue/worker.ts の英語コメント中の — も対象外、原語のままの技術用語（pull request / dry run / feature flag）は正しい、docs/queue-design.md の『永続化方式の選択』は捨てた選択肢の棄却理由なので残す根拠、インシデントレポートのナラティブは例外。提案→確認のフローを取り、自動修正しない。 実体を確定できない比喩は憶測で書き換えず確認事項として出し、指示層にある比喩は行動を誤らせるため重要度を引き上げる。",
+      "files": [],
+      "assertions": [
+        "audit として処理し、harness へリダイレクトしない",
+        "比喩由来のジャーゴンを検出する: rules/release.md の『ゲート』『アンカー』、docs/queue-design.md の『キューのホーム』『バックプレッシャの底』",
+        "ジャーゴンの是正方針が『削除』ではなく『指している実体で書き直す』である",
+        "規範に混ざった作業記録を検出する: rules/release.md の『2025-11-04 に佐藤さんの依頼で追加。その後2回改訂している』の削除を提案する",
+        "ナラティブを検出する: docs/queue-design.md 冒頭の時系列の語りを、節単独で読める形へ書き直す提案を出す",
+        "用語ゆれを検出する: 同じ概念が docs/queue-design.md では「再投入」、docs/api-contract.md では「リトライ」と書かれている（ヘッダ名 x-retry-count は外部契約なので統一対象に含めない）",
+        "本文中のダッシュを網羅的に検出する: 日本語文章の em dash 5箇所（rules/release.md 1、docs/queue-design.md 2、docs/ops-runbook.txt 1、src/queue/worker.ts のコメント 1）を漏れなく挙げている。拡張子を .md に絞らず、ドット始まりディレクトリ配下の .claude/rules/ も取りこぼしていない",
+        "過剰検出しない: docs/api-contract.md の表の空セルの — と数値範囲 18–21 を違反として挙げない",
+        "過剰検出しない: src/queue/worker.ts の英語コメント中の em dash を違反として挙げない（規約は日本語の文章に対するもの）",
+        "過剰検出しない: 原語のままの技術用語（pull request / dry run / feature flag / semver）を訳せと言わない",
+        "過剰検出しない: docs/queue-design.md『永続化方式の選択』の棄却理由を作業記録とみなして削除提案しない",
+        "過剰検出しない: docs/incident-2026-05-payment-timeout.md のナラティブを違反として挙げない（調査報告は例外）",
+        "提案→確認のフローを取り、自動修正しない",
+        "実体を確定できない比喩（rules/release.md の『ゲート』、docs/queue-design.md の『キューのホーム』）を憶測で書き換えず、確認事項として提示する。どちらも比喩を消すと読み手が求められた行動を復元できない（『ゲート』は通過条件が原文になく、『キューのホーム』は置き場所を指す語が原文にない）",
+        "実体を確定できる比喩（rules/release.md の『アンカー』、docs/queue-design.md の『バックプレッシャの底』）は確認へ回さず書き直す。書き直しには原文にある語だけを使い、原文にない語を補わない（『アンカー』は原文後半の「差分がある状態でリリースしない」、『底』は原文の「下限を設けている」が実体を述べている）",
+        "指示層（.claude/rules/）にある比喩の重要度を、docs 側の文体問題より高く扱う（行動を誤らせるため）"
+      ]
+    },
+    {
+      "id": 5,
+      "name": "audit-code-comments",
+      "fixture": "eval-fixtures/document-harness/fixture-f-comments",
+      "prompt": "このリポジトリを監査してください。ドキュメントだけでなく、コード内のコメントも見てほしいです。注: 現セッションで私はまだ何も実装変更していません。",
+      "expected_output": "ステップ2.5 でコード内コメントを検査し、他カテゴリと節を分けて報告する。検出すべき違反: (1) ジャーゴン = src/api/dispatch.ts:3 の「配信のゲート」、scripts/deploy.sh:2 の「デプロイのアンカー」。(2) 作業記録 = src/jobs/retry.py:11 の「2025-08-12 に田中さんの依頼で追加した。その後1回直している」。(3) ナラティブ = src/api/queue.go:5-6 の時系列の語り。(4) ダッシュ = dispatch.ts:3 の em dash。過剰検出しないこと: dispatch.ts の英語コメント（em dash を含むが規約は日本語の文章に適用）、src/styles/main.css:1 の CSS ID セレクタ、scripts/deploy.sh:3 の長オプション、dispatch.ts:15 の文字列リテラル、docs/delivery-design.md「チャネルの選択」の棄却理由。取りこぼしの明示: ブロックコメント内部行（dispatch.ts:11-12 の「配信のホーム」という造語）と Python の docstring 本文（retry.py:6）は行単位の絞り込みでは取れないため、絞り込みが完全でない旨を報告に添える。是正がコメント本文に限りコードに触れないことも明記する。提案→確認のフローを取り、自動修正しない。",
+      "files": [],
+      "assertions": [
+        "コード内コメントの検査を、ドキュメントの検査と節を分けて報告する",
+        "ジャーゴンを検出する: src/api/dispatch.ts:3 の「配信のゲート」と scripts/deploy.sh:2 の「デプロイのアンカー」",
+        "作業記録を検出する: src/jobs/retry.py:11 の日付・依頼者・修正回数",
+        "ナラティブを検出する: src/api/queue.go:5-6 の時系列の語り",
+        "行末コメントを検出できている（retry.py:8 / dispatch.ts:6 / queue.go:3 のいずれかを拾っている）",
+        "半角カタカナを含むコメント（src/api/queue.go:3 の「ｷｭｰ」）を取りこぼしていない",
+        "日本語コメント中のダッシュを検出する: src/api/dispatch.ts:3 の em dash（同ファイル17行目の英語コメントとの切り分けが要る）",
+        "過剰検出しない: dispatch.ts の英語コメント中の em dash を違反として挙げない",
+        "過剰検出しない: src/styles/main.css:1 の CSS ID セレクタと scripts/deploy.sh:3 の長オプションを違反として挙げない",
+        "過剰検出しない: dispatch.ts:15 のコメント記号を含む文字列リテラルを違反として挙げない",
+        "過剰検出しない: docs/delivery-design.md「チャネルの選択」の棄却理由を作業記録として削除提案しない",
+        "絞り込みが完全でないことを報告に明記する（ブロックコメント内部行と Python の docstring 本文が取れない）",
+        "是正がコメント本文に限り、コードに触れないことを明記する",
+        "提案→確認のフローを取り、自動修正しない"
       ]
     }
   ]

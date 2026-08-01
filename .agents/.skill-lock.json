@@ -73,30 +73,27 @@
       "sourceType": "github",
       "sourceUrl": "https://github.com/1natsu-vacation/agent-skills.git",
       "skillPath": "skills/1natsu-document-harness/SKILL.md",
-      "skillFolderHash": "0e73e5c2623c25ff6516ba3191cc6e798248aa2b",
-      "pluginName": "1natsu-document-harness",
+      "skillFolderHash": "2beed8959253c3f1cccad1764bbe114c30ec17a3",
       "installedAt": "2026-07-03T12:50:32.628Z",
-      "updatedAt": "2026-07-31T16:04:29.996Z"
+      "updatedAt": "2026-08-01T20:42:36.956Z"
     },
     "1natsu-document-harness-audit": {
       "source": "1natsu-vacation/agent-skills",
       "sourceType": "github",
       "sourceUrl": "https://github.com/1natsu-vacation/agent-skills.git",
       "skillPath": "skills/1natsu-document-harness-audit/SKILL.md",
-      "skillFolderHash": "fef745367800c9e05400bc1973eac2730bbe9079",
-      "pluginName": "1natsu-document-harness",
+      "skillFolderHash": "e6e29e1fa5375a7ed9b24892e46ec3bff76db81d",
       "installedAt": "2026-07-03T12:50:32.629Z",
-      "updatedAt": "2026-07-31T16:04:30.007Z"
+      "updatedAt": "2026-08-01T20:42:38.184Z"
     },
     "1natsu-document-harness-model": {
       "source": "1natsu-vacation/agent-skills",
       "sourceType": "github",
       "sourceUrl": "https://github.com/1natsu-vacation/agent-skills.git",
       "skillPath": "skills/1natsu-document-harness-model/SKILL.md",
-      "skillFolderHash": "01ab50148d4f7ebaa32f167d278d51877bbd58a1",
-      "pluginName": "1natsu-document-harness",
+      "skillFolderHash": "913dc59d93f53f394ee13240e2163c1920305a6f",
       "installedAt": "2026-07-03T12:50:32.629Z",
-      "updatedAt": "2026-07-31T16:04:30.012Z"
+      "updatedAt": "2026-08-01T20:42:39.877Z"
     },
     "1natsu-error-handling": {
       "source": "1natsu-vacation/agent-skills",
@@ -148,15 +145,6 @@
       "installedAt": "2026-07-03T12:50:32.633Z",
       "updatedAt": "2026-07-31T16:04:30.031Z"
     },
-    "herdr": {
-      "source": "ogulcancelik/herdr",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/ogulcancelik/herdr.git",
-      "skillPath": "SKILL.md",
-      "skillFolderHash": "e9b22084e03880f43d1f1daaf5d9f45c717b77c4",
-      "installedAt": "2026-07-24T19:33:08.136Z",
-      "updatedAt": "2026-07-24T19:33:08.136Z"
-    },
     "context7-mcp": {
       "source": "upstash/context7",
       "sourceType": "github",
@@ -175,6 +163,15 @@
       "pluginName": "1natsu-hunk",
       "installedAt": "2026-07-31T16:04:30.022Z",
       "updatedAt": "2026-07-31T16:04:30.022Z"
+    },
+    "herdr": {
+      "source": "herdrdev/herdr",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/herdrdev/herdr.git",
+      "skillPath": "skills/herdr/SKILL.md",
+      "skillFolderHash": "4821f1d39ccae24b9b274b03184edaaf198a3994",
+      "installedAt": "2026-08-01T20:43:58.469Z",
+      "updatedAt": "2026-08-01T20:43:58.469Z"
     }
   },
   "dismissed": {
