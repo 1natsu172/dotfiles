@@ -11,6 +11,7 @@ macOS の個人 dotfiles。シェル・各種ツール・AI エージェント�
 コードや設定ファイルからは読み取れない設計判断・検証済みの挙動は `docs/` にある。**該当する設定を触る前に読むこと。**
 
 - [docs/claude-code-security.md](./docs/claude-code-security.md) — Claude Code の sandbox / permission 設計、脅威モデル、公式 Docs から自明でない検証済み挙動（`D` 付きの delta 表）
+- [docs/claude-code-instruction-loading.md](./docs/claude-code-instruction-loading.md) — CLAUDE.md / `.claude/rules` がいつコンテキストへ載るか。`paths` の解決規則（project root 基準・配下に閉じる）と検証手段。**rule の `paths` を足す・変える前に読むこと**
 - [docs/supply-chain-defenses.md](./docs/supply-chain-defenses.md) — npm / bun / pnpm のサプライチェーン多層防御。保持期間・postinstall・proxy registry
 - [docs/fnox-token-management.md](./docs/fnox-token-management.md) — 秘匿情報を disk に置かず、実行時に消費プロセスへ注入する仕組み
 - [docs/herdr-session-lifecycle.md](./docs/herdr-session-lifecycle.md) — herdr の server が detach を跨いで生存するため、シェル設定の変更が反映されない問題と対処。**config.fish / PATH を触ったら読むこと**
@@ -19,7 +20,7 @@ macOS の個人 dotfiles。シェル・各種ツール・AI エージェント�
 
 ## この repo を触るときの前提
 
-- `~/.claude` は `dotfiles/.claude` への symlink。したがって `.claude/rules/` は **user-level rules ＝全プロジェクトでロードされる**。dotfiles 固有の内容をそこに置かない（置き場はこのファイル）
+- `~/.claude` は `dotfiles/.claude` への symlink。したがって `.claude/rules/` は **user-level rules ＝全プロジェクトでロードされる**。dotfiles 固有の内容をそこに置かない（置き場はこのファイル）。`paths` の有無で常時ロードか遅延ロードかが決まり、`paths` は project root 配下しか捕捉できない（[docs/claude-code-instruction-loading.md](./docs/claude-code-instruction-loading.md)）
 - `.claude/settings.json`（permissions / sandbox）の変更は `.claude/rules/claude-code-settings.md` に従う。仕様は記憶や本 repo の doc でなく公式 Docs を一次情報にし、実機で検証してから確定する
 - 追跡対象は `.gitignore` の allowlist 方式。ツールの state / cache / 認証ファイルは追跡しない
 - dotfiles自体のセットアップ手順・macOS の手動設定・各ツールの運用方針などは [README.md](./README.md)

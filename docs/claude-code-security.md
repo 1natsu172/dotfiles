@@ -313,6 +313,7 @@ permission は挙動が直感に反するため、**推測せず公式 Docs ＋�
 ## 関連
 
 - 公式 Docs（仕様の一次情報・毎回参照）: [permissions](https://code.claude.com/docs/en/permissions) / [sandboxing](https://code.claude.com/docs/en/sandboxing)
+- [docs/claude-code-instruction-loading.md](./claude-code-instruction-loading.md): CLAUDE.md / `.claude/rules` のロード挙動と `paths` の解決規則（permission とは別方言）
 - [docs/supply-chain-defenses.md](./supply-chain-defenses.md): PM のサプライチェーン防御（保持期間・postinstall・proxy registry）
 - `.claude/rules/claude-code-settings.md`: 設定変更時の鉄則（公式 Docs 参照・実機検証）
 - `### AI tools`（README.md）: MCP / plugins / Agent Skills の管理方針
