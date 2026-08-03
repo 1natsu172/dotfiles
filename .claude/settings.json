@@ -301,7 +301,14 @@
     "skill-creator@claude-plugins-official": true,
     "swift-lsp@claude-plugins-official": true,
     "typescript-lsp@claude-plugins-official": true,
-    "claude-security@claude-plugins-official": true
+    "claude-security@claude-plugins-official": true,
+    "1natsu-pr@1natsu": true,
+    "1natsu-commit@1natsu": true,
+    "1natsu-conflicts@1natsu": true,
+    "1natsu-debug@1natsu": true,
+    "1natsu-document-harness@1natsu": true,
+    "1natsu-error-handling@1natsu": true,
+    "1natsu-hunk@1natsu": true
   },
   "extraKnownMarketplaces": {
     "claude-code-workflows": {
@@ -320,6 +327,13 @@
       "source": {
         "source": "github",
         "repo": "entireio/skills"
+      },
+      "autoUpdate": true
+    },
+    "1natsu": {
+      "source": {
+        "source": "github",
+        "repo": "1natsu-vacation/agent-skills"
       },
       "autoUpdate": true
     }
