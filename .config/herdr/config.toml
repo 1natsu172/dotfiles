@@ -2,6 +2,11 @@ onboarding = false
 [keys]
 open_worktree = "prefix+alt+g"
 
+# herdr はマウス操作をアクションへバインドできない (keys.* はすべてキーボード限定)。
+# pane をクリックしてから prefix を挟まず 1 打鍵で zoom できるよう、ダイレクトキーを併記する。
+# 既定の prefix+z も残す。ダイレクトキーは pane 内アプリからそのキーを奪う点に注意。
+zoom = ["prefix+z", "ctrl+alt+z"]
+
 [ui]
 agent_panel_sort = "priority"
 
