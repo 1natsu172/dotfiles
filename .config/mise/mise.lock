@@ -308,7 +308,19 @@ url = "https://github.com/jdx/fnox/releases/download/v1.30.0/fnox-x86_64-unknown
 url_api = "https://api.github.com/repos/jdx/fnox/releases/assets/471791354"
 provenance = "github-attestations"
 
+[tools.fnox."platforms.linux-x64-baseline"]
+checksum = "sha256:2479e045a8b9bac203d499d24693ce98e3724706d22ebdd76d812c2b66dcc321"
+url = "https://github.com/jdx/fnox/releases/download/v1.30.0/fnox-x86_64-unknown-linux-gnu.tar.gz"
+url_api = "https://api.github.com/repos/jdx/fnox/releases/assets/471791354"
+provenance = "github-attestations"
+
 [tools.fnox."platforms.linux-x64-musl"]
+checksum = "sha256:2b12cd7d0e814ca9f0066b96a3e1c3f307f18b3819eab7a2eb11e173c3bec3b9"
+url = "https://github.com/jdx/fnox/releases/download/v1.30.0/fnox-x86_64-unknown-linux-musl.tar.gz"
+url_api = "https://api.github.com/repos/jdx/fnox/releases/assets/471791367"
+provenance = "github-attestations"
+
+[tools.fnox."platforms.linux-x64-musl-baseline"]
 checksum = "sha256:2b12cd7d0e814ca9f0066b96a3e1c3f307f18b3819eab7a2eb11e173c3bec3b9"
 url = "https://github.com/jdx/fnox/releases/download/v1.30.0/fnox-x86_64-unknown-linux-musl.tar.gz"
 url_api = "https://api.github.com/repos/jdx/fnox/releases/assets/471791367"
@@ -327,7 +339,19 @@ url = "https://github.com/jdx/fnox/releases/download/v1.30.0/fnox-x86_64-apple-d
 url_api = "https://api.github.com/repos/jdx/fnox/releases/assets/471791307"
 provenance = "github-attestations"
 
+[tools.fnox."platforms.macos-x64-baseline"]
+checksum = "sha256:13759ab93da8ab53c0e7530166a7128b6afd946bbca98d6583f892afff1ed903"
+url = "https://github.com/jdx/fnox/releases/download/v1.30.0/fnox-x86_64-apple-darwin.tar.gz"
+url_api = "https://api.github.com/repos/jdx/fnox/releases/assets/471791307"
+provenance = "github-attestations"
+
 [tools.fnox."platforms.windows-x64"]
+checksum = "sha256:9a6007af908a7c43275c5b0156d227e6a3a9cf183c68265ee7cdef26b88984e3"
+url = "https://github.com/jdx/fnox/releases/download/v1.30.0/fnox-x86_64-pc-windows-msvc.zip"
+url_api = "https://api.github.com/repos/jdx/fnox/releases/assets/471791353"
+provenance = "github-attestations"
+
+[tools.fnox."platforms.windows-x64-baseline"]
 checksum = "sha256:9a6007af908a7c43275c5b0156d227e6a3a9cf183c68265ee7cdef26b88984e3"
 url = "https://github.com/jdx/fnox/releases/download/v1.30.0/fnox-x86_64-pc-windows-msvc.zip"
 url_api = "https://api.github.com/repos/jdx/fnox/releases/assets/471791353"
