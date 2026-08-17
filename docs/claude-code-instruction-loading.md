@@ -38,10 +38,31 @@
 | `claude-code-settings.md` | `paths` で遅延 | 「settings を変更する」契機がファイル編集そのものなので `paths` で捕捉できる |
 | `git-push-upstream-sandbox.md` | 常時 | 「push する」契機はファイル編集を伴わず `paths` で捕捉できない |
 | `fnox-sandbox-invocation.md` | 常時 | 「npm / yarn を打つ」契機も同様 |
+| `japanese-style.md` | 常時 | 適用先が TUI 応答とファイル本文の両方で、契機がファイル編集に限られない。加えて PreToolUse hook が注入元として実行時に読む |
 
 **契機がファイル編集でないものは常時ロードにするしかない。** 常時ロードは全セッションのコンテキストを食うので数行に抑える（各ファイル冒頭のコメントに「`paths` を足さない」理由を書いてある）。
 
+`japanese-style.md` だけは数行に収まらない。これは `.claude/CLAUDE.md` から移した節で、CLAUDE.md も起動時に全文ロードされるため起動時のトークン量は増減しない。移動の狙いは、規範の実体を 1 ファイルへ寄せて hook の注入元と一致させることにある。
+
 `claude-code-settings.md` の `paths` が実際に効くことは cwd = dotfiles の素のセッションで確認済み（`dotfiles/.claude/settings.json` を Read して注入を観測）。ただし上記のとおり、**他 project から `~/.claude/settings.json` を触る場面は捕捉できない**。この場面が稀なので現状は `paths` のままにしている。
+
+### `japanese-style.md` を hook で注入し直す
+
+起動時ロードに加えて、PreToolUse hook（`node-scripts/src/claude-japanese-style-nudge.ts`）が `.md` への書き込み時に本文を `additionalContext` として注入し直す。起動時にロードした規範はコンテキストが伸びるほど遠ざかって効かなくなるため、現在位置へ置き直す。
+
+settings 側は `if` を `Edit(//**/*.md)` と `Write(//**/*.md)` の 2 エントリに分けている。`if` は tool 名の直接比較で、permission rule と違って `Edit(...)` が Write tool を捕まえないため、片方だけだと新規 `.md` 作成で注入が落ちる（`claude-code-security.md` の `D18`）。
+
+hook は本文を複製せず rule ファイルを実行時に読む。これで起動時にロードされる本文と注入される本文がずれない。
+
+**発火頻度が設計上の主変数。** `additionalContext` は attachment として履歴へ永続的に積まれ、後続の全リクエストで再送される。prompt キャッシュが下げるのは再送の価格だけで、context window の占有量は減らない（実測: 531 モデル呼び出しのセッションで `cache_read_input_tokens` は単調増加し、減少は 6 回ともキャッシュ失効による 0 へのリセットだった）。素朴に書き込みごとへ鳴らすと占有が膨らんで compact が早まり、注入で守ろうとしていたコンテキストを自分で壊す。
+
+そこで hook 側で `prompt_id`（ユーザーターンごとの UUID）と `agent_id` による重複排除を行い、発火を「`.md` を書いたターンにつき、エージェントごとに最大 1 回」に抑えている。過去 146 セッションでの試算では、1,678 回の `.md` 書き込みが 390 回の注入に落ち、context 占有の増分は平均 1.3%・最悪 4.6%。重複排除を外すと最悪 27.6% まで伸びる。
+
+枠を取れなかったときも、置き場そのものが使えなかったときも注入しない（fail closed）。重複排除が効かないまま注入を続けると並行する書き込みの全てが本文を積み、頻度を抑えるという前提が消えるため、注入を落とすほうが害が小さい。
+
+重複排除は **`wx`（存在したら失敗）でのファイル作成 1 回**で行い、EEXIST を負けたシグナルとして使う。read してから write する形では守れない。Claude Code は 1 応答に含まれる複数の Edit/Write を並行に走らせ、PreToolUse hook も並行に起動するため、全プロセスが「未注入」を読んでから書いて全員が注入する。`agent_id` をキーへ含めるのは、subagent が親と `session_id` / `prompt_id` を共有するためで、含めないと subagent が先に `.md` を書いたターンで親側の注入が消える。
+
+`additionalContext` に `@path` を書いても展開されない。`@` import は起動時のメモリファイル読み込み専用の経路で、hook の出力はそこを通らない。
 
 ## 検証のやり方
 
