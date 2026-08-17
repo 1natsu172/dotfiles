@@ -147,6 +147,13 @@
             "if": "Edit(//**/.claude/settings*.json)",
             "timeout": 10,
             "statusMessage": "settings のパス綴りを検査中"
+          },
+          {
+            "type": "command",
+            "command": "bun ~/dotfiles/node-scripts/src/claude-settings-symlink-guard.ts",
+            "if": "Write(//**/.claude/settings*.json)",
+            "timeout": 10,
+            "statusMessage": "settings のパス綴りを検査中"
           }
         ]
       }

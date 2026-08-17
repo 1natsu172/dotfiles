@@ -13,6 +13,7 @@ paths:
 - `docs/claude-code-security.md` は **dotfiles 固有の判断**と**公式から自明でない検証済み挙動（delta）**だけを書く。仕様の写経はしない（書くとドリフトする）。
 - permission rule は**実機で deny 検証してから確定**する（推測で書かない）。
   - **tool の write 防御は必ず `Edit(...)` で検証する。`Write(...)` は無機能**（組み込み Write tool も Bash redirect も gate しない。CC 2.1.210 実機確定・公式 Docs 明記で起動時 WARN の原因。詳細は `docs/claude-code-security.md` の `D3`）。`Write` だけで試すと「効かない」と誤認する。
+- **hook の `if` へこの結論を持ち込まない。`if` は逆で、Write tool を捕まえるには `Write(...)` が要る**（tool 名の直接比較なので `Edit(...)` は Edit にしか効かない）。`matcher` に `Edit|Write` と書いても `if` が弾く。両方を捕まえるなら綴りごとに 2 エントリ並べる（`docs/claude-code-security.md` の `D18`）。
 - **dir symlink を経由するパス（`~/.config/**`・`~/.codex/**` 等、実体が dotfiles 側にあるもの）を deny するときは実体パス `~/dotfiles/...` で書き、`~/...` 綴りと併記しない**。symlink 綴りだけだと file tool しか守れず Bash と OS 層は無言で素通りし、併記は冗長なうえ「どちらが効いているか」を隠す（詳細・実測は `docs/claude-code-security.md` の `D10`）。ファイル単体の symlink（`~/.gitconfig` 等）と home の実ディレクトリ（`~/.ssh` 等）は `~/...` のままでよい。
 - **綴りは hook（`claude-settings-symlink-guard`）が検査する**。settings を編集すると symlink 経由のパスが報告されるので、**報告が返ったら実体パスに直してから続ける**（無視して進めない）。手動確認は `bun ./node-scripts/src/claude-settings-symlink-guard.ts ~/.claude/settings.json`。仕組みと限界は `docs/claude-code-security.md` の「settings のパス綴りを hook で検査する」。
 - **パス指定の deny は `//**/X`（FS 全体アンカー）で書く。`**/X`（相対アンカー）は使わない**。`**/` は層ごとに効き方が食い違う（ファイル型は Bash/OS 層のみ、ディレクトリ型は file tool 層のみ）うえ、**dotfiles 内で検証すると cwd と `~/.claude` が同一ツリーになり食い違いを検出できない**（`docs/claude-code-security.md` の `D11`）。
