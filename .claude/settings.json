@@ -436,5 +436,6 @@
   "teammateMode": "auto",
   "remoteControlAtStartup": false,
   "agentPushNotifEnabled": true,
-  "voiceEnabled": true
+  "voiceEnabled": true,
+  "advisorModel": "fable"
 }
