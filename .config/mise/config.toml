@@ -88,6 +88,12 @@ _.path = [
   # are managed through the `go:` backend in [tools] instead of `go install`.
   # Flipping `go.set_gobin = false` would send `go install` to ~/go/bin and make
   # this entry necessary again.
+
+  # Installers for these two append to a shell rc on their own (lms writes an
+  # `export PATH` block to every rc it finds, opencode a `fish_add_path` line).
+  # Kept here instead, so the rc files stay free of generated blocks.
+  "{{env.HOME}}/.opencode/bin",
+  "{{env.HOME}}/.lmstudio/bin",
   "{{env.ANDROID_HOME}}/platform-tools",
   "{{env.ANDROID_HOME}}/emulator",
   # Ghostty.app/Contents/MacOS is deliberately absent: Ghostty puts it on PATH
