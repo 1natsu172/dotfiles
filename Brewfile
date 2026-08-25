@@ -202,7 +202,6 @@ mas "Kindle", id: 302584613
 mas "Microsoft To Do", id: 1274495053
 mas "Numbers", id: 409203825
 mas "Pages", id: 409201541
-mas "Whisper Transcription", id: 1668083311
 mas "WiFi Signal", id: 525912054
 vscode "anthropic.claude-code"
 vscode "astro-build.astro-vscode"
