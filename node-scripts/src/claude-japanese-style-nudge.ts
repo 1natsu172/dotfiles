@@ -23,7 +23,9 @@
  * ロードされる本文と注入される本文が一致し続ける。
  *
  * 呼ばれ方:
- *   - PreToolUse hook（matcher `Edit|Write`、`if` は `.md` 限定で Edit 用と Write 用の 2 エントリ。
+ *   - PreToolUse hook。**現在は settings.json から外し、hook なしで規範が保たれるかを経過観測している**
+ *     （判断の目安と戻し方は `docs/claude-code-instruction-loading.md`）。以下は登録するときの形。
+ *     matcher `Edit|Write`、`if` は `.md` 限定で Edit 用と Write 用の 2 エントリ（
  *     `if` は tool 名の直接比較で、permission rule と違い `Edit(...)` が Write tool を捕まえない
  *     ため、片方だけだと新規作成で落ちる＝`docs/claude-code-security.md` の `D18`）。
  *     PreToolUse が鳴る時点で

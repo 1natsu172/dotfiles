@@ -176,23 +176,6 @@
             "command": "ccstatusline --hook"
           }
         ]
-      },
-      {
-        "matcher": "Edit|Write",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bun ~/dotfiles/node-scripts/src/claude-japanese-style-nudge.ts",
-            "if": "Edit(//**/*.md)",
-            "timeout": 10
-          },
-          {
-            "type": "command",
-            "command": "bun ~/dotfiles/node-scripts/src/claude-japanese-style-nudge.ts",
-            "if": "Write(//**/*.md)",
-            "timeout": 10
-          }
-        ]
       }
     ],
     "SessionStart": [

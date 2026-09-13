@@ -1,7 +1,8 @@
 <!-- scope:global (eager) — `paths:` の不在は意図的。
      理由 1: 適用先は TUI 応答とファイル本文の両方で、契機がファイル編集に限られないため `paths` で捕捉できない。
-     理由 2: このファイルは PreToolUse hook（claude-japanese-style-nudge）が注入元として実行時に読む。
-     起動時にロードされる本文と注入される本文を一致させるため、実体はここ 1 箇所に置く。
+     理由 2: このファイルは PreToolUse hook（claude-japanese-style-nudge）の注入元を兼ねる。hook は現在
+     settings から外して経過観測中（docs/claude-code-instruction-loading.md）。戻したときに起動時ロードの
+     本文と注入される本文が一致するよう、実体はここ 1 箇所に置く。
      `paths:` を足さないこと。 -->
 
 # 文章と日本語の規範

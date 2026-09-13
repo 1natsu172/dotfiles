@@ -38,7 +38,7 @@
 | `claude-code-settings.md` | `paths` で遅延 | 「settings を変更する」契機がファイル編集そのものなので `paths` で捕捉できる |
 | `git-push-upstream-sandbox.md` | 常時 | 「push する」契機はファイル編集を伴わず `paths` で捕捉できない |
 | `fnox-sandbox-invocation.md` | 常時 | 「npm / yarn を打つ」契機も同様 |
-| `japanese-style.md` | 常時 | 適用先が TUI 応答とファイル本文の両方で、契機がファイル編集に限られない。加えて PreToolUse hook が注入元として実行時に読む |
+| `japanese-style.md` | 常時 | 適用先が TUI 応答とファイル本文の両方で、契機がファイル編集に限られない。加えて PreToolUse hook の注入元を兼ねる（hook は現在無効。後述） |
 
 **契機がファイル編集でないものは常時ロードにするしかない。** 常時ロードは全セッションのコンテキストを食うので数行に抑える（各ファイル冒頭のコメントに「`paths` を足さない」理由を書いてある）。
 
@@ -46,11 +46,37 @@
 
 `claude-code-settings.md` の `paths` が実際に効くことは cwd = dotfiles の素のセッションで確認済み（`dotfiles/.claude/settings.json` を Read して注入を観測）。ただし上記のとおり、**他 project から `~/.claude/settings.json` を触る場面は捕捉できない**。この場面が稀なので現状は `paths` のままにしている。
 
-### `japanese-style.md` を hook で注入し直す
+### `japanese-style.md` を hook で注入し直す（現在は無効）
 
-起動時ロードに加えて、PreToolUse hook（`node-scripts/src/claude-japanese-style-nudge.ts`）が `.md` への書き込み時に本文を `additionalContext` として注入し直す。起動時にロードした規範はコンテキストが伸びるほど遠ざかって効かなくなるため、現在位置へ置き直す。
+**この hook は現在 `.claude/settings.json` から外し、経過観測している。** 観測しているのは、hook を使わず起動時ロードの rule だけで、長いセッションの後半まで規範が保たれるかどうか。観測開始は 2026-09-14、CC 2.1.270。Claude Code の更新で改善していれば hook は要らない。スクリプトとテストは残してあり、本節の以下の記述は hook を戻すときの設計としてそのまま有効。
 
-settings 側は `if` を `Edit(//**/*.md)` と `Write(//**/*.md)` の 2 エントリに分けている。`if` は tool 名の直接比較で、permission rule と違って `Edit(...)` が Write tool を捕まえないため、片方だけだと新規 `.md` 作成で注入が落ちる（`claude-code-security.md` の `D18`）。
+- **戻す目安**: 長いセッションの後半で `.md` を書いたときに、ダッシュや英語の比喩を直訳した語が戻ってくる
+- **外したまま確定するなら**: スクリプト、テスト、本節、`japanese-style.md` 冒頭コメントの理由 2 を片づける
+- **戻し方**: `.claude/settings.json` の `hooks.PreToolUse` へ次のエントリを足す
+
+```json
+{
+  "matcher": "Edit|Write",
+  "hooks": [
+    {
+      "type": "command",
+      "command": "bun ~/dotfiles/node-scripts/src/claude-japanese-style-nudge.ts",
+      "if": "Edit(//**/*.md)",
+      "timeout": 10
+    },
+    {
+      "type": "command",
+      "command": "bun ~/dotfiles/node-scripts/src/claude-japanese-style-nudge.ts",
+      "if": "Write(//**/*.md)",
+      "timeout": 10
+    }
+  ]
+}
+```
+
+有効にすると、PreToolUse hook（`node-scripts/src/claude-japanese-style-nudge.ts`）が、起動時ロードとは別に `.md` への書き込み時にも本文を `additionalContext` として注入し直す。起動時にロードした規範はコンテキストが伸びるほど遠ざかって効かなくなるため、現在位置へ置き直す。
+
+settings 側では `if` を `Edit(//**/*.md)` と `Write(//**/*.md)` の 2 エントリに分ける。`if` は tool 名の直接比較で、permission rule と違って `Edit(...)` が Write tool を捕まえないため、片方だけだと新規 `.md` 作成で注入が落ちる（`claude-code-security.md` の `D18`）。
 
 hook は本文を複製せず rule ファイルを実行時に読む。これで起動時にロードされる本文と注入される本文がずれない。
 
