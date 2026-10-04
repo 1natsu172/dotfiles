@@ -57,13 +57,13 @@ macOS 同梱の `/bin/bash` は 3.2 固定なので、Brewfile で bash 5 を入
 
 **bash 3.2 互換を維持する（PATH が不定、または bash 5 より前に走る経路）**
 
-- `claude-utils/` 配下 — Claude Code の hooks と `headersHelper`。`settings.json` /
+- `claude-utils/` 配下: Claude Code の hooks と `headersHelper`。`settings.json` /
   `.mcp.json` から絶対パスで起動されるため、PATH は Claude Code のプロセス次第になる。
   GUI から起動された場合は `/usr/bin:/bin` だけになり `/bin/bash` に落ちる
-- `credential-helper.sh` — git が呼ぶ。`#!/bin/sh` で POSIX の範囲に留める
-- `install-fnox-shell-wrappers` と repo ルートの `install.sh` — README のセットアップ手順で
+- `credential-helper.sh`: git が呼ぶ。`#!/bin/sh` で POSIX の範囲に留める
+- `install-fnox-shell-wrappers` と repo ルートの `install.sh`: README のセットアップ手順で
   `brew bundle` より前に走る。新規マシンではまだ bash 5 が存在しない
-- `sample-script.sh` と `difiti` — bash 4 以降の機能を使わないので、要求を上げる理由がない
+- `sample-script.sh` と `difiti`: bash 4 以降の機能を使わないので、要求を上げる理由がない
 
 `fnox-wrappers.sh` は fish / zsh / bash の rc から source される生成物なので POSIX 関数のみ。
 
