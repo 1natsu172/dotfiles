@@ -2,7 +2,6 @@
   "env": {
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
     "CURL_CA_BUNDLE": "/opt/homebrew/etc/ca-certificates/cert.pem",
-    "ENABLE_TOOL_SEARCH": "true",
     "GIT_SSL_CAINFO": "/opt/homebrew/etc/ca-certificates/cert.pem",
     "SSL_CERT_FILE": "/opt/homebrew/etc/ca-certificates/cert.pem"
   },
@@ -99,8 +98,6 @@
       "Bash(defaults import *)"
     ],
     "ask": [
-      "Bash(curl *)",
-      "Bash(wget *)",
       "Bash(rm *)",
       "Bash(gh workflow run *)",
       "Bash(gh run rerun *)",
@@ -422,9 +419,12 @@
   },
   "advisorModel": "opus",
   "tui": "fullscreen",
+  "voice": {
+    "enabled": true,
+    "mode": "hold"
+  },
   "skipWorkflowUsageWarning": true,
   "teammateMode": "auto",
   "remoteControlAtStartup": false,
-  "agentPushNotifEnabled": true,
-  "voiceEnabled": true
+  "agentPushNotifEnabled": true
 }

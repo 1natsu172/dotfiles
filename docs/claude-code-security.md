@@ -95,12 +95,14 @@
 
 sandbox の中でも外部への送信やデータの消失は起こりうるので、そういう操作だけ `ask` に置く。
 
-- `curl *` `wget *` `rm *`: 外部への送信と不可逆な削除
+- `rm *`: 不可逆な削除
 - `env` `printenv *`: fnox が注入した token をまとめて出力する経路で、Shai-Hulud 型が env を漁る挙動そのもの
 - `* publish *`: 不可逆な外部公開で、侵害された環境から汚染版を publish して広がる経路でもある
 - `gh workflow run *` `gh run rerun *`: CI を動かす
 
 `sed` などの viewer は置かない（`D8`）。迂回できる（`D2`）ので防御にならず、subagent が止まるだけになる。
+
+`curl` `wget` も置かない。sandbox 内の送信先は `allowedDomains` に限られ、リスト外へ出るには auto mode の classifier の審査か permission の確認を通る。python や node でも同じ送信ができるので、`ask` に置いても防御は増えず、調査のたびに確認が出るだけになる。外部送信を止めているのは `allowedDomains` なので、ここは必要最小限に保つ（「Sandbox の追加設定」）。
 
 ### git
 
