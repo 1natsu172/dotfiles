@@ -14,6 +14,7 @@ macOS の個人 dotfiles。シェル・各種ツール・AI エージェント�
 - [docs/claude-code-instruction-loading.md](./docs/claude-code-instruction-loading.md) — CLAUDE.md / `.claude/rules` がいつコンテキストへ載るか。`paths` の解決規則（project root 基準・配下に閉じる）と検証手段。**rule の `paths` を足す・変える前に読むこと**
 - [docs/supply-chain-defenses.md](./docs/supply-chain-defenses.md) — npm / bun / pnpm のサプライチェーン多層防御。保持期間・postinstall・proxy registry
 - [docs/fnox-token-management.md](./docs/fnox-token-management.md) — 秘匿情報を disk に置かず、実行時に消費プロセスへ注入する仕組み
+- [docs/token-leak-prevention.md](./docs/token-leak-prevention.md) — パッケージマネージャーの login が追跡対象へ書き込むトークンを、pre-commit の gitleaks で止める
 - [docs/herdr-session-lifecycle.md](./docs/herdr-session-lifecycle.md) — herdr の server が detach を跨いで生存するため、シェル設定の変更が反映されない問題と対処。**config.fish / PATH を触ったら読むこと**
 - [docs/shell-env-management.md](./docs/shell-env-management.md) — PATH / 環境変数を mise に集約する方針、`brew shellenv` と `mise activate` の順序制約、fish の二重 activate。**config.fish / .zshrc / .bashrc / mise の config.toml を触る前に読むこと**
 - [docs/homebrew-maintenance-ops.md](./docs/homebrew-maintenance-ops.md) — Brewfile は生成物で状態の実体はレシート側にある。剪定・棚卸しの手順。**Brewfile を編集する前に読むこと**

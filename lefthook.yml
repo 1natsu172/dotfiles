@@ -4,11 +4,11 @@
 # 切っている理由は AI エージェントの sandbox 固有の事情: docs/claude-code-security.md の `D16`。
 no_auto_install: true
 
-# pre-commit の lint。実体は mise のファイルタスク（mise-tasks/lint/shell）で、
-# ここは起動と対象の絞り込みだけを担う。
+# pre-commit は shell の lint と秘匿情報の検査の 2 つ。lint の実体は mise のファイルタスク
+# （mise-tasks/lint/shell）で、ここは起動と対象の絞り込みだけを担う。
 #
 # lefthook 本体は `lefthook install` が生成する .git/hooks/pre-commit が mise の install
-# パスを直接フォールバックに持つので、mise が未活性でも起動する。ただし下の `mise run` は
+# パスを直接フォールバックに持つので、mise が未活性でも起動する。ただし下の `mise run` / `mise x` は
 # PATH 上の mise を要求するため、PATH が最小限しか通っていない GUI の git クライアントからの
 # commit では失敗する（素通りせず落ちるので、そのときは terminal から commit する）。
 #
@@ -28,3 +28,8 @@ pre-commit:
         - "install.sh"
         - "mise-tasks/**"
       run: mise run lint:shell {staged_files}
+    # 認証トークンのコミットを止める。対象と理由は docs/token-leak-prevention.md。
+    # gitleaks は staged の差分を自分で読むので、glob も {staged_files} も渡さない。
+    # --verbose がないと検出箇所が出ず件数だけになる。
+    - name: secret-scan
+      run: mise x -- gitleaks git --pre-commit --staged --redact --verbose --no-banner

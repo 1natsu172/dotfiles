@@ -9,6 +9,8 @@
 [tools]
 # pre-commit の lint 用（lefthook.yml）。shellcheck / shfmt 本体は Brewfile 側。
 lefthook = "latest"
+# pre-commit の秘匿情報検査用（lefthook.yml の secret-scan）。
+gitleaks = "latest"
 
 [tasks.lint]
 description = "lint をまとめて実行する"
