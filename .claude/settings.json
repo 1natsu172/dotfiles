@@ -110,7 +110,7 @@
     ],
     "defaultMode": "auto"
   },
-  "model": "opus[1m]",
+  "model": "opus",
   "enableAllProjectMcpServers": false,
   "enabledMcpjsonServers": [
     "context7",
@@ -415,7 +415,12 @@
     ]
   },
   "effortLevel": "high",
-  "advisorModel": "fable",
+  "modelSettings": {
+    "claude-opus-5-5": {
+      "effortLevel": "medium"
+    }
+  },
+  "advisorModel": "opus",
   "tui": "fullscreen",
   "skipWorkflowUsageWarning": true,
   "teammateMode": "auto",
