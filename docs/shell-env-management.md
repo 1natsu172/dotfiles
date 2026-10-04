@@ -1,78 +1,40 @@
 # シェル環境（PATH / 環境変数）の管理
 
-## 前提
+PATH の追加とシェルに依存しない環境変数は `.config/mise/config.toml` の `[env]` に書く。`_.path` が PATH、他のキーが環境変数になり、fish / zsh / bash のどれも `mise activate` で同じ値を受け取る。キーバインド・色・関数などシェル固有の設定は各シェルの rc に残す。
 
-PATH の追加とシェル非依存の環境変数は `.config/mise/config.toml` の `[env]` が正本。`_.path` が PATH、それ以外のキーが環境変数になる。fish / zsh / bash のいずれも `mise activate` 経由で同じ値を受け取る。
+- `fish_add_path` は使わない。universal variable `fish_user_paths`（`fish_variables` に保存され、追跡対象外）に書くので config.fish と実際の値がずれ、fish から起動していないプロセスには伝わらない。存在しないディレクトリは黙って無視する
+- 自分で PATH を出力する仕組みを持つツールはそれに任せ、`_.path` に並べない。Homebrew は `brew shellenv`、mise は自身の tool パス、Ghostty は自分で PATH に入れる
+- `JAVA_HOME` `GOROOT` `GOBIN` は mise が設定するので、シェル側で上書きしない。shims だけでは設定されず `mise activate` が要る。`GOBIN` は mise の go の配下を指すので、Go の CLI は `[tools]` の `go:` backend で入れる
 
-`fish_add_path` は使わない。universal variable `fish_user_paths`（実体は `~/.config/fish/fish_variables`、追跡対象外）へ書き込むため config.fish の記述と実効値がずれ、fish 起点でないプロセスには伝わらない。
+## 順序
 
-vendor が自前の env 出力インターフェースを持つものは vendor に任せ、`_.path` に列挙しない。Homebrew は `brew shellenv`、mise 自身は tool パス、Ghostty は自分で PATH に入れる。
-
-キーバインド・色・シェル関数といったシェル固有の設定は各シェルの rc に残す。
-
-## 順序の制約
-
-`brew shellenv <shell>` は `mise activate` より**前**に置く。`brew shellenv fish` は `fish_add_path --global --move --path` で `/opt/homebrew/bin` を先頭へ移すため、後に置くと Homebrew の python3 が mise 管理の python を隠す。
-
-```fish
-command -v python3
-```
-
-`_.path` のエントリは mise の tool パスより前に入る。mise 管理ツールと同名のバイナリを持つディレクトリを `_.path` に置かないこと。
-
-```sh
-mise env -s zsh
-```
+- `brew shellenv <shell>` は `mise activate` より前に置く。`brew shellenv fish` は `/opt/homebrew/bin` を PATH の先頭へ移すので、後に置くと Homebrew の python3 が mise の python を隠す。`command -v python3` で確かめる
+- `_.path` のエントリは mise の tool パスより前に入る。mise で管理しているツールと同名のバイナリを持つディレクトリを `_.path` に置かない。`mise env -s zsh` で確かめる
 
 ## brew shellenv
 
-シェル名を明示的に渡す（`zsh` / `bash` / `fish`）。引数なしの `brew shellenv` は `$SHELL` を見て出力構文を決めるため、`$SHELL` と実行中のシェルが一致しないと別シェルの構文が流れ込む。
+- シェル名（`zsh` / `bash` / `fish`）を必ず渡す。引数が無いと `$SHELL` で構文を決めるので、実行中のシェルと違えば別の構文が流れ込む
+- zsh では `.zprofile` ではなく `.zshrc` に置く。`.zprofile` は login shell でしか読まれない。Homebrew のインストーラは `.zprofile` を案内してくるが従わない
 
-zsh は `.zprofile` ではなく `.zshrc` に置く。`.zprofile` は login shell でしか読まれず、非ログインの zsh に届かない。Homebrew のインストーラが表示する「Next steps」は `$SHELL` から配布先を決めるため、macOS では `.zprofile` を案内してくる。
+## fish の mise は二重に activate されうる
 
-## fish では mise が二重に activate されうる
-
-Homebrew の mise formula が `/opt/homebrew/share/fish/vendor_conf.d/mise-activate.fish` を配置する。これは config.fish より先に読まれ、`mise activate fish`（hook-env）を無条件で実行する。
-
-したがって config.fish 側で hook-env を呼ぶ必要はない。IDE 向けに shims を足す場合だけ activate する。
-
-無効化する場合は `MISE_FISH_AUTO_ACTIVATE=0` を vendor conf.d より先に読ませる（`conf.d/` にファイル名順で先行する名前で置く）。
+Homebrew の mise は `/opt/homebrew/share/fish/vendor_conf.d/mise-activate.fish` を置き、config.fish より先に `mise activate fish` を実行する。config.fish 側で activate する必要は無く、IDE 向けに shims を足すときだけ書く。止めるなら `MISE_FISH_AUTO_ACTIVATE=0` を、ファイル名順で先に読まれる `conf.d/` のファイルに置く。
 
 ```fish
 fish --profile-startup /tmp/p.log -lc true; grep -i mise /tmp/p.log
 ```
 
-## mise が設定する環境変数
-
-`JAVA_HOME` / `GOROOT` / `GOBIN` は mise が設定する。シェル側で上書きしないこと。
-
-これらは `mise activate` が必要で、shims だけでは設定されない。
-
-`GOBIN` が mise の go install 配下を指すため、`go install` の出力は `~/go/bin` に入らない。Go の CLI ツールは `[tools]` の `go:` backend で管理する（`.default-go-packages` は非推奨）。
-
-```sh
-mise env -s zsh
-```
-
 ## 診断
 
-クリーンな login shell と突き合わせる。ここに出るものは現行の設定が出力しているもので、継承の残骸ではない。
+環境変数を落とした login shell の PATH が、いまの設定が出力する PATH になる。ここに無いのにペインにだけあるものは、herdr などが引き継いだ古い値。
 
 ```fish
 /usr/bin/env -i HOME=$HOME TERM=xterm USER=$USER fish -l -c 'string join \n $PATH'
+string join \n $PATH | sort | uniq -d                    # 重複
+for p in $PATH; test -d $p; or echo "missing: $p"; end   # 存在しないエントリ
 ```
 
-重複と実体のないエントリを洗う。
-
-```fish
-string join \n $PATH | sort | uniq -d
-for p in $PATH; test -d $p; or echo "missing: $p"; end
-```
-
-## 落とし穴
-
-- **設定を消したのに残る場合は herdr を疑う。** [herdr-session-lifecycle.md](./herdr-session-lifecycle.md) の手順を踏むまで反映されない
-- **Claude Code は起動時の shell snapshot を使う。** 設定を変えたら Claude Code の再起動が要る
-- **`/usr/libexec/java_home` は sandbox 内では JVM を1つも検出できない。** `Unable to locate a Java Runtime` を返すため、JVM の確認は sandbox 外で実行する
-- **`fish_add_path` は存在しないディレクトリを黙って無視する。** 行が残っていても効いていないことがある
-- **universal variable は config.fish から記述を消しても残る。** `set -U --erase <name>` で個別に消す
+- 設定から消したのに残るなら herdr を疑う（[herdr-session-lifecycle.md](./herdr-session-lifecycle.md)）
+- universal variable は config.fish から消しても残る。`set -U --erase <name>` で消す
+- Claude Code は起動時の shell snapshot を使うので、設定を変えたら再起動する
+- `/usr/libexec/java_home` は sandbox 内では JVM を検出できず `Unable to locate a Java Runtime` を返す。sandbox 外で確かめる

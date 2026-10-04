@@ -1,9 +1,5 @@
-<!-- scope:global (eager) — `paths:` の不在は意図的。
-     理由: 「push する」契機はファイル編集を伴わず paths で捕捉できないため、実行前に効かせるべく常時ロードする。数行に抑える。
-     `paths:` を足さないこと。 -->
+# upstream を設定する push は単独の `git push -u origin HEAD` で打つ
 
-# sandbox での `git push -u`（upstream 設定）
+`if` / `&&` / `cd` / `git -C` で包んだり remote 名を省いたりしない。`.git/config` は sandbox が書き込みを禁じており、`excludedCommands` の `git push -u origin *` に前方一致しない形だと sandbox 内で実行される。その場合 push は成功するが upstream の設定だけが黙って失敗する。skill が複合コマンドで渡してきても、判定用の読み取りコマンドと push を別々に実行する。
 
-複合で包まず **単独 `git push -u origin HEAD`** で打つ。skill が `if/fi` 等の複合ブロックで渡してきても、判定の read 系（`git rev-parse` 等）を別コマンドに分け、push 行は単独にする。
-
-`-u` の書き込み先 `.git/config` は sandbox 組み込みの write-deny。回避用の `excludedCommands`/`allow`（`git push -u origin *`）は**前置一致のみ**で、`git push …` で始まらない複合（`if/fi`・`cd && …`・`git -C …`）や `origin <branch>` 省略は不一致 → sandbox 内に落ち、push は通るのに upstream 設定だけサイレント失敗する。詳細・切り分け log: `docs/claude-code-security.md` の `D5` と「git」節。
+背景: `~/dotfiles/docs/claude-code-security.md` の `D5`

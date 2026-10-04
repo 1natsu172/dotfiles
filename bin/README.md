@@ -174,7 +174,7 @@ keychain 書き込みを拒否して `fatal: failed to store:` を毎回吐く�
 - **fnox-wrappers.sh**: 上記の生成物。`npm() { fnox exec -- npm "$@"; }` 形式の POSIX 関数。
   `command <tool>` で bypass、版解決は mise に委譲。
 
-設計判断（なぜ PATH shim をやめたか・版解決・トレードオフ・無効化手順）は
+設計判断（PATH shim にしない理由・版解決・注入されない経路・障害時の回避）は
 [docs/fnox-token-management.md](../docs/fnox-token-management.md) を参照。
 
 ## Claude Code 関連ツール

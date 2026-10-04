@@ -1,11 +1,5 @@
-# sandbox 内での fnox ラッパー呼び出し
+# token が要る npm / yarn / pnpm / bun は `fnox exec` で打つ
 
-<!-- eager ロード（paths トリガなし）: 「npm/yarn を打つ」契機はファイル編集を伴わず paths で捕捉できないため、実行前に効かせるべく常時ロードする。数行に抑える。 -->
+registry の token を要する操作（install・publish 等）は、素の `npm install` ではなく `fnox exec -- npm install` の形で打つ。素のラッパー呼び出しは sandbox 内に残り、fnox が呼ぶ op が TLS 検証に失敗して 401 になる。`fnox *` は `excludedCommands` に入っているので、この形なら sandbox 外で token を解決できる。token が要らないコマンドは素のままでよい。
 
-sandbox 有効時、**token を要する** npm / yarn / pnpm / bun 操作（既定 registry が `.npmrc` 経由で token を要求するため、未注入だと 401）は、素のラッパー（`npm install`）ではなく **`fnox exec -- <pm> …` の形で明示的に打つ**。
-
-- 素のラッパーは Claude の submit 文字列が `npm …` で `excludedCommands: ["fnox *"]` に当たらず sandbox 内に残る → op（Go 製）が Seatbelt 下で TLS 検証に失敗して token 未解決 → 401。
-- `fnox exec -- <pm> …` は `fnox *` に当たり sandbox 外で実行され op が解決できる（その install のみ unsandbox になる＝`npm */yarn *` の全除外より狭い、を許容）。
-- token 不要のコマンドは素のラッパー（sandbox 内）のままでよい（`npm --version` 等は WARN が出ても無害）。
-
-理由・切り分けの実機ログ: `docs/fnox-token-management.md` §sandbox / permission、`docs/claude-code-security.md` §fnox。
+背景: `~/dotfiles/docs/claude-code-security.md` の「fnox」節
