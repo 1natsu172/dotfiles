@@ -21,7 +21,7 @@
 | `D2` | 2026-05-25 | 2.1.150 | Bash の matcher は `&&` `;` `\|` `$(...)` を分解して評価するが、別パス名（`/bin/echo`）やインタプリタ経由（`sh -c`）は取りこぼす。Bash の deny は誤承認を防ぐ程度のもので、境界は sandbox |
 | `D3` | 2026-07-15 | 2.1.210 | `Write(path)` の permission rule は何も止めない。組み込み Write tool は Edit 扱いで `Edit(...)` が止め、Bash の redirect も `Write(...)` では止まらない。パス無しの `Write`（tool 全体）は別扱いで有効 |
 | `D4` | 2026-05-25 | 2.1.150 | 秘密鍵用の `Read(//**/*.pem)` が公開 CA バンドル（`cert.pem`）まで遮断し、sandbox 内の `git push` や `curl` が TLS 確立前に失敗する。対処は「sandbox 内で TLS を通す」 |
-| `D5` | 2026-06-08 | 2.1.168 | `.git/config` と `.git/hooks/` は harness 組み込みで sandbox から書けない。`git commit` は通るが、`git push -u` は upstream の書き込みに失敗する。しかも git は exit 0 で「set up to track」と表示するので失敗に気付けない。Claude の Edit tool からは `.git/config` を書ける |
+| `D5` | 2026-10-04 | 2.1.288 | `.git/config` と `.git/hooks/` は harness 組み込みで sandbox から書けない。`git push -u` と `git branch -d` は本体の操作だけ成功し、config の更新は失敗する。`git push -u` は exit 0 で「set up to track」と表示するので失敗に気付けない。Claude の Edit tool からは書ける |
 | `D6` | 2026-07-12 | 2.1.207 | sandbox のファイル判定は symlink を解決した実体パスで行う。`allowWrite` に symlink 側の綴りを書いても効かないので、dotfiles 管理のパスは `~/dotfiles/...` で書く |
 | `D7` | 2026-07-22 | 2.1.216 | sandbox は keychain への書き込みを遮断する。git の `osxkeychain` helper は認証後の store で `fatal: failed to store: 100001` を出すが、認証は通っていて exit 0。helper が system と global の 2 箇所で設定されていると 2 行出る |
 | `D8` | 2026-06-18 | 未記録 | `autoAllowBashIfSandboxed` でも明示の `ask` は sandbox 内で発火する（`deny` > `ask` > auto-allow）。パイプの後段も単独で判定される。`sed` などの viewer を `ask` に置くと、ページングのたびに発火し、非対話の subagent は denied として扱う |
@@ -35,6 +35,7 @@
 | `D16` | 2026-07-29 | 2.1.220 | lefthook の hook 自動同期が `.git/hooks/` の書き込み禁止（`D5`）に当たり、commit のたびにエラーを出す。commit 自体は成功する。`lefthook.yml` の `no_auto_install: true` で止め、hook の種類を増やしたときだけ手で `lefthook install` する |
 | `D17` | 2026-06-26 | 未記録 | macOS の `security` CLI の書き込み系（`list-keychains -s` など）は sandbox 内で exit 0 のまま何もしない。読み取り系は通るので成功したように見える。sandbox 外で実行し直す |
 | `D18` | 2026-08-17 | 2.1.233 | hook の `if` は tool 名をそのまま比べるので、permission と逆に `Edit(...)` は Write tool に当たらない。Edit と Write の両方を捕まえるなら `if` を 2 エントリ並べる |
+| `D19` | 2026-10-05 | 2.1.289 | `excludedCommands` はコマンド全体が除外パターンに当たるときだけ効く。同じパターン同士の `&&` `;` と `2>&1` は sandbox 外で動く。パイプ、ファイルへのリダイレクト、`$(...)`、heredoc、ほかのコマンドとの連結を含むと、全体が sandbox 内で動く |
 
 ## ファイル別の保護方針
 
@@ -88,6 +89,8 @@
 
 `autoAllowBashIfSandboxed: true` なので、sandbox 内のコマンドは明示ルールに当たらなければ自動で許可される（`D8`）。`allow` が意味を持つのは sandbox 外で実行するコマンド（`excludedCommands`）と WebFetch だけ。
 
+`excludedCommands` はコマンド全体が当たるときしか効かない（`D19`）ので、AI には除外したコマンドを単独で打たせる（`.claude/rules/sandbox-excluded-commands.md`）。
+
 ### ask
 
 sandbox の中でも外部への送信やデータの消失は起こりうるので、そういう操作だけ `ask` に置く。
@@ -111,7 +114,7 @@ upstream を設定する push だけは `excludedCommands` で sandbox 外に出
 
 keychain への store 失敗（`D7`）は `~/.gitconfig` の credential helper で黙らせる。helper を `helper =` でリセットしてから `~/dotfiles/bin/credential-helper.sh` 1 本に置き換え、Claude Code の中でだけ `store` / `erase` を何もしないようにしている。
 
-- git の push / fetch 全体を sandbox 外に出す案は採らない。複合コマンドや子プロセスの git には前方一致が効かない
+- git の push / fetch 全体を sandbox 外に出す案は採らない。複合コマンド（`D19`）や子プロセスの git には効かない
 - スクリプトに実行権が無いと `get` が exit 126 で失敗し、git が対話プロンプトで止まる
 - Homebrew の `/opt/homebrew/etc/gitconfig` は `brew upgrade` で復活するので、消さずにリセットで無効化する
 
@@ -129,7 +132,7 @@ fnox が呼ぶ op も Go 製で、Seatbelt の中では TLS 検証に失敗す�
 
 - 除外するのは `op *` ではなく `fnox *`。`excludedCommands` は Claude が送るコマンド文字列の先頭に当たるので、子プロセスの op は名前では捕まらない
 - `fnox get *` と `fnox export *` は値を出力するので deny。`fnox exec` は値を出さずに子プロセスへ注入するだけなので許可する
-- シェル関数のラッパー経由の `npm install` は送信文字列が `npm ...` なので sandbox 内に残り、401 になる。token が要る操作は `fnox exec -- <pm> ...` と打つ（`.claude/rules/fnox-sandbox-invocation.md`）。`npm *` を丸ごと除外するより範囲が狭く、token の要らない install は sandbox に残せる
+- シェル関数のラッパー経由の `npm install` は送信文字列が `npm ...` なので sandbox 内に残り、401 になる。token が要る操作は `fnox exec -- <pm> ...` と打つ（`.claude/rules/sandbox-excluded-commands.md`）。`npm *` を丸ごと除外するより範囲が狭く、token の要らない install は sandbox に残せる
 - 原因は Go と Seatbelt の TLS 検証で、通信先の許可ではない。`allowedDomains` に足しても `SSL_CERT_FILE` を設定しても直らない
 
 ### hunk
