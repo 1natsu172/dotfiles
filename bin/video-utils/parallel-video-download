@@ -307,9 +307,10 @@ execute_parallel_downloads() {
 		export -f download_video record_failed_url log_info log_error log_success log_warning
 		export OUTPUT_DIR ARIA2_CONNECTIONS FAILED_URLS_FILE DRY_RUN
 
-		# Execute dry-run checks using xargs
+		# NUL-delimited arguments avoid xargs -I's default 255-byte replacement limit.
 		grep "^[^#[:space:]]" "$URL_FILE" |
-			xargs -n 1 -P "$MAX_CONCURRENT" -I {} bash -c 'download_video "$@"' _ {}
+			tr '\n' '\0' |
+			xargs -0 -n 1 -P "$MAX_CONCURRENT" bash -c 'download_video "$@"' _
 
 		log_info "[DRY RUN] 実行内容の確認が完了しました"
 		return 0
@@ -321,9 +322,10 @@ execute_parallel_downloads() {
 	export -f download_video record_failed_url log_info log_error log_success log_warning
 	export OUTPUT_DIR ARIA2_CONNECTIONS FAILED_URLS_FILE DRY_RUN
 
-	# Execute parallel downloads using xargs
+	# NUL-delimited arguments avoid xargs -I's default 255-byte replacement limit.
 	if grep "^[^#[:space:]]" "$URL_FILE" |
-		xargs -n 1 -P "$MAX_CONCURRENT" -I {} bash -c 'download_video "$@"' _ {}; then
+		tr '\n' '\0' |
+		xargs -0 -n 1 -P "$MAX_CONCURRENT" bash -c 'download_video "$@"' _; then
 		log_info "並列ダウンロード処理が完了しました"
 	else
 		log_warning "一部のダウンロードで問題が発生しました"
