@@ -1,5 +1,5 @@
 tap "aquaproj/aqua", trusted: true
-tap "distroav/distroav", trusted: true
+tap "distroav/tap", "https://github.com/DistroAV/homebrew-tap.git"
 tap "entireio/tap", trusted: true
 tap "github/gh", trusted: true
 tap "rjyo/moshi", trusted: true
@@ -119,7 +119,7 @@ cask "dbngin"
 # Voice and text chat software
 cask "discord"
 # NDI integration for OBS Studio
-cask "distroav/distroav/distroav", trusted: true
+cask "distroav"
 # App to build and share containerised applications and microservices
 cask "docker-desktop"
 # Client for the Dropbox cloud storage service
@@ -189,8 +189,6 @@ cask "steam"
 cask "visual-studio-code"
 # Multimedia player
 cask "vlc"
-# Rust-based terminal
-cask "warp"
 # Install and switch between multiple versions of Xcode
 cask "xcodes-app"
 # Video communication and virtual meeting platform
@@ -274,4 +272,3 @@ vscode "wesbos.theme-cobalt2"
 vscode "yzhang.markdown-all-in-one"
 go "cmd/go"
 go "cmd/gofmt"
-go "golang.org/x/tools/gopls"
