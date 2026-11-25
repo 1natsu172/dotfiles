@@ -94,8 +94,6 @@ brew "rjyo/moshi/moshi-hook"
 cask "1password"
 # Command-line interface for 1Password
 cask "1password-cli"
-# AI dictation app
-cask "amical"
 # Tools for building Android applications
 cask "android-studio"
 # Application uninstaller
@@ -186,6 +184,8 @@ cask "steam"
 cask "visual-studio-code"
 # Multimedia player
 cask "vlc"
+# Voice to text app
+cask "voiceink"
 # Install and switch between multiple versions of Xcode
 cask "xcodes-app"
 # Video communication and virtual meeting platform
