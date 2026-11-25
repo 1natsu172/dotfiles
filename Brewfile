@@ -48,8 +48,6 @@ brew "git"
 brew "git-delta"
 # Git extension for versioning large files
 brew "git-lfs"
-# Post-modern modal text editor
-brew "helix"
 # Agent multiplexer that lives in your terminal
 brew "herdr"
 # Review-first terminal diff viewer for agent-authored changesets
@@ -118,8 +116,7 @@ cask "datagrip"
 cask "dbngin"
 # Voice and text chat software
 cask "discord"
-# NDI integration for OBS Studio
-cask "distroav"
+cask "distroav/distroav/distroav"
 # App to build and share containerised applications and microservices
 cask "docker-desktop"
 # Client for the Dropbox cloud storage service
