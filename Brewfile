@@ -123,6 +123,8 @@ cask "dropbox"
 cask "entireio/tap/entire", trusted: true
 # Web browser
 cask "firefox@developer-edition"
+# Offline voice-to-text dictation app with AI enhancement
+cask "fluidvoice"
 # Screen colour temperature controller
 cask "flux-app"
 cask "font-blex-mono-nerd-font"
@@ -184,8 +186,6 @@ cask "steam"
 cask "visual-studio-code"
 # Multimedia player
 cask "vlc"
-# Voice to text app
-cask "voiceink"
 # Install and switch between multiple versions of Xcode
 cask "xcodes-app"
 # Video communication and virtual meeting platform
