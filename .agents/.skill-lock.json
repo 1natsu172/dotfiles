@@ -1,24 +1,6 @@
 {
   "version": 3,
   "skills": {
-    "web-design-guidelines": {
-      "source": "vercel-labs/agent-skills",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/vercel-labs/agent-skills.git",
-      "skillPath": "skills/web-design-guidelines/SKILL.md",
-      "skillFolderHash": "3116f3e62dbd02b44a598b1aa690d2a8938e8f89",
-      "installedAt": "2026-07-03T12:37:55.560Z",
-      "updatedAt": "2026-07-03T12:37:55.560Z"
-    },
-    "writing-guidelines": {
-      "source": "vercel-labs/agent-skills",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/vercel-labs/agent-skills.git",
-      "skillPath": "skills/writing-guidelines/SKILL.md",
-      "skillFolderHash": "17d954cadfb8dec50bf0c707c9e7634be9ae9fe8",
-      "installedAt": "2026-07-03T12:37:55.560Z",
-      "updatedAt": "2026-07-03T12:37:55.560Z"
-    },
     "find-skills": {
       "source": "vercel-labs/skills",
       "sourceType": "github",
@@ -86,16 +68,6 @@
       "installedAt": "2026-08-03T10:31:31.149Z",
       "updatedAt": "2026-08-03T10:31:31.149Z"
     },
-    "1natsu-git-analysis": {
-      "source": "1natsu-vacation/agent-skills",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/1natsu-vacation/agent-skills.git",
-      "skillPath": "skills/1natsu-git-analysis/SKILL.md",
-      "skillFolderHash": "36505073d35982ccd88f9f292d0960986d4fe7ab",
-      "pluginName": "1natsu-debug",
-      "installedAt": "2026-08-03T10:31:31.159Z",
-      "updatedAt": "2026-08-03T10:31:31.159Z"
-    },
     "1natsu-pair-debug": {
       "source": "1natsu-vacation/agent-skills",
       "sourceType": "github",
@@ -135,26 +107,6 @@
       "pluginName": "1natsu-document-harness",
       "installedAt": "2026-08-03T10:31:31.209Z",
       "updatedAt": "2026-08-03T10:31:31.209Z"
-    },
-    "1natsu-error-handling": {
-      "source": "1natsu-vacation/agent-skills",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/1natsu-vacation/agent-skills.git",
-      "skillPath": "skills/1natsu-error-handling/SKILL.md",
-      "skillFolderHash": "b4f35851acef6e5b36ed1b7e9d0dd6a60dae2f42",
-      "pluginName": "1natsu-error-handling",
-      "installedAt": "2026-08-03T10:31:31.210Z",
-      "updatedAt": "2026-08-03T10:31:31.210Z"
-    },
-    "1natsu-hunk": {
-      "source": "1natsu-vacation/agent-skills",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/1natsu-vacation/agent-skills.git",
-      "skillPath": "skills/1natsu-hunk/SKILL.md",
-      "skillFolderHash": "2b17222ccf3195ee2a2f5e4de0650f7dbfd910bc",
-      "pluginName": "1natsu-hunk",
-      "installedAt": "2026-08-03T10:31:31.214Z",
-      "updatedAt": "2026-08-03T10:31:31.214Z"
     },
     "1natsu-create-pr": {
       "source": "1natsu-vacation/agent-skills",
